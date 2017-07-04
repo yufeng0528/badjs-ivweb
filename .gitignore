@@ -220,6 +220,8 @@ pip-log.txt
 node_modules/
 coverage.html
 web-debug.bat
+#badjs-storage/cache/
+*.db
 
 
 #############
