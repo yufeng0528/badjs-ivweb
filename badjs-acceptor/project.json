@@ -1,0 +1,21 @@
+{
+    "port": 8082,
+    "dispatcher": {
+        "port": 10001,
+        "address": "127.0.0.1",
+        "subscribe": "badjs",
+        "module": "./dispatcher/axon"
+    },
+    "interceptors": [
+        "./filter/validateParam",
+        "./filter/comboPreprocess",
+        "./filter/addExt",
+        "./filter/blackListValidate",
+        "./filter/excludeParam",
+        "./filter/str2Int"
+    ],
+    "blackList" :{
+        "ip" : [ "999.9.9.9" , "999.9.*" ,  "999.9.*.*"],
+        "ua": ["Baiduspider" , "Tencent_Security_Team" ]
+    }
+}
