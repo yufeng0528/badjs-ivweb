@@ -1,8 +1,8 @@
 var process = require("child_process");
 var path = require("path");
 
-var args = ["--debug", "--project"]
-
+//var args = ["--debug", "--project"]
+var args = []
 
 console.log("========  badjs-acceptor ===========")
 process.fork(path.join(__dirname, "badjs-acceptor", "app.js"), args)
