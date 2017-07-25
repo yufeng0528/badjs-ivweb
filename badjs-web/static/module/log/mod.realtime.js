@@ -200,7 +200,12 @@ var currentIndex;
 var maxShow = 100;
 var startMonitor = function(id) {
 
-    websocket = new WebSocket("ws://" + location.host + "/ws/realtimeLog");
+    var host = location.host;
+    if (host.indexOf(':') < 0) {
+        host += ':8081';
+    }
+
+    websocket = new WebSocket("ws://" + host + "/ws/realtimeLog");
 
     currentIndex = 0;
     websocket.onmessage = function(evt) {

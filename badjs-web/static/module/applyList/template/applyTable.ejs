@@ -1,5 +1,6 @@
 <%
     var len = it.item.length;
+    var xss = require('xss-filters');
 
     var statue = "";
 
@@ -43,8 +44,8 @@ for(var i = 0; i<len ; i++){
     }catch(e){
         one.blacklist = {};
     }
-    blacklistIPStr =  one.blacklist.ip ? one.blacklist.ip.join(',') : ''
-    blacklistUAStr =  one.blacklist.ua ? one.blacklist.ua.join(',') : ''
+    blacklistIPStr =  one.blacklist.ip ? xss.inHTMLData(one.blacklist.ip.join(',')) : ''
+    blacklistUAStr =  one.blacklist.ua ? xss.inHTMLData(one.blacklist.ua.join(',')) : ''
 
     if(one.status != 0){
         status = one.status ==1 ? 'agree-active' : 'disagree-active';
@@ -64,9 +65,9 @@ for(var i = 0; i<len ; i++){
             </div>
         </td>
         <td class="apply_name">
-            <span style="width:100px;" class="textOverflow" title="<%=one.name%>"><%=one.name%></span>
+            <span style="width:100px;" class="textOverflow" title="<%=xss.inHTMLData(one.name)%>"><%=xss.inHTMLData(one.name)%></span>
         </td>
-        <td class="apply_userName"><%=one.userName%></td>
+        <td class="apply_userName"><%=xss.inHTMLData(one.userName)%></td>
         <td class="apply_createTime"><%= _.formatDate( new Date(one.createTime) , 'YYYY-MM-DD' )%></td>
        <!-- <td  class="apply_description">
             <span style="width:250px;" class="textOverflow" title="<%=one.description%>"> <%=one.description%></span>
@@ -79,7 +80,7 @@ for(var i = 0; i<len ; i++){
              <span style="width:270px;" class="textOverflow" >
                 <b>userAgent：</b><%= blacklistUAStr    %>
               </span>
-            <span style="width:270px;" class="textOverflow" title="<%=one.description%>"><b>描述：</b><%=one.description%></span>
+            <span style="width:270px;" class="textOverflow" title="<%=xss.inHTMLData(one.description)%>"><b>描述：</b><%=xss.inHTMLData(one.description)%></span>
         </td>
 
         <td class="apply_operation">

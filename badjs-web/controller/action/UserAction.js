@@ -6,6 +6,7 @@ var log4js = require('log4js'),
     logger = log4js.getLogger(),
     UserService = require('../../service/UserService'),
     crypto = require('crypto'),
+    xss = require('xss-filters'),
     BusinessService = require('../../service/BusinessService'),
     isError = function (res , error){
         if(error){
@@ -50,7 +51,7 @@ var userAction = {
 
             userDao.one({ loginName : req.body.username } ,function (err , user) {
                 if(err || !user || (crypto.createHash("md5").update(req.body.password).digest('hex') != user.password)){
-                    res.render('login', { name:req.body.username,   isUseOA : !! global.pjconfig.oos, index:"login"   , message : "帐号或则密码错误"} );
+                    res.render('login', { name:xss.inDoubleQuotedAttr(req.body.username),   isUseOA : !! global.pjconfig.oos, index:"login"   , message : "帐号或则密码错误"} );
                 }else {
                     req.session.user = {
                         role : user.role,
@@ -70,6 +71,10 @@ var userAction = {
     },
 
     register : function (params , req ,  res){
+
+
+        res.render('noregister');
+        return;
 
         var method = req.method.toLowerCase();
         if(method == "post"){

@@ -21,25 +21,65 @@ let mailOptions = {
     from: '"IVWEB" 2580575484@qq.com', // sender address
 };
 
+let mailList = [];
 
 module.exports = (from, to, cc, title, content, attachments) => {
 
-  mailOptions.to = to;
-  mailOptions.cc = cc;
-  mailOptions.subject = title;
-  mailOptions.html = content;
+    let  _mailOptions = Object.assign({}, mailOptions);
 
-  if (attachments) {
-      mailOptions.attachments = attachments;
-  }
-  
-mailOptions.to = 'sampsonwang@tencent.com';
+    _mailOptions.to = to;
+    _mailOptions.cc = cc;
+    _mailOptions.subject = title;
+    _mailOptions.html = content;
 
-console.log(mailOptions);
+    if (attachments) {
+        _mailOptions.attachments = attachments;
+    }
+
+    // _mailOptions.to = 'sampsonwang@tencent.com';
+    // _mailOptions.cc = 'sampsonwang@tencent.com';
+
+    console.log(_mailOptions);
+
+    // 第一次进来开始倒计时，后面进来的不走这个逻辑
+    if (mailList.length == 0) {
+        timeoutSendMail();
+    }
+
+    //sendMail(_mailOptions);
+    // 先放到池子中，再每隔一段时间发送，避免触发频率限制，疑似垃圾邮件
+    mailList.push(_mailOptions);
+
+    // console.log('mailList');
+    // console.log(mailList)
+
+}
+
+
+function timeoutSendMail() {
+
+    let mailTimmer = setInterval(() => {
+
+        console.log(`mailList.length: ${mailList.length}`)
+
+
+        if (mailList.length <= 0 ) {
+            clearInterval(mailTimmer);
+        }
+
+        let mailItemOp = mailList.shift();
+        sendMail(mailItemOp);
+
+    }, 1 * 80 * 1000)
+}
+
+function sendMail(maildata) {
+
+
+  console.log('send email ....')
   return new Promise((resolve, reject) => {
-
       // send mail with defined transport object
-      transporter.sendMail(mailOptions, function(error, info){
+      transporter.sendMail(maildata, function(error, info){
           if(error){
               console.log(error);
               reject(error)
@@ -49,9 +89,6 @@ console.log(mailOptions);
           }
       });
 
-
   })
-
-  
 
 }

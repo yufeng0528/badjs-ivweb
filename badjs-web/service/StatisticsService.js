@@ -36,6 +36,7 @@ var StatisticsService = function() {
     this.statisticsDao = global.models.statisticsDao;
     this.applyDao = global.models.applyDao;
     this.pvDao = global.models.pvDao;
+    this.scoreDao = global.models.scoreDao;
 
     //this.triggerUrl = global.pjconfig.storage.errorMsgTopCacheUrl;
     this.url = global.pjconfig.storage.errorMsgTopUrl;
@@ -113,6 +114,16 @@ StatisticsService.prototype = {
             }).where(function() {
 
             });
+    },
+    queryScoreById: function (param, callback) {
+        var id = param.id;
+
+	this.scoreDao.find({badjsid: id})
+	    .limit(30).order('-date')
+	    .all((err, items) => {
+		callback(items);
+            })
+
     },
     fetchAndSave: function(id, startDate, cb) {
         var self = this;

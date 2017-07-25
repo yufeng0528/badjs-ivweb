@@ -7,6 +7,7 @@ var express = require('express')
     , serveStatic = require('serve-static')
     , app = express()
     , router = require('../controller/router')
+    , compress = require('compression')
     , orm = require('orm');
 
 
@@ -20,6 +21,7 @@ var log4js = require('log4js'),
 app.set('views',path.join(__dirname , ".." , "views"));
 app.set('view engine', 'html');
 app.engine('html', tpl.__express);
+app.use(compress());
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 120 * 60 * 1000 } }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -42,6 +44,7 @@ app.use(orm.express(msqlUrl, {
     models.userApplyDao = require('../dao/UserApplyDao')(db);
     models.statisticsDao = require('../dao/StatisticsDao')(db);
     models.pvDao = require('../dao/PvDao')(db);
+    models.scorevDao = require('../dao/ScoreDao')(db);
     models.db = db;
 
     global.models = models;

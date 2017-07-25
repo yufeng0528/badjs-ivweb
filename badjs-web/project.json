@@ -1,5 +1,5 @@
 {
-    "host" : "http://badjs.now.qq.com:8081/",
+    "host" : "http://badjs.now.qq.com/",
     "port": 8081,
     "mysql" : {
         "url" : "mysql://root:root@localhost:3306/badjs"
@@ -20,13 +20,13 @@
         "module": "axon"
     },
     "email": {
-        "homepage": "http://badjs.now.qq.com:8081/user/index.html",
+        "homepage": "http://badjs.now.qq.com/user/index.html",
         "from": "noreply-badjs@demo.com",
         "emailSuffix" : "@tencent.com",
         "smtp": "smtp.demo.com",
         "smtpUser":   "username", 
         "smtpPassword":"password",
-        "time": "09:00:00",
+        "time": "06:00:00",
         "top": 20,
         "module": "ivwebMail"
     }

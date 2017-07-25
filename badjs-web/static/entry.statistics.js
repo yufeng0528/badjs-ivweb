@@ -1,4 +1,4 @@
-webpackJsonp([8],{
+webpackJsonp([7],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
@@ -6,12 +6,12 @@ webpackJsonp([8],{
 	var statistics = __webpack_require__(16);
 	statistics.init();
 
-	var last_select = __webpack_require__(14);
+	var last_select = __webpack_require__(13);
 	last_select.init();
 
 /***/ },
 
-/***/ 14:
+/***/ 13:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
@@ -45,31 +45,13 @@ webpackJsonp([8],{
 	 * */
 
 
-	__webpack_require__(20);
-	var Dialog = __webpack_require__(122);
-	var statisticsTpl = __webpack_require__(131);
+	__webpack_require__(19);
+	var Dialog = __webpack_require__(21);
+	var statisticsTpl = __webpack_require__(31);
 
 	var encodeHtml = function (str) {
 	    return (str + '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\x60/g, '&#96;').replace(/\x27/g, '&#39;').replace(/\x22/g, '&quot;');
 	};
-
-	var handleScore = function (pv, e_pv) {
-	    
-	    $('#pre-view').html(pv);
-	    // 算分
-            var e_rate = e_pv / pv;
-	    var score;
-	    if (e_rate <= 0.005) {
-		score = 100;
-	    } else if (e_rate < 0.1 && e_rate > 0.005) {
-		score = 100 - 10 * e_rate;
-	    } else {
-		score = 0;
-	    }
-
-	    $('#score').html(score.toFixed(2));
-
-	}
 
 
 	    var statistics = {
@@ -96,19 +78,10 @@ webpackJsonp([8],{
 	                    return ;
 	                }
 
-			var d = new Date($('#startTime').val() + " 00:00:00");
-
-	                $.getJSON("/controller/statisticsAction/queryById.do" , {projectId : projectId , startDate : d - 0} , function (data){
+	                $.getJSON("/controller/statisticsAction/queryById.do" , {projectId : projectId , startDate : new Date($('#startTime').val() + " 00:00:00") - 0} , function (data){
 	                        $('#table-content').html(statisticsTpl({it : data,  opt : {encodeHtml : encodeHtml }}));
 	                    if(  data && data.data[0] ){
 	                        $('#error-count').html(data.data[0].total || 0 );
-
-				$.getJSON("/controller/statisticsAction/getpvbyid.do", {badjsid: projectId, date: $('#startTime').val().replace(/-/g, '')}, function (pv_data) {
-
-				    if (pv_data && pv_data[0] && pv_data[0].pv) {
-				        handleScore(pv_data[0].pv, data.data[0].total || 0);
-				    }
-				})
 	                    }
 	                });
 	            });
@@ -122,7 +95,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 20:
+/***/ 19:
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -1981,7 +1954,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 21:
+/***/ 20:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -2161,11 +2134,11 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 122:
+/***/ 21:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
-	var modal = __webpack_require__(134);
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(20);
+	var modal = __webpack_require__(149);
 
 	    var container;
 
@@ -2213,7 +2186,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 131:
+/***/ 31:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {module.exports = function (obj) {
@@ -2225,25 +2198,25 @@ webpackJsonp([8],{
 
 	    if (!it.data || !it.data[0] || !it.data[0].content || !it.data[0].content[0]) {
 	;
-	__p += '\r\n    <tr ><td colspan="3" style="text-align: center">当天没有统计数据</td></tr>\r\n';
+	__p += '\n    <tr ><td colspan="3" style="text-align: center">当天没有统计数据</td></tr>\n';
 
 	    } else {
 	        var count = 0 ;
 	        var content = it.data[0].content;
 	        $.each(content , function (key , value) {
 	;
-	__p += '\r\n<tr class="listRow">\r\n    <td class="td-row-1" style="width:40px;">' +
+	__p += '\n<tr class="listRow">\n    <td class="td-row-1" style="width:40px;">' +
 	((__t = ( ++count )) == null ? '' : __t) +
-	'</td>\r\n    <td class="td-row-2" style="width:120px;">' +
+	'</td>\n    <td class="td-row-2" style="width:120px;">' +
 	((__t = ( value.total )) == null ? '' : __t) +
-	'</td>\r\n    <td class="td-row-3" style="word-break:break-all">' +
+	'</td>\n    <td class="td-row-3" style="word-break:break-all">' +
 	((__t = ( opt.encodeHtml(value.title) )) == null ? '' : __t) +
-	'</td>\r\n</tr>\r\n';
+	'</td>\n</tr>\n';
 
 	        });
 	    }
 	;
-	__p += '\r\n';
+	__p += '\n';
 
 	}
 	return __p
@@ -2252,7 +2225,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 134:
+/***/ 149:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -2261,11 +2234,11 @@ webpackJsonp([8],{
 	with (obj) {
 	__p += '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="' +
 	((__t = (it.id || '' )) == null ? '' : __t) +
-	'">\r\n  <div class="modal-backdrop fade"></div>\r\n  <div class="modal-dialog">\r\n    <div class="modal-content">\r\n\r\n      <div class="modal-header">\r\n        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" data-event-click="close">×</span><span class="sr-only">Close</span></button>\r\n        <h4 class="modal-title">' +
+	'">\n  <div class="modal-backdrop fade"></div>\n  <div class="modal-dialog">\n    <div class="modal-content">\n\n      <div class="modal-header">\n        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" data-event-click="close">×</span><span class="sr-only">Close</span></button>\n        <h4 class="modal-title">' +
 	((__t = (it.header)) == null ? '' : __t) +
-	'</h4>\r\n      </div>\r\n      <div class="modal-body">\r\n        ' +
+	'</h4>\n      </div>\n      <div class="modal-body">\n        ' +
 	((__t = (it.body)) == null ? '' : __t) +
-	'\r\n      </div>\r\n      <div class="modal-footer">\r\n        <button type="button" class="btn btn-default" data-event-click="close">Close</button>\r\n      </div>\r\n\r\n    </div>\r\n  </div>\r\n</div>';
+	'\n      </div>\n      <div class="modal-footer">\n        <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n      </div>\n\n    </div>\n  </div>\n</div>';
 
 	}
 	return __p

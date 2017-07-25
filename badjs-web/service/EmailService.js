@@ -22,6 +22,7 @@ var EmailService = function() {
     this.top = parseInt(global.pjconfig.email.top, 10) || 20;
     this.from = global.pjconfig.email.from || "noreply-badjs@tencent.com";
     this.homepage = global.pjconfig.email.homepage;
+    this.host = global.pjconfig.host;
 };
 
 var getYesterday = function() {
@@ -82,7 +83,7 @@ var getImageData = function(name, data) {
             },
             series: [{
                 data: totalArray,
-                name: "-"
+                name: 'badjs count' 
             }]
         }
     };
@@ -128,7 +129,7 @@ EmailService.prototype = {
 
             if (imagePath) {
                 html.push('<h4>最近' + DAY_LENGTH + '天图表统计</h4>');
-                html.push('<p><img src="cid:00000001"></p>');
+                html.push('<p><img src="cid:' + data.cid1 + '"></p>');
             }
 
             var total_top = 0;
@@ -155,6 +156,8 @@ EmailService.prototype = {
             );
 
 	    html.push('<p>注：badjs得分规则</p> <p>（1）当报错率 <= 0.5%： badjs得分=100</p> <p>（2）当 0.5%< 报错率 < 10%：badjs得分： 100 - 10 * 报错率</p> <p>（3）当报错率 >= 10%： badjs得分=0</p>');
+
+	    // 质量趋势图
 
             html.push('<table style="border-collapse:collapse;;width:95%"><tr style="background-color:#188eee;text-align:left;color:#fff"><th style="padding:2px 0 2px 10px;border:1px solid #dedede;width:60px">#</th><th style="padding:2px 0 2px 10px;border:1px solid #dedede;;width:120px">出现次数</th><th style="padding:2px 0 2px 10px;border:1px solid #dedede">错误内容</th></tr>');
             content.forEach(function(v) {
@@ -283,21 +286,22 @@ EmailService.prototype = {
         var that = this;
         var title = "【BadJS 日报 " + dateFormat(this.date, "yyyy-MM-dd") + "】- " + emails.title;
         data.title = emails.title;
-	var pvParam = {
-	    badjsid: badjsid,
-	    date: dateFormat(this.date,  "yyyyMMdd")
-	}
+        var pvParam = {
+            badjsid: badjsid,
+            date: dateFormat(this.date,  "yyyyMMdd")
+        }
         this.statisticsService.getPvById(pvParam, function (err, pvdata) {
-	    data.pvData = pvdata; 
-	    var content = that.render(data, emails.imagePath);
+            data.pvData = pvdata; 
+            data.cid1 = '000' + parseInt(Math.random() * 1000);
+            var content = that.render(data, emails.imagePath);
 
-	    var attachments = [{
-	        filename: '01.png',
-		path: emails.imagePath,
-		cid: '00000001'
-	    }]
+            var attachments = [{
+                filename: data.cid1 + '01.png',
+            path: that.host + emails.imagePath,
+            cid: data.cid1
+            }]
             sendEmail(this.from, emails.to, emails.cc, title, content, attachments);
-	})
+        })
     },
     start: function() {
         var that = this;
