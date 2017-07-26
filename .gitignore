@@ -220,7 +220,8 @@ pip-log.txt
 node_modules/
 coverage.html
 web-debug.bat
-#badjs-storage/cache/
+badjs-storage/cache/
+badjs-web/static/scoreimg/
 *.db
 
 
