@@ -46,8 +46,9 @@ webpackJsonp([7],{
 
 
 	__webpack_require__(19);
-	var Dialog = __webpack_require__(21);
-	var statisticsTpl = __webpack_require__(31);
+	var Dialog = __webpack_require__(22);
+	var statisticsTpl = __webpack_require__(32);
+	var scoreLib = __webpack_require__(21)
 
 	var encodeHtml = function (str) {
 	    return (str + '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\x60/g, '&#96;').replace(/\x27/g, '&#39;').replace(/\x22/g, '&quot;');
@@ -82,6 +83,18 @@ webpackJsonp([7],{
 	                        $('#table-content').html(statisticsTpl({it : data,  opt : {encodeHtml : encodeHtml }}));
 	                    if(  data && data.data[0] ){
 	                        $('#error-count').html(data.data[0].total || 0 );
+	                    }
+	                });
+
+	                $.getJSON("/controller/statisticsAction/getRate.do" , {badjsid: projectId , date: $('#startTime').val()} , function (data){
+	                    // console.log(data)
+	                   var pv, rate;
+	                    if (data.length>0) {
+	                        pv = data[0].pv;
+	                        rate = data[0].rate;
+	                        $('#score').html(scoreLib.handleScore(pv, data[0].badjscount));
+	                        $('#pre-view').html(pv);
+
 	                    }
 	                });
 	            });
@@ -2137,8 +2150,35 @@ webpackJsonp([7],{
 /***/ 21:
 /***/ function(module, exports, __webpack_require__) {
 
+	
+	var handleScore = function (pv, e_pv) {
+	    
+	    // 算分
+	    var e_rate = e_pv / pv;
+	    var score;
+	    if (e_rate <= 0.005) {
+	        score = 100;
+	    } else if (e_rate < 0.1 && e_rate > 0.005) {
+	        score = 100 - 10 * 100 * e_rate;
+	    } else {
+	        score = 0;
+	    }
+
+	    return score.toFixed(2);
+
+	}
+	module.exports = {
+	    handleScore: handleScore
+	}
+
+
+/***/ },
+
+/***/ 22:
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(20);
-	var modal = __webpack_require__(149);
+	var modal = __webpack_require__(150);
 
 	    var container;
 
@@ -2186,7 +2226,7 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 31:
+/***/ 32:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {module.exports = function (obj) {
@@ -2225,7 +2265,7 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 149:
+/***/ 150:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {

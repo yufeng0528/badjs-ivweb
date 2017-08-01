@@ -14,7 +14,7 @@ var log4js = require('log4js'),
  
  logger.info('connect mysql: ' + msqlUrl);
  
-        var EmailService = require("../service/EmailService_test.js");
+        var EmailService = require("../service/EmailService.js");
  
  orm.connect(msqlUrl, function (err, db) {
  

@@ -12,6 +12,7 @@ var UserService = require('./UserService');
 var dateFormat = require("../utils/dateFormat");
 var exporting = require('node-highcharts-exporting');
 var StatisticsService = require('./StatisticsService');
+var scoreLib = require('../lib/getScore.js');
 var sendEmail = require("../utils/" + global.pjconfig.email.module);
 
 var DAY_LENGTH = 30;
@@ -96,24 +97,6 @@ var encodeHtml = function(str) {
 	.replace(/\x22/g, '&quot;').replace(/@/g, '<br/>@');
 };
 
-
-var handleScore = function (pv, e_pv) {
-    
-    // 算分
-    var e_rate = e_pv / pv;
-    var score;
-    if (e_rate <= 0.005) {
-	score = 100;
-    } else if (e_rate < 0.1 && e_rate > 0.005) {
-	score = 100 - 10 * e_rate;
-    } else {
-	score = 0;
-    }
-
-    return score.toFixed(2);
-
-}
-
 EmailService.prototype = {
     render: function(data, imagePath) {
         var that = this;
@@ -145,7 +128,7 @@ EmailService.prototype = {
 	    var viewPv = 0, score = 0;
 	    if (data.pvData && data.pvData.length > 0) {
 		viewPv = data.pvData[0].pv;
-		score = handleScore(viewPv, total || 0);
+		score = scoreLib.handleScore(viewPv, total || 0);
 	    }
             total > 0 && html.push('<p style="border-top:1px solid #666;margin-top:20px;padding:5px 0 0 10px">错误PV： {{total}} , Top {{top}} 占 {{per}}。访问PV：{{viewPv}}，<span style="color:red;">质量评分：{{score}}</span></p>'
                 .replace(/{{total}}/g, total)

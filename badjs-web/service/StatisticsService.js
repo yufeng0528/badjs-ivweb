@@ -77,9 +77,9 @@ StatisticsService.prototype = {
           
         this.pvDao.find({
             badjsid: param.badjsid,
-	    date: param.date
+	        date: param.date
         }, function(err, data) {
-	    callback(err, data);
+	        callback(err, data);
         });
     },
     queryByChart: function(param, callback) {
@@ -118,10 +118,10 @@ StatisticsService.prototype = {
     queryScoreById: function (param, callback) {
         var id = param.id;
 
-	this.scoreDao.find({badjsid: id})
-	    .limit(30).order('-date')
-	    .all((err, items) => {
-		callback(items);
+	    this.scoreDao.find({badjsid: id})
+            .limit(30).order('-date')
+            .all((err, items) => {
+                callback(items);
             })
 
     },

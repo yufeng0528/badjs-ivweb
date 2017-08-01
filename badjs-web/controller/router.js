@@ -23,12 +23,15 @@ module.exports = function(app){
     realtimeService(app);
 
     //html页面请求
-    app.get('/', function (req , res){
+    app.get('/help.html', function (req , res){
         res.render('index',{} );
+    });
+    app.get('/', function (req , res){
+        res.redirect(req.protocol + "://" + req.get('host') + '/user/index.html');
     });
 
     app.get('/index.html', function (req , res){
-        res.render('index',{} );
+        res.redirect(req.protocol + "://" + req.get('host') + '/user/index.html');
     } );
 
     app.get('/user/index.html', function (req , res){

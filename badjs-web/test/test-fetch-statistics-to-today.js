@@ -2,6 +2,8 @@
 var mysql = require('mysql'),
     StatisticsService = require('../service/StatisticsService'),
     orm = require('orm');
+var id = process.argv[2];
+console.log(id);
 
 GLOBAL.pjconfig = require('../project.json');
 //GLOBAL.DEBUG = true;
@@ -24,7 +26,7 @@ orm.connect( mysqlUrl, function(err , db) {
     var aa = new StatisticsService();
 
 
-    var startDate = new Date('2015-09-23 00:00:00');
+    var startDate = new Date('2017-07-29 00:00:00');
     var nowDate = new Date;
 
     //fetch data until today
@@ -35,12 +37,17 @@ orm.connect( mysqlUrl, function(err , db) {
                 console.log("out today");
                 return ;
             }
-            fetch(id , new Date(startDate.getFullYear() + "-" + (startDate.getMonth()+1)+"-"+ (startDate.getDate()+1)+" 00:00:00"));
+            // fetch(id , new Date(startDate.getFullYear() + "-" + (startDate.getMonth()+1)+"-"+ (startDate.getDate()+1)+" 00:00:00"));
 
         })
     }
 
-    fetch(24 , startDate);
+
+    for(var i=28; i<40; i++) {
+
+    fetch(i , startDate);
+    }
+
 
 });
 

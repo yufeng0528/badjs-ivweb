@@ -1,4 +1,3 @@
-var imgLib = require('../lib/getImg.js');
 var pv = require('./handle_pv_2.js');
 const orm = require('orm');
 

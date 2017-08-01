@@ -19,10 +19,10 @@ webpackJsonp([6],{
 	 *
 	 */
 	__webpack_require__(19);
-	__webpack_require__(22);
 	__webpack_require__(23);
-	var Dialog = __webpack_require__(21);
-	var statisticsTpl = __webpack_require__(30);
+	__webpack_require__(24);
+	var Dialog = __webpack_require__(22);
+	var statisticsTpl = __webpack_require__(31);
 
 	var dayNumber = 0,
 	    days = [];
@@ -2193,11 +2193,11 @@ webpackJsonp([6],{
 
 /***/ },
 
-/***/ 21:
+/***/ 22:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(20);
-	var modal = __webpack_require__(149);
+	var modal = __webpack_require__(150);
 
 	    var container;
 
@@ -2245,7 +2245,7 @@ webpackJsonp([6],{
 
 /***/ },
 
-/***/ 22:
+/***/ 23:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {/*
@@ -2558,7 +2558,7 @@ webpackJsonp([6],{
 
 /***/ },
 
-/***/ 23:
+/***/ 24:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2661,7 +2661,7 @@ webpackJsonp([6],{
 
 /***/ },
 
-/***/ 30:
+/***/ 31:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {module.exports = function (obj) {
@@ -2730,7 +2730,7 @@ webpackJsonp([6],{
 
 /***/ },
 
-/***/ 149:
+/***/ 150:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {

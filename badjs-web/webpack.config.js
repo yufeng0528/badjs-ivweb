@@ -34,7 +34,7 @@ module.exports = {
         filename: './[name].js'
     },
     resolve: {
-        modulesDirectories : [   'node_modules' ,  path.join( __dirname, "static/common" ) ,  path.join( __dirname, "static/lib" ) , staticPath]
+        modulesDirectories : [   'node_modules' , 'lib',  path.join( __dirname, "static/common" ) ,  path.join( __dirname, "static/lib" ) , staticPath]
     },
     module : {
         loaders: [

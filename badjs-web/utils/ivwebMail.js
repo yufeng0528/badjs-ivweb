@@ -36,8 +36,9 @@ module.exports = (from, to, cc, title, content, attachments) => {
         _mailOptions.attachments = attachments;
     }
 
-    // _mailOptions.to = 'sampsonwang@tencent.com';
-    // _mailOptions.cc = 'sampsonwang@tencent.com';
+    // console.log(content);
+     // _mailOptions.to = 'sampsonwang@tencent.com';
+     // _mailOptions.cc = 'sampsonwang@tencent.com';
 
     console.log(_mailOptions);
 
@@ -65,18 +66,20 @@ function timeoutSendMail() {
 
         if (mailList.length <= 0 ) {
             clearInterval(mailTimmer);
+            return;
         }
 
         let mailItemOp = mailList.shift();
         sendMail(mailItemOp);
 
-    }, 1 * 80 * 1000)
+    }, 110 * 1000)
 }
 
 function sendMail(maildata) {
 
 
   console.log('send email ....')
+      console.log(maildata);
   return new Promise((resolve, reject) => {
       // send mail with defined transport object
       transporter.sendMail(maildata, function(error, info){

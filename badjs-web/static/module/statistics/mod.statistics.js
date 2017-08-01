@@ -7,6 +7,7 @@
 require("jquery/jquery.datetimepicker");
 var Dialog = require("dialog/dialog");
 var statisticsTpl = require("./template/statistics.ejs");
+var scoreLib = require('getScore')
 
 var encodeHtml = function (str) {
     return (str + '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\x60/g, '&#96;').replace(/\x27/g, '&#39;').replace(/\x22/g, '&quot;');
@@ -41,6 +42,18 @@ var encodeHtml = function (str) {
                         $('#table-content').html(statisticsTpl({it : data,  opt : {encodeHtml : encodeHtml }}));
                     if(  data && data.data[0] ){
                         $('#error-count').html(data.data[0].total || 0 );
+                    }
+                });
+
+                $.getJSON("/controller/statisticsAction/getRate.do" , {badjsid: projectId , date: $('#startTime').val()} , function (data){
+                    // console.log(data)
+                   var pv, rate;
+                    if (data.length>0) {
+                        pv = data[0].pv;
+                        rate = data[0].rate;
+                        $('#score').html(scoreLib.handleScore(pv, data[0].badjscount));
+                        $('#pre-view').html(pv);
+
                     }
                 });
             });

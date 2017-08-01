@@ -27,6 +27,13 @@ var StatisticsAction = {
             });
         });
     },
+    getRate: function(param, req, res) {
+          var db = global.models.db,
+          date = param.date.replace(/\D/g, '');
+          db.driver.execQuery('select * from b_quality where date=' + date + ' and badjsid=' + param.badjsid + ';', (err, data) => {
+              res.json(data);
+          })
+    },
     projectTotal: function(param, req, res) {
         var params = req.query,
             user = req.session.user;
@@ -132,18 +139,18 @@ var StatisticsAction = {
         var statisticsService = new StatisticsService();
         statisticsService.getPvById({
             badjsid: req.query.badjsid,
-	    date: req.query.date
-	}, function(err, data) {
+            date: req.query.date
+        }, function(err, data) {
             if (err) {
                 res.json({
-		    retcode: 2,
-		    msg: err
-		});
-                return;
+                    retcode: 2,
+                    msg: err
+                });
+                    return;
             }
-	    res.json(data)
-	})
-   }
+            res.json(data)
+        })
+    }
 };
 
 module.exports = StatisticsAction;
