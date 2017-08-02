@@ -15,6 +15,8 @@ var LogAction = require('./action/LogAction'),
 
 
 var log4js = require('log4js'),
+    crypto = require('crypto'),
+    xssFilters = require('xss-filters'),
     logger = log4js.getLogger();
 
 module.exports = function(app){
@@ -120,6 +122,10 @@ module.exports = function(app){
             var params = method =="post"? req.body : req.query;
             params.user = req.session.user;
 
+            // feflow工具调用使用的
+            // name+loginname+feflow md5后保存到cookie中key为 ff
+            handleFeflow(req);
+
             if( !params.user ){
                 res.json({ret : -2 , msg : "should login"});
                 return ;
@@ -145,3 +151,18 @@ module.exports = function(app){
 
 
 };
+
+function handleFeflow(req) {
+
+    
+    const _ffname = crypto.createHash("md5").update(req.name + req.username + "badjsappkey").digest('hex'),
+        cookie_ffname = req.cookie._ffname;
+
+    console.log(`handleFeflow: _ffname: ${_ffname}, cookie_ffname: ${cookie_ffname}`);
+
+    if (_ffname == cookie_ffname) {
+        req.user = {loginName: req.username}
+    }
+
+
+}
