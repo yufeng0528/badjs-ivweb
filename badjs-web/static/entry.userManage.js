@@ -1,15 +1,15 @@
-webpackJsonp([4],{
+webpackJsonp([6],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var usermanger = __webpack_require__(17);
+	var usermanger = __webpack_require__(19);
 
 	usermanger.init();
 
 /***/ },
 
-/***/ 17:
+/***/ 19:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -17,8 +17,8 @@ webpackJsonp([4],{
 	 * @author coverguo
 	 * */
 
-	var Dialog = __webpack_require__(22);
-	var userTable = __webpack_require__(33);
+	var Dialog = __webpack_require__(26);
+	var userTable = __webpack_require__(152);
 
 
 	    var encodeHtml = function (str) {
@@ -167,7 +167,7 @@ webpackJsonp([4],{
 
 /***/ },
 
-/***/ 20:
+/***/ 21:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -347,11 +347,11 @@ webpackJsonp([4],{
 
 /***/ },
 
-/***/ 22:
+/***/ 26:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(20);
-	var modal = __webpack_require__(150);
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
+	var modal = __webpack_require__(156);
 
 	    var container;
 
@@ -399,7 +399,7 @@ webpackJsonp([4],{
 
 /***/ },
 
-/***/ 33:
+/***/ 152:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -448,7 +448,7 @@ webpackJsonp([4],{
 
 /***/ },
 
-/***/ 150:
+/***/ 156:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {

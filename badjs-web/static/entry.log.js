@@ -1,31 +1,33 @@
-webpackJsonp([5],{
+webpackJsonp([10],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var log = __webpack_require__(11);
+	var log = __webpack_require__(12);
 	log.init();
 
-	var source_trigger = __webpack_require__(12);
+	var source_trigger = __webpack_require__(13);
 	source_trigger.init();
 
-	var last_select = __webpack_require__(13);
+	var last_select = __webpack_require__(14);
 	last_select.init();
 
 /***/ },
 
-/***/ 11:
+/***/ 12:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {/* global _ */
-	var dialog = __webpack_require__(22);
-	var Delegator = __webpack_require__(20);
+	var dialog = __webpack_require__(26);
+	var Delegator = __webpack_require__(21);
 
-	var logTable = __webpack_require__(28);
-	var keyword = __webpack_require__(29);
-	var debar = __webpack_require__(30);
+	var logTable = __webpack_require__(145);
+	var keyword = __webpack_require__(146);
+	var debar = __webpack_require__(147);
 
-	__webpack_require__(19);
+	var logDetailDialog = __webpack_require__(25);
+
+	__webpack_require__(22);
 
 	var logConfig = {
 	        id: 0,
@@ -129,25 +131,17 @@ webpackJsonp([5],{
 	        })
 	        .on('click', 'alertModal', function(e) {
 	            var $target=$(e.currentTarget);
-	            $("#detailModal .id").text("#"+$target.text());
-	            $("#detailModal .time").text($target.siblings('.td-2').text());
-	            $("#detailModal .info").html($target.siblings('.td-3').html());
-	            $("#detailModal .uin").text($target.siblings('.td-4').text());
-	            $("#detailModal .ip").text($target.siblings('.td-5').text());
-	            $("#detailModal .agent").text($target.siblings('.td-6').children("span:first-of-type").attr("title"));
-	            $("#detailModal .source").html($target.siblings('.td-7').html());
-	            $("#detailModal").show();
-	            console.log(document.documentElement.style.overflow);
-	            document.documentElement.style.overflow='hidden';
-	            document.body.style.overflow='hidden';
-	        }).on('click', 'closeModal', function(e){
-	            if($(e.target).hasClass('click')){
-	                $("#detailModal").hide();
-	                document.documentElement.style.overflow='';
-	                document.body.style.overflow='';
-	            }
-	            e.stopPropagation();
-	            e.preventDefault();
+
+	            logDetailDialog({
+	                id :$target.text(),
+	                time :$target.siblings('.td-2').text(),
+	                info :$target.siblings('.td-3').html(),
+	                uin :$target.siblings('.td-4').text(),
+	                ip :$target.siblings('.td-5').text(),
+	                agent : $target.siblings('.td-6').attr("title"),
+	                source :   $target.siblings('.td-7').html() ,
+	            })
+
 	        }).on('change', 'selectBusiness', function() {
 	            var val = $(this).val() - 0;
 	            currentSelectId = val;
@@ -340,7 +334,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 12:
+/***/ 13:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {exports.init = function() {
@@ -381,7 +375,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 13:
+/***/ 14:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
@@ -406,7 +400,187 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 19:
+/***/ 21:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {/**
+	 * Map
+	 * @class
+	 */
+	function Map() {
+	    this.map = {};
+	    this.length = 0;
+	}
+	Map.prototype = {
+	    constructor: Map,
+	    /**
+	     * has
+	     * @param {String} key
+	     * @returns {Boolean}
+	     */
+	    has: function (key) {
+	        return (key in this.map);
+	    },
+	    /**
+	     * get
+	     * @param {String} key
+	     * @returns {Any}
+	     */
+	    get: function (key) {
+	        return this.map[key];
+	    },
+	    /**
+	     * set
+	     * @param {String} key
+	     * @param {Any} value
+	     */
+	    set: function (key, value) {
+	        !this.has(key) && this.length++;
+	        return (this.map[key] = value);
+	    },
+	    /**
+	     * count
+	     * @returns {Number}
+	     */
+	    count: function () {
+	        return this.length;
+	    },
+	    /**
+	     * remove
+	     * @param {String} key
+	     */
+	    remove: function (key) {
+	        if (this.has(key)) {
+	            this.map[key] = null;
+	            delete this.map[key];
+	            this.length--;
+	        }
+	    }
+	};
+
+	var cache = new Map(), set = cache.set, uid = 0;
+	cache.set = function (node, value) {
+	    if (!value) {
+	        value = node;
+	        set.call(cache, ++uid + '', value);
+	        return uid;
+	    } else {
+	        typeof node === 'string' &&
+	        (node = $(node)[0]);
+	        $.data(node, 'event-data', value);
+	        return this;
+	    }
+	};
+
+	function _key(arr) {
+	    if (!arr) return {};
+	    arr = arr.split(' ');
+	    var obj = {};
+	    for (var i = 0, l = arr.length; i < l; i++) {
+	        obj[arr[i]] = true;
+	    }
+	    return obj;
+	}
+
+	/**
+	 * Delegator
+	 * @class
+	 * @param {Selector} container
+	 */
+	function Delegator(container) {
+	    this.container = $(container);
+	    this.listenerMap = new Map();
+	}
+
+	/**
+	 * getKey
+	 * @param {Any} value
+	 * @returns {Number}
+	 */
+	Delegator.set = cache.set;
+	/**
+	 * cache
+	 * @class
+	 * @static
+	 */
+	Delegator.cache = cache;
+
+	Delegator.prototype = {
+	    constructor: Delegator,
+	    _getListener: function (type) {
+	        if (this.listenerMap.has(type)) {
+	            return this.listenerMap.get(type);
+	        }
+	        function listener(e) {
+	            var data = $.data(this),
+	                routes = data['event-' + type + '-routes'],
+	                eventData = data['event-data'], handle, dataKey;
+
+	            // preprocessing
+	            if (!routes && (routes = this.getAttribute('data-event-' + type))) {
+	                (routes = routes.split(' ')) &&
+	                (data['event-' + type + '-routes'] = routes);
+	                !eventData &&
+	                (dataKey = this.getAttribute('data-event-data')) &&
+	                (eventData = cache.get(dataKey)) &&
+	                (data['event-data'] = eventData) &&
+	                (cache.remove(dataKey));
+	                !data['event-stop-propagation'] &&
+	                (data['event-stop-propagation'] = _key(this.getAttribute('data-event-stop-propagation')));
+	            }
+
+	            if (routes) {
+	                for (var i = 0, l = routes.length; i < l; i++) {
+	                    handle = listener.handleMap.get(routes[i]);
+
+	                    if (handle) {
+	                        handle.call(this, e, eventData);
+	                    }
+	                    data['event-stop-propagation'][type] &&
+	                    e.stopPropagation();
+	                }
+	            }
+	        }
+
+	        listener.handleMap = new Map();
+	        this.listenerMap.set(type, listener);
+	        this.container.on(type, '[data-event-' + type + ']', listener);
+	        return listener;
+	    },
+	    /**
+	     * on
+	     * @param {String} type
+	     * @param {String} name
+	     * @param {Function} handle
+	     */
+	    on: function (type, name, handle) {
+	        var listener = this._getListener(type);
+	        listener.handleMap.set(name, handle);
+	        return this;
+	    },
+	    /**
+	     * off
+	     * @param {String} type
+	     * @param {String} name
+	     */
+	    off: function (type, name) {
+	        var listener = this._getListener(type),
+	            handleMap = listener.handleMap;
+	        handleMap.remove(name);
+	        if (!handleMap.count()) {
+	            this.container.off(type, '[data-event-' + type + ']', listener);
+	            this.listenerMap.remove(type);
+	        }
+	    }
+	};
+
+	module.exports = Delegator;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ },
+
+/***/ 22:
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -2265,191 +2439,66 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 20:
+/***/ 25:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {/**
-	 * Map
-	 * @class
-	 */
-	function Map() {
-	    this.map = {};
-	    this.length = 0;
-	}
-	Map.prototype = {
-	    constructor: Map,
-	    /**
-	     * has
-	     * @param {String} key
-	     * @returns {Boolean}
-	     */
-	    has: function (key) {
-	        return (key in this.map);
-	    },
-	    /**
-	     * get
-	     * @param {String} key
-	     * @returns {Any}
-	     */
-	    get: function (key) {
-	        return this.map[key];
-	    },
-	    /**
-	     * set
-	     * @param {String} key
-	     * @param {Any} value
-	     */
-	    set: function (key, value) {
-	        !this.has(key) && this.length++;
-	        return (this.map[key] = value);
-	    },
-	    /**
-	     * count
-	     * @returns {Number}
-	     */
-	    count: function () {
-	        return this.length;
-	    },
-	    /**
-	     * remove
-	     * @param {String} key
-	     */
-	    remove: function (key) {
-	        if (this.has(key)) {
-	            this.map[key] = null;
-	            delete this.map[key];
-	            this.length--;
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
+	var dialogTpl = __webpack_require__(155);
+
+	    var container;
+
+	    function hide() {
+	        container.removeClass('in');
+	        container.find('.modal-backdrop').removeClass('in');
+	        setTimeout(function () {
+	            container.remove();
+	            container = undefined;
+	        }, 300);
+	    }
+
+
+	    function Dialog (param) {
+	        if (container) {
+	            container.remove();
+	            container = undefined;
 	        }
-	    }
-	};
+	        container = $(dialogTpl(param))
+	            .appendTo(document.body)
+	            .show();
 
-	var cache = new Map(), set = cache.set, uid = 0;
-	cache.set = function (node, value) {
-	    if (!value) {
-	        value = node;
-	        set.call(cache, ++uid + '', value);
-	        return uid;
-	    } else {
-	        typeof node === 'string' &&
-	        (node = $(node)[0]);
-	        $.data(node, 'event-data', value);
-	        return this;
-	    }
-	};
+	        var key,
+	            action,
+	            delegator,
+	            on =  {};
 
-	function _key(arr) {
-	    if (!arr) return {};
-	    arr = arr.split(' ');
-	    var obj = {};
-	    for (var i = 0, l = arr.length; i < l; i++) {
-	        obj[arr[i]] = true;
-	    }
-	    return obj;
-	}
+	        delegator = (new Delegator(container))
+	            .on('click', 'close', hide);
 
-	/**
-	 * Delegator
-	 * @class
-	 * @param {Selector} container
-	 */
-	function Delegator(container) {
-	    this.container = $(container);
-	    this.listenerMap = new Map();
-	}
-
-	/**
-	 * getKey
-	 * @param {Any} value
-	 * @returns {Number}
-	 */
-	Delegator.set = cache.set;
-	/**
-	 * cache
-	 * @class
-	 * @static
-	 */
-	Delegator.cache = cache;
-
-	Delegator.prototype = {
-	    constructor: Delegator,
-	    _getListener: function (type) {
-	        if (this.listenerMap.has(type)) {
-	            return this.listenerMap.get(type);
-	        }
-	        function listener(e) {
-	            var data = $.data(this),
-	                routes = data['event-' + type + '-routes'],
-	                eventData = data['event-data'], handle, dataKey;
-
-	            // preprocessing
-	            if (!routes && (routes = this.getAttribute('data-event-' + type))) {
-	                (routes = routes.split(' ')) &&
-	                (data['event-' + type + '-routes'] = routes);
-	                !eventData &&
-	                (dataKey = this.getAttribute('data-event-data')) &&
-	                (eventData = cache.get(dataKey)) &&
-	                (data['event-data'] = eventData) &&
-	                (cache.remove(dataKey));
-	                !data['event-stop-propagation'] &&
-	                (data['event-stop-propagation'] = _key(this.getAttribute('data-event-stop-propagation')));
-	            }
-
-	            if (routes) {
-	                for (var i = 0, l = routes.length; i < l; i++) {
-	                    handle = listener.handleMap.get(routes[i]);
-
-	                    if (handle) {
-	                        handle.call(this, e, eventData);
-	                    }
-	                    data['event-stop-propagation'][type] &&
-	                    e.stopPropagation();
-	                }
-	            }
+	        for (key in on) {
+	            action = key.split('/');
+	            delegator.on(action[0], action[1], on[key]);
 	        }
 
-	        listener.handleMap = new Map();
-	        this.listenerMap.set(type, listener);
-	        this.container.on(type, '[data-event-' + type + ']', listener);
-	        return listener;
-	    },
-	    /**
-	     * on
-	     * @param {String} type
-	     * @param {String} name
-	     * @param {Function} handle
-	     */
-	    on: function (type, name, handle) {
-	        var listener = this._getListener(type);
-	        listener.handleMap.set(name, handle);
-	        return this;
-	    },
-	    /**
-	     * off
-	     * @param {String} type
-	     * @param {String} name
-	     */
-	    off: function (type, name) {
-	        var listener = this._getListener(type),
-	            handleMap = listener.handleMap;
-	        handleMap.remove(name);
-	        if (!handleMap.count()) {
-	            this.container.off(type, '[data-event-' + type + ']', listener);
-	            this.listenerMap.remove(type);
-	        }
-	    }
-	};
+	        setTimeout(function () {
+	            container.addClass('in');
+	            container.find('.modal-backdrop').addClass('in');
 
-	module.exports = Delegator;
+	        }, 0);
+	    }
+
+	    Dialog.hide = hide;
+
+	module.exports =  Dialog;
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
 
-/***/ 22:
+/***/ 26:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(20);
-	var modal = __webpack_require__(150);
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
+	var modal = __webpack_require__(156);
 
 	    var container;
 
@@ -2497,7 +2546,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 28:
+/***/ 145:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {module.exports = function (obj) {
@@ -2596,6 +2645,9 @@ webpackJsonp([5],{
 	        case '1':
 	            type = 'debug';
 	            break;
+	        case '20':
+	            type = 'offline';
+	            break;
 	    }
 
 	    if (_.isArray(it[i].target)) {
@@ -2635,9 +2687,9 @@ webpackJsonp([5],{
 	((__t = ( classes['td-6'] )) == null ? '' : __t) +
 	'" title="' +
 	((__t = ( it[i].userAgent )) == null ? '' : __t) +
-	'">  \n            ';
+	'">\n            ';
 
-	            var browserTypes = getBrowserType(it[i].userAgent);      
+	            var browserTypes = getBrowserType(it[i].userAgent);
 	            for(var x = 0; x < browserTypes.length; x++) {
 	             ;
 	__p += '\n             <span class="ico-browser ' +
@@ -2679,7 +2731,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 29:
+/***/ 146:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -2698,7 +2750,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 30:
+/***/ 147:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -2717,7 +2769,34 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 150:
+/***/ 155:
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '\n\n<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="logDetailModal">\n    <div class="modal-backdrop fade"></div>\n    <div class="modal-dialog">\n        <div class="modal-content">\n\n            <div class="modal-header">\n                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" data-event-click="close">×</span><span class="sr-only">Close</span></button>\n                <h4 class="modal-title">日志详情</h4>\n            </div>\n            <div class="modal-body">\n                <p>\n                    <b>Time：</b><span class="time">' +
+	((__t = (time)) == null ? '' : __t) +
+	'</span>\n                </p>\n                <p>\n                    <b>Info：</b><div class="info">' +
+	((__t = (info)) == null ? '' : __t) +
+	'</div>\n                </p>\n                <p>\n                    <b>uin：</b><span class="uin">' +
+	((__t = (uin)) == null ? '' : __t) +
+	'</span>\n                </p>\n                <p>\n                    <b>ip：</b><span class="ip">' +
+	((__t = (ip)) == null ? '' : __t) +
+	'</span>\n                </p>\n                <p>\n                    <b>agent：</b><div class="userAgent">' +
+	((__t = (agent)) == null ? '' : __t) +
+	'</div>\n                </p>\n                <p>\n                    <b>Source：</b><div class="source">' +
+	((__t = (source)) == null ? '' : __t) +
+	'</div>\n                </p>\n            </div>\n            <div class="modal-footer">\n                <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n            </div>\n\n        </div>\n    </div>\n</div>\n';
+
+	}
+	return __p
+	}
+
+/***/ },
+
+/***/ 156:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
