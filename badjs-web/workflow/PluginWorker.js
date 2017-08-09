@@ -1,3 +1,4 @@
+'use strict';
 
 // 检测plugin文件夹
 // 动态加载文件
@@ -6,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const logger = require('log4js').getLogger();
-const pluginPath = path.resolve('plugin');
+const pluginPath = path.resolve(__dirname, '../plugin');
 
 const dirs = fs.readdirSync(pluginPath);
 logger.info('init plugin ...')

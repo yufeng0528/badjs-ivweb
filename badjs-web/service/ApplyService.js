@@ -88,7 +88,7 @@ ApplyService.prototype = {
                     callback(err);
                     return;
                 }
-                callback(null);
+                callback(null, items);
             })
 
         });

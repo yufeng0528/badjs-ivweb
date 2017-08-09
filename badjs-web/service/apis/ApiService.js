@@ -1,3 +1,4 @@
+'use strict';
 const Promise = require('bluebird');
 
 const userService = require('../UserService.js'),
@@ -54,13 +55,13 @@ function _addApply(apply) {
 
     return new Promise((resolve, reject) => {
 
-        new ApplyService().add(apply, (err) => {
+        new ApplyService().add(apply, (err, item) => {
 
             if (err) {
 
                 reject({retcode: 1, msg: err});
             }else {
-                resolve({retcode: 0});
+                resolve({retcode: 0, badjsId: item.applyId});
             }
 
         })
