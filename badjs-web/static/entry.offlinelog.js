@@ -1,16 +1,17 @@
-webpackJsonp([3],{
+webpackJsonp([11],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var log = __webpack_require__(16);
+	var log = __webpack_require__(15);
 	log.init();
 
 	var source_trigger = __webpack_require__(13);
 	source_trigger.init();
 
-	var last_select = __webpack_require__(14);
-	last_select.init();
+	//var last_select = require("../common/last.select");
+	//last_select.init();
+
 
 /***/ },
 
@@ -55,41 +56,20 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 14:
+/***/ 15:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
-		var last_select = -1;
-		
-		try {
-
-		    last_select = localStorage.last_select >> 0; // jshint ignore:line
-			
-			var $sb = $('#select-business');
-			
-			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
-
-			$sb.on('change', function(){
-				localStorage.last_select = $sb.val();
-			});
-
-		} catch (ex) {}
-
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-
-/***/ 16:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {var dialog = __webpack_require__(26);
+	/* WEBPACK VAR INJECTION */(function($, _) {var dialog = __webpack_require__(26);
 	var Delegator = __webpack_require__(21);
 
 	var logTable = __webpack_require__(145);
 	var keyword = __webpack_require__(146);
 	var debar = __webpack_require__(147);
+	var offlineDialog = __webpack_require__(23);
 	var logDetailDialog = __webpack_require__(25);
+
+	var offlineLogCache = {};
+
 
 	var logConfig = {
 	        id: 0,
@@ -98,7 +78,7 @@ webpackJsonp([3],{
 	        include: [],
 	        exclude: [],
 	        index: 0,
-	        level: [1, 2, 4]
+	        level: [1, 2, 4 , 20]
 	    },
 
 	    encodeHtml = function(str) {
@@ -109,7 +89,6 @@ webpackJsonp([3],{
 	        return str.replace(/@/gi , '<br/><b style="color:#A78830;">@</b> ')
 	    };
 
-	var websocket;
 
 	var currentSelectId = -1,
 	    currentIndex = 0,
@@ -180,9 +159,9 @@ webpackJsonp([3],{
 	        }).on('click', 'removeDebar', function(e, value) {
 	            $(this).closest('.keyword-tag').remove();
 	            removeValue(value, logConfig.exclude);
-	        }).on('click', 'showLogs', function() {
-	            logConfig.id = $('#select-business').val() >> 0; // jshint ignore:line
-	            if (logConfig.id <= 0 || loading) {
+	        }).on('click', 'configOfflineMonitor', function(e, value) {
+
+	            if ( logConfig.id <= 0 ) {
 	                !loading && dialog({
 	                    header: '警告',
 	                    body: '请选择一个项目'
@@ -190,16 +169,75 @@ webpackJsonp([3],{
 	                return;
 	            }
 
-	            if (!$(this).data("stop")) {
-	                $(this).data("stop", true);
-	                $('#log-table').html('');
-	                startMonitor(logConfig.id);
-	                $(this).addClass("stop").text('停止监听');
-	            } else {
-	                $(this).data("stop", false);
-	                websocket.close();
-	                $(this).removeClass("stop").text('开始监听');
+	            offlineDialog(logConfig)
+
+
+	        }).on('click', 'showLogs', function() {
+	            var fileId = logConfig.fileId = $('#select-offline-logs').val(); // jshint ignore:line
+
+	            if(loading){
+	                return ;
 	            }
+
+	            if (logConfig.fileId <= 0 || logConfig.id <= 0 ) {
+	                !loading && dialog({
+	                    header: '警告',
+	                    body: '请选择一个离线日志'
+	                });
+	                return;
+	            }
+
+
+	            loading = true;
+	            $(".setting-search").text("正在加载...")
+
+	            if(offlineLogCache[fileId]){
+	                showLogs(offlineLogCache[fileId] , logConfig)
+	                $(".setting-search").text("查询日志");
+	                loading = false;
+	                return ;
+	            }
+
+	            var url = '/controller/logAction/showOfflineLog.do';
+	            $.ajax({
+	                url: url,
+	                data: {
+	                    id: logConfig.id,
+	                    fileId: fileId,
+	                },
+	                success : function (data){
+	                    loading = false;
+
+	                    $(".setting-search").text("查询日志")
+	                    var offlineLogs = JSON.parse(data.data);
+	                    var newLogs = []
+	                    offlineLogs.logs.forEach(function (item){
+	                        var  date = new Date(item.time);
+	                        item.userAgent = offlineLogs.userAgent;
+	                        item.date = _.formatDate(date , 'YYYY-MM-DD hh:mm:ss');
+	                        var all = "";
+	                        for(var key in item ) {
+	                            if(key == 'time'){
+	                                continue
+	                            }
+	                            all += ';'+key+'=' + item[key];
+	                        }
+	                        item.date = date;
+	                        item.all = all;
+	                        newLogs.push(item)
+	                    })
+
+	                    offlineLogCache[fileId] = newLogs
+
+	                    showLogs(offlineLogCache[fileId] , logConfig)
+	                },
+	                error : function (){
+
+	                }
+	            })
+
+
+
 
 	        })
 	        .on('click', 'alertModal', function(e, data) {
@@ -214,7 +252,6 @@ webpackJsonp([3],{
 	                agent : $target.siblings('.td-6').attr("title"),
 	                source :   $target.siblings('.td-7').html() ,
 	            })
-
 	        }).on('change', 'selectBusiness', function() {
 	            var val = $(this).val() - 0;
 	            currentSelectId = val;
@@ -222,6 +259,7 @@ webpackJsonp([3],{
 	            currentIndex = 0;
 	            noData = false;
 	            logConfig.id = val;
+	            fetchOfflineFile(val)
 	        }).on('click', 'showTd', function(e) {
 	            var $target=$(e.currentTarget).toggleClass('active');
 	            $('.main-table .'+$target.data('td')).toggleClass('active');
@@ -258,8 +296,15 @@ webpackJsonp([3],{
 	                logConfig.level.splice($.inArray(1, logConfig.level), 1);
 	                $(this).addClass('msg-dis');
 	            }
+	        }).on('click', 'offlineTypeClick', function() {
+	            if ($(this).hasClass('msg-dis')) {
+	                logConfig.level.push(20);
+	                $(this).removeClass('msg-dis');
+	            } else {
+	                logConfig.level.splice($.inArray(20, logConfig.level), 1);
+	                $(this).addClass('msg-dis');
+	            }
 	        });
-
 
 
 	}
@@ -272,90 +317,126 @@ webpackJsonp([3],{
 	    }
 	}
 
-	var keepAliveTimeoutId;
-	var currentIndex;
-	var maxShow = 100;
-	var startMonitor = function(id) {
 
-	    var host = location.host;
-	    if (host.indexOf(':') < 0) {
-	        host += ':8081';
+
+	function fetchOfflineFile (id){
+	    if(id == -1 || !id){
+	        $("#select-offline-logs").attr("disabled").html('<option value="-1">-- 选择离线日志 --</option>')
+	        return;
 	    }
-
-	    websocket = new WebSocket("ws://" + host + "/ws/realtimeLog");
-
-	    currentIndex = 0;
-	    websocket.onmessage = function(evt) {
-	        showLogs(JSON.parse(evt.data).message);
-	    };
-
-	    websocket.onclose = function() {
-	        clearTimeout(keepAliveTimeoutId);
-	    };
-
-	    websocket.onopen = function() {
-
-	        websocket.send(JSON.stringify({
-	            type: "INIT",
-	            include: logConfig.include,
-	            exclude: logConfig.exclude,
-	            level: logConfig.level,
-	            id: id
-	        }));
-
-	        keepAliveTimeoutId = setInterval(function() {
-	            websocket.send(JSON.stringify({
-	                type: "KEEPALIVE"
-	            }));
-	        }, 5000);
-	    };
-	};
+	    var url = '/controller/logAction/showOfflineFiles.do';
+	    $.ajax({
+	        url: url,
+	        data: {
+	            id: id,
+	        },
+	        success : function (data){
+	            if(data.data.length <= 0){
+	                $("#select-offline-logs").attr("disabled" , "disabled").html('<option value="-1">-- 无离线日志 --</option>')
+	            }else {
+	                $("#select-offline-logs").removeAttr("disabled").html("")
+	                $.each(data.data, function (key , item){
+	                    var arr = item.id.split("_");
+	                    var itemName = arr[0];
+	                    if(arr[2]  ){
+	                        var dateStr = _.formatDate(new Date(arr[2]-0) , 'YYYY-MM-DD');
+	                        itemName += " (" + dateStr +")";
+	                    }
 
 
-	function showLogs(data) {
+	                    $("#select-offline-logs").append('<option value="'+item.id +'">'+itemName+'</option>')
+	                })
+	            }
+	        },
+	        error : function (){
+
+	        }
+	    })
+	}
+
+	function showLogs(data , opt) {
+
+
+
+	    var includeJSON = [];
+	    opt.include.forEach(function(value, key) {
+	        includeJSON.push(value);
+	    });
+
+
+	    var excludeJSON = [];
+	    opt.exclude.forEach(function(value, key) {
+	        excludeJSON.push(value);
+	    });
+
+
+	    var newData = [];
+	    data.forEach(function (value){
+	        var matched = false;
+
+	        if($.inArray( value.level , opt.level ) == -1){
+	            return ;
+	        }
+	        if(includeJSON.length || excludeJSON.length){
+	            for(var i = 0 ; i < includeJSON.length ; i++){
+	                if(value.all.indexOf(includeJSON[i]) > -1){
+	                    matched = true;
+	                }
+	            }
+
+	            for(var i = 0 ; i < excludeJSON.length ; i++){
+	                if(value.all.indexOf(excludeJSON[i]) > -1){
+	                   matched = false;
+	                }else {
+	                    matched = true;
+	                }
+	            }
+	        }else  {
+	            matched = true;
+	        }
+
+	        if(matched){
+	            newData.push(value)
+	        }
+
+
+	    });
 
 	    var param = {
 	        encodeHtml: encodeHtml,
 	        set: Delegator.set,
-	        startIndex: currentIndex,
+	        startIndex: 1,
 	        formatMsg : formatMsg
 	    };
 
-	    var $table = $('#log-table');
-
-	    if (maxShow % 100 === 0) {
-	        $table.html($table.html().split("</tr>").slice(0, maxShow).join("</tr>"));
-	    }
-	    $table.prepend(logTable({
-	        it: [data],
-	        opt: param
+	    $('#log-table').html(logTable({
+	        it: newData,
+	        opt: param,
+	        classes: {
+	            'td-1':'active',
+	            'td-2':'active',
+	            'td-3':'active',
+	            'td-6':'active',
+	            'td-7':'active',
+	        }
 	    }));
-	    currentIndex++;
 	}
 
 	function init() {
 	    bindEvent();
 	    //读取用户偏好
-	    var items=$("#content .right-side .setting-show .item");
-	    window.classes={};
-	    //console.log(localStorage);
-	    for(var i=0;i<items.length;i++){
-	        var item=$(items[i]);
-	        if(localStorage.getItem(item.data("td"))==='true'){
-	            item.removeClass('active');
-	            $('.main-table .'+item.data('td')).removeClass('active');
-	            window.classes[item.data('td')]='';
-	        }else{
-	            window.classes[item.data('td')]='active';
-	        }
-	    }
+
+	    $('.main-table .td-4').removeClass('active');
+	    $('.main-table .td-5').removeClass('active');
+
+
 	    $('#content .mid-side .main-table thead tr').show();
 	    $('#content .right-side .setting-show').show();
 	}
 
 	exports.init = init;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ },
 
@@ -536,6 +617,124 @@ webpackJsonp([3],{
 	module.exports = Delegator;
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ },
+
+/***/ 23:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($, _) {var Delegator = __webpack_require__(21);
+	var offline_monitor_row = __webpack_require__(153);
+	var dialogTpl = __webpack_require__(154);
+
+	    var container;
+
+	    function hide() {
+	        container.removeClass('in');
+	        container.find('.modal-backdrop').removeClass('in');
+	        setTimeout(function () {
+	            container.remove();
+	            container = undefined;
+	        }, 300);
+	    }
+
+	    function showOfflineLogConfig(logConfig){
+	        $.ajax({
+	            url: "/controller/logAction/getOfflineLogConfig.do",
+	            data: {
+	                id: logConfig.id,
+	            },
+	            success : function (data){
+	                $("#offlineConfigModal table").html("")
+	                _.each(data.data , function (value ,key){
+	                    $("#offlineConfigModal table").append(offline_monitor_row({uin : key}))
+	                })
+	            },
+	            error : function (){
+
+	            }
+	        })
+	    }
+
+	    function Dialog (param) {
+	        if (container) {
+	            container.remove();
+	            container = undefined;
+	        }
+	        container = $(dialogTpl())
+	            .appendTo(document.body)
+	            .show();
+
+	        var key,
+	            action,
+	            delegator,
+	            on =  {};
+
+	        delegator = (new Delegator(container))
+	            .on('click', 'close', hide)
+	            .on('click', 'addUin', function (){
+	                var val = $("#addUin").val();
+
+	                if(val.length <=0){
+	                    return ;
+	                }
+	                $.ajax({
+	                    url: "/controller/logAction/addOfflineLogConfig.do",
+	                    data: {
+	                        uin: val,
+	                        id : param.id
+	                    },
+	                    success : function (data){
+	                        if(!data.data.hadAdd && data.ret == 0){
+	                            $("#offlineConfigModal table").append(offline_monitor_row({uin : val}))
+	                        }
+
+	                        $("#addUin").val("")
+	                    },
+	                    error : function (){
+
+	                    }
+	                })
+	            })
+	            .on('click', 'deleteUin', function (e){
+	                var val = $(e.currentTarget).attr("uin");
+
+	                if(val.length <=0){
+	                    return ;
+	                }
+	                $.ajax({
+	                    url: "/controller/logAction/deleteOfflineLogConfig.do",
+	                    data: {
+	                        uin: val,
+	                        id : param.id
+	                    },
+	                    success : function (){
+	                        $(e.currentTarget).parents("tr").remove();
+	                    },
+	                    error : function (){
+
+	                    }
+	                })
+	            });
+
+	        for (key in on) {
+	            action = key.split('/');
+	            delegator.on(action[0], action[1], on[key]);
+	        }
+
+	        setTimeout(function () {
+	            container.addClass('in');
+	            container.find('.modal-backdrop').addClass('in');
+
+	            showOfflineLogConfig(param);
+	        }, 0);
+	    }
+
+	    Dialog.hide = hide;
+
+	module.exports =  Dialog;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ },
 
@@ -862,6 +1061,40 @@ webpackJsonp([3],{
 	'<span class="keyword-del" data-event-click="removeDebar" data-event-data="' +
 	((__t = (opt.set(it.value))) == null ? '' : __t) +
 	'">x</span></a>';
+
+	}
+	return __p
+	}
+
+/***/ },
+
+/***/ 153:
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '<tr>\n    <td style="width:70%">' +
+	((__t = (uin)) == null ? '' : __t) +
+	'</td>\n    <td>监听中</td>\n    <td><a uin="' +
+	((__t = (uin)) == null ? '' : __t) +
+	'" data-event-click="deleteUin" href="javascript:;">删除</a></td>\n</tr>\n';
+
+	}
+	return __p
+	}
+
+/***/ },
+
+/***/ 154:
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="offlineConfigModal">\n    <div class="modal-backdrop fade"></div>\n    <div class="modal-dialog">\n        <div class="modal-content">\n\n            <div class="modal-header">\n                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" data-event-click="close">×</span><span class="sr-only">Close</span></button>\n                <h4 class="modal-title">设置离线日志自动拉取</h4>\n            </div>\n            <div class="modal-body">\n                <div class="form-group" style="text-align: center;">\n                    <input style="display: inline-block;width: 300px;" type="text" class="form-control" id="addUin" placeholder="添加监听的UIN">\n                    <button type="submit" class="btn btn-default" data-event-click="addUin">添加</button>\n                </div>\n                <div class="uin-list">\n                    <table class="table table-striped">\n                    </table>\n                </div>\n            </div>\n            <div class="modal-footer">\n                <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n            </div>\n\n        </div>\n    </div>\n</div>\n';
 
 	}
 	return __p

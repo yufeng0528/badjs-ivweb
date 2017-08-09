@@ -20,6 +20,19 @@ var ApplyService = function() {
 
 
 
+var logService = new LogService();
+var pushProject = function(from) {
+    logService.pushProject(function(err) {
+        if (err) {
+            logger.warn('push project  error ' + err);
+        } else {
+            logger.info('push project success from ' + from + ' .');
+        }
+    });
+}
+
+
+
 ApplyService.prototype = {
 
     queryListByAdmin: function(target, callback) {
@@ -112,17 +125,10 @@ ApplyService.prototype = {
 
                 });
 
-                var logService = new LogService();
+                pushProject('remove');
 
-                logService.pushProject(function(err) {
-                    if (err) {
-                        logger.warn('push project  error ' + err);
-                    } else {
-                        logger.info('push project success from remove .');
-                    }
                 });
 
-            });
         });
     },
     update: function(target, callback) {
@@ -140,6 +146,8 @@ ApplyService.prototype = {
                     ret: 0,
                     msg: "success update"
                 });
+                // update project.db
+                pushProject('update');
             });
         });
     },
