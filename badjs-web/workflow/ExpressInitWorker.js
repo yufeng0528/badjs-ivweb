@@ -8,7 +8,10 @@ var express = require('express')
     , app = express()
     , router = require('../controller/router')
     , compress = require('compression')
-    , orm = require('orm');
+    , orm = require('orm')
+    , pluginHandler = require('./PluginWorker')
+;
+ 
 
 
 var path = require("path");
@@ -67,6 +70,8 @@ app.use("/user" , function (req , res , next){
     }
 });
 
+
+
 app.use(function (err, req, res, next) {
     res.send(err.stack);
 });
@@ -74,7 +79,8 @@ app.use(function (err, req, res, next) {
 
 router(app);
 
-
+// 注册插件路由事件
+pluginHandler.registerRoute(app);
 
 var port = parseInt(GLOBAL.pjconfig.port, 10) || 80;
 module.exports = function (){

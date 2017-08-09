@@ -4,6 +4,8 @@ var workflow = require('./workflow.config.json'),
 
 var workflowPath = workflow.path;
 
+global.apiPath = __dirname + '/service/apis/ApiService.js';
+
 if(!workflowPath){
     workflowPath = "./"
 }
