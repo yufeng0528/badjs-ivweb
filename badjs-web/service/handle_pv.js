@@ -76,6 +76,8 @@ rl.on('close', () => {
             } else {
                 console.log(err);
             }
+
+            mdb.close();
         })
 
     });
