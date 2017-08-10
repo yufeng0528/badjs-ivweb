@@ -12,7 +12,7 @@ var LogAction = require('./action/LogAction'),
     ApproveAction = require("./action/ApproveAction"),
     realtimeService = require("../service/RealtimeService"),
     UserApplyAction = require("./action/UserApplyAction"),
-    pluginHandler = require('./PluginWorker');
+    pluginHandler = require('../workflow/PluginWorker');
 
 var _ = require("underscore");
 
@@ -43,7 +43,7 @@ module.exports = function(app){
 
     app.use('/login.html', function (req , res, next){
         if (pluginHandler.login) {
-            pluginHandler.login.check(req, res, next);
+            res.redirect('/user/index.html');
         } else {
             UserAction.login({}, req , res);
         }

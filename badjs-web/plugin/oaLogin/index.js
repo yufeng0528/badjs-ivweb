@@ -15,7 +15,7 @@ function check(req, res, next) {
     } else  {
         console.log('oalogin not login.')
 
-        redirect(res, 'https://login.oa.tencent.com/Connect/Authorize.ashx');
+        redirect(req, res, 'https://login.oa.tencent.com/Connect/Authorize.ashx');
 
     }
 
@@ -74,7 +74,7 @@ function doLogin(req, res, next) {
                 id : user.userId,
                 email : user.email,
                 loginName : user.name,
-                chineseName : user.name.
+                chineseName : user.name
             }
 
             next();
@@ -84,7 +84,7 @@ function doLogin(req, res, next) {
     }).catch(e => {
         if (e.retcode == 5) {
 
-            redirect(res, 'https://login.oa.tencent.com/Connect/Authorize.ashx')
+            redirect(req, res, 'https://login.oa.tencent.com/Connect/Authorize.ashx')
 
         } else {
             res.end(JSON.stringify(e));
@@ -99,12 +99,14 @@ function doLogin(req, res, next) {
 }
 
 function logout(req, res, next) {
-    redirect(res, 'https://login.oa.tencent.com/Modules/SignOut.ashx');
+    req.session.user = null;
+    redirect(req, res, 'https://login.oa.tencent.com/Modules/SignOut.ashx');
 }
 
-function redirect(res, url) {
+
+function redirect(req, res, url) {
     res.writeHead(302, {
-        'Location': url + '?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + req.originalUrl.split('?')[0])
+        'Location': url + '?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/user/index.html');
     })
     res.end();
 
