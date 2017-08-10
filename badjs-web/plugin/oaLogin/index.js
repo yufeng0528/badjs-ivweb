@@ -15,7 +15,7 @@ function check(req, res, next) {
     } else  {
 
         res.writeHead(302, {
-            'Location': 'https://login.oa.tencent.com/Connect/Authorize.ashx?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + req.url);
+            'Location': 'https://login.oa.tencent.com/Connect/Authorize.ashx?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + req.url)
         })
         res.end();
     }
@@ -30,7 +30,7 @@ function getOAUser(code) {
         const url = `https://now.qq.com/zxjg/cgi-bin/tofhander/?type=1&code=${code}`;
 
         http.get(url, res => {
-            const { statusCode } = res;
+            const statusCode = res.statusCode;
 
             if (statusCode !== 200) {
                 reject({code: statusCode});
@@ -97,7 +97,7 @@ function doLogin(req, res, next) {
 function logout(req, res, next) {
 
     res.writeHead(302, {
-        'Location': 'https://login.oa.tencent.com/Modules/SignOut.ashx?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + req.url);
+        'Location': 'https://login.oa.tencent.com/Modules/SignOut.ashx?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + req.url)
     })
     res.end();
 }
