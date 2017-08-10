@@ -30,7 +30,7 @@ function _getUserByName(name) {
                     userObj = data[0];
                     resolve({
                         userId: userObj.id,
-                        name: userObj.name,
+                        name: userObj.loginName,
                         role: userObj.role,
                         email: userObj.email
                     });

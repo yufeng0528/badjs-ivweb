@@ -5,19 +5,18 @@ const http = require('http');
 const Promise = require('bluebird');
 const api = require(global.apiPath);
 
-// 这里暂时用不到 
 function check(req, res, next) {
 
     if (req.session.user) {
         next();
     } else if (req.query.code) {
+        console.log('oalogin dologin.')
         doLogin(req, res, next);
     } else  {
+        console.log('oalogin not login.')
 
-        res.writeHead(302, {
-            'Location': 'https://login.oa.tencent.com/Connect/Authorize.ashx?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + req.url)
-        })
-        res.end();
+        redirect(res, 'https://login.oa.tencent.com/Connect/Authorize.ashx');
+
     }
 
 
@@ -27,7 +26,7 @@ function check(req, res, next) {
 function getOAUser(code) {
     return new Promise((resolve, reject) => {
 
-        const url = `https://now.qq.com/zxjg/cgi-bin/tofhander/?type=1&code=${code}`;
+        const url = `http://now.qq.com/zxjg/cgi-bin/tofhander/?type=1&code=${code}`;
 
         http.get(url, res => {
             const statusCode = res.statusCode;
@@ -52,7 +51,6 @@ function getOAUser(code) {
                     }
                 })
             }
-            resolve(res);
         }).on('error', e => {
             reject({msg: e});
         })
@@ -67,7 +65,7 @@ function doLogin(req, res, next) {
     getOAUser(code).then(data => {
         // 获得用户信息
 
-        return api.getUser(data.LoginName);
+        return api.getUser(data.data.LoginName);
     }).then(user => {
 
         if (user) {
@@ -75,8 +73,8 @@ function doLogin(req, res, next) {
                 role : user.role,
                 id : user.userId,
                 email : user.email,
-                loginName : data.loginName ,
-                chineseName : data.chineseName
+                loginName : user.name,
+                chineseName : user.name.
             }
 
             next();
@@ -84,7 +82,13 @@ function doLogin(req, res, next) {
             res.end('用户不存在，请联系系统管理员');
         }
     }).catch(e => {
-        res.end('系统异常');
+        if (e.retcode == 5) {
+
+            redirect(res, 'https://login.oa.tencent.com/Connect/Authorize.ashx')
+
+        } else {
+            res.end(JSON.stringify(e));
+        }
     })
     
 
@@ -95,13 +99,16 @@ function doLogin(req, res, next) {
 }
 
 function logout(req, res, next) {
-
-    res.writeHead(302, {
-        'Location': 'https://login.oa.tencent.com/Modules/SignOut.ashx?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + req.url)
-    })
-    res.end();
+    redirect(res, 'https://login.oa.tencent.com/Modules/SignOut.ashx');
 }
 
+function redirect(res, url) {
+    res.writeHead(302, {
+        'Location': url + '?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + req.originalUrl.split('?')[0])
+    })
+    res.end();
+
+}
 
 
 const login = {

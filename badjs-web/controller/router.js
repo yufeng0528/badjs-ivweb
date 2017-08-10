@@ -11,7 +11,8 @@ var LogAction = require('./action/LogAction'),
     StatisticsAction = require("./action/StatisticsAction"),
     ApproveAction = require("./action/ApproveAction"),
     realtimeService = require("../service/RealtimeService"),
-    UserApplyAction = require("./action/UserApplyAction");
+    UserApplyAction = require("./action/UserApplyAction"),
+    pluginHandler = require('./PluginWorker');
 
 var _ = require("underscore");
 
@@ -40,8 +41,12 @@ module.exports = function(app){
         IndexAction.index({} , req , res);
     } );
 
-    app.use('/login.html', function (req , res){
-        UserAction.login({}, req , res);
+    app.use('/login.html', function (req , res, next){
+        if (pluginHandler.login) {
+            pluginHandler.login.check(req, res, next);
+        } else {
+            UserAction.login({}, req , res);
+        }
     } );
 
     app.use('/register.html', function (req , res){
@@ -104,10 +109,14 @@ module.exports = function(app){
      * 登出
      * */
     app.get('/logout', function(req, res){
-        req.session.user = null;
-        var homeUrl = req.protocol + "://" + req.get('host') + '/index.html';
-        delete req.session.user;
-        res.redirect(homeUrl);
+        if (pluginHandler.login) {
+            pluginHandler.login.logout(req, res);
+        } else {
+            req.session.user = null;
+            var homeUrl = req.protocol + "://" + req.get('host') + '/index.html';
+            delete req.session.user;
+            res.redirect(homeUrl);
+        }
     });
 
 
