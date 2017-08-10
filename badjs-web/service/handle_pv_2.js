@@ -208,7 +208,7 @@ function sendMail(data) {
 
     var attachments =  ac;
 
-     mail('', 'herbertliu@tencent.com,kurtshen@tencent.com,lindazhu@tencent.com,linjianghe@tencent.com,linkzhu@tencent.com,richcao@tencent.com,ryanjschen@tencent.com,sampsonwang@tencent.com,seanxie@tencent.com,willliang@tencent.com,xuchenzhang@tencent.com,zhuoyingmo@tencent.com,lewischeng@tencent.com,adamhe@tencent.com,kevinyyang@tencent.com,jeremygao@tencent.com,jimmytian@tencent.com,qiuqiuqiu@tencent.com,bilibiliou@tencent.com', 'sampsonwang@tencent.com', 'IVWEB badjs质量评分日报', content.join(''), attachments);
+     mail('', 'herbertliu@tencent.com,kurtshen@tencent.com,lindazhu@tencent.com,linjianghe@tencent.com,linkzhu@tencent.com,richcao@tencent.com,ryanjschen@tencent.com,sampsonwang@tencent.com,seanxie@tencent.com,willliang@tencent.com,xuchenzhang@tencent.com,zhuoyingmo@tencent.com,lewischeng@tencent.com,adamhe@tencent.com,kevinyyang@tencent.com,jeremygao@tencent.com,jimmytian@tencent.com', 'sampsonwang@tencent.com', 'IVWEB badjs质量评分日报', content.join(''), attachments);
      // mail('', 'sampsonwang@tencent.com', 'sampsonwang@tencent.com', 'IVWEB badjs质量评分日报', content.join(''), attachments);
 
 }

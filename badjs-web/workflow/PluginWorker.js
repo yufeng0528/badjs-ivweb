@@ -17,7 +17,7 @@ const apiType = ['route'];
 // 插件的信息
 const list = [];
 let plugins = [];
-let pluginObj
+let pluginObj, login = {};
 
 dirs.forEach(item => {
 
@@ -28,6 +28,7 @@ dirs.forEach(item => {
 
 function handlePlugin(plugin) {
     getRoutePluginInfo(plugin);
+    getLoginPluginInfo(plugin);
 }
 
 function getRoutePluginInfo(plugin) {
@@ -45,6 +46,14 @@ function getRoutePluginInfo(plugin) {
 
         logger.info(`plugin: ${plugin.name}`);
 
+    }
+}
+
+function getLoginPluginInfo(plugin) {
+    if (plugin.login) {
+
+        login = plugin.login;
+        
     }
 }
 
@@ -80,7 +89,8 @@ function registerRoute(app) {
 
 module.exports = {
    getList,
-   registerRoute 
+   registerRoute,
+   login
 }
 
 

@@ -63,7 +63,12 @@ if(global.pjconfig.oos && global.pjconfig.oos.module){
 
 app.use("/user" , function (req , res , next){
     if(!req.session.user){
-        res.redirect(req.protocol + "://" + req.get('host') + '/login.html');
+
+        if (pluginHandler.login.doLogin) {
+            pluginHandler.login.doLogin(req, res, next);
+        } else {
+            res.redirect(req.protocol + "://" + req.get('host') + '/login.html');
+        }
         return ;
     } else {
         next();
