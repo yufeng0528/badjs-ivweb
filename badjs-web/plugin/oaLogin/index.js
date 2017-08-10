@@ -106,7 +106,7 @@ function logout(req, res, next) {
 
 function redirect(req, res, url) {
     res.writeHead(302, {
-        'Location': url + '?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/user/index.html');
+        'Location': url + '?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/user/index.html')
     })
     res.end();
 
