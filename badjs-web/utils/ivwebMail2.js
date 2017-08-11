@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   secure: true,
   auth: {  
     user: 'ivweb@ivweb.club',  
-    pass: 'wld8lIVWEB' 
+    pass: '' 
   }  
 });
 
