@@ -165,17 +165,20 @@ connect()
             'Content-Type': 'image/jpeg',
             'Connection': 'close'
         };
+        
+
+        var param = req.query;
+        if (req.method === "POST") {
+            param = req.body;
+        }
+
         // responseHeader end with 204
         responseHeader['Content-length'] = 0;
         res.writeHead(204, responseHeader);
 
         logger.debug('===== complete a message =====');
         res.end();
-
-        var param = req.query;
-        if (req.method === "POST") {
-            param = req.body;
-        }
+        
 
         var id = param.id - 0;
         if (isNaN(id) ||

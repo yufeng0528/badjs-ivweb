@@ -9,10 +9,12 @@ const whiteList = ['ivweb']
 
 function checkWhitelist(req, res) {
 
-    const username = req.body.form.username,
-    password = req.body.form.password;
+    if (req.body &&
+        req.body.username &&
+        whiteList.indexOf(req.body.username) > -1) {
 
-    if (whiteList.indexOf(username) > -1) {
+        const username = req.body.username;
+
         api.getUser(username).then(user => {
 
             if (user) {
@@ -23,13 +25,16 @@ function checkWhitelist(req, res) {
                     loginName : user.name,
                     chineseName : user.name
                 }
-                res.end('ok');
+                res.json({retcode: 0, msg:'ok'});
             } else {
-                res.end('no user');
+                res.json({retcode: 1, msg:'no user'});
             }
+        }).catch(e => {
+            res.json(e);
         })
+
         return true;
-    } esle {
+    } else {
         return false;
     }
 }
