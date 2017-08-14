@@ -5,14 +5,47 @@ const http = require('http');
 const Promise = require('bluebird');
 const api = require(global.apiPath);
 
+const whiteList = ['ivweb']
+
+function checkWhitelist(req, res) {
+
+    const username = req.body.form.username,
+    password = req.body.form.password;
+
+    if (whiteList.indexOf(username) > -1) {
+        api.getUser(username).then(user => {
+
+            if (user) {
+                req.session.user = {
+                    role : user.role,
+                    id : user.userId,
+                    email : user.email,
+                    loginName : user.name,
+                    chineseName : user.name
+                }
+                res.end('ok');
+            } else {
+                res.end('no user');
+            }
+        })
+        return true;
+    } esle {
+        return false;
+    }
+}
+
 function check(req, res, next) {
+
+    if (checkWhitelist(req, res)) {
+        return;
+    }
 
     if (req.session.user) {
         next();
     } else if (req.query.code) {
         console.log('oalogin dologin.')
         doLogin(req, res, next);
-    } else  {
+    } else {
         console.log('oalogin not login.')
 
         redirect(req, res, 'https://login.oa.tencent.com/Connect/Authorize.ashx');

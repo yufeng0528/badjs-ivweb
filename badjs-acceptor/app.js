@@ -165,6 +165,12 @@ connect()
             'Content-Type': 'image/jpeg',
             'Connection': 'close'
         };
+        // responseHeader end with 204
+        responseHeader['Content-length'] = 0;
+        res.writeHead(204, responseHeader);
+
+        logger.debug('===== complete a message =====');
+        res.end();
 
         var param = req.query;
         if (req.method === "POST") {
@@ -187,6 +193,7 @@ connect()
         param.id = id;
 
         try {
+            console.log(param)
             interceptor.invoke({
                 req: req,
                 data: param
@@ -203,12 +210,6 @@ connect()
             return;
         }
 
-        // responseHeader end with 204
-        responseHeader['Content-length'] = 0;
-        res.writeHead(204, responseHeader);
-
-        logger.debug('===== complete a message =====');
-        res.end();
     })
     //.use('/offlineLog', connect.bodyParser())
     .use('/offlineLog', function(req, res) {
