@@ -26,8 +26,6 @@ global.pjconfig = {
         "from": "noreply-badjs@demo.com",
         "emailSuffix" : "@demo.com",
         "smtp": "smtp.demo.com",
-        "smtpUser":   "username", 
-        "smtpPassword":"password",
         "time": "09:00:00",
         "top": 20,
         "module": "ivwebMail"
