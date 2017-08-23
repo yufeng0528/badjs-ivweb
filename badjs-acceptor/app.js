@@ -172,13 +172,6 @@ connect()
             param = req.body;
         }
 
-        // responseHeader end with 204
-        responseHeader['Content-length'] = 0;
-        res.writeHead(204, responseHeader);
-
-        logger.debug('===== complete a message =====');
-        res.end();
-        
 
         var id = param.id - 0;
         if (isNaN(id) ||
@@ -196,7 +189,6 @@ connect()
         param.id = id;
 
         try {
-            console.log(param)
             interceptor.invoke({
                 req: req,
                 data: param
@@ -212,6 +204,14 @@ connect()
             logger.debug('id ' +  param.id +' , interceptor reject :' + req.throwError);
             return;
         }
+
+        // responseHeader end with 204
+        responseHeader['Content-length'] = 0;
+        res.writeHead(204, responseHeader);
+
+        logger.debug('===== complete a message =====');
+        res.end();
+        
 
     })
     //.use('/offlineLog', connect.bodyParser())

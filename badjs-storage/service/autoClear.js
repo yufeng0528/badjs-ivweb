@@ -55,7 +55,12 @@ module.exports = function (){
         afterDate.setDate(afterDate.getDate()+1);
         afterDate.setHours(04);
 
-       // autoClearStart();
+        /*
+        setTimeout(() => {
+
+            autoClearStart();
+        }, 5000);
+        */
 
 
         var afterTimestamp = afterDate - new Date ;
@@ -64,9 +69,9 @@ module.exports = function (){
 
         var start = function (){
             autoClearStart();
-            setTimeout(function (){
+            setInterval(function (){
                 autoClearStart();
-            } , 86400000 * maxAge );
+            } , 86400000);
         };
 
         setTimeout(function (){
