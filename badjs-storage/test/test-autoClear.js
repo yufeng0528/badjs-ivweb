@@ -4,11 +4,19 @@
 
 var MongoClient = require('mongodb').MongoClient;
 
-global.MONGDO_URL = "mongodb://localhost:27017/badjs";
+global.MONGODB = { 
+    url : "mongodb://localhost:27017/badjs",
+}
+
+global.pjconfig = {
+    maxAge: 5
+}
 
 
 
- require('./autoClear');
+ var clear = require('./../service/autoClear');
+
+ clear();
 
 
 

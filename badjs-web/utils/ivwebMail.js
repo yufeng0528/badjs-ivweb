@@ -5,14 +5,16 @@ const Promise = require('bluebird')
 const log4js = require('log4js');
 const logger = log4js.getLogger();
 
+const emailConf = global.pjconfig.email;
+
 
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
   service: 'qq',  
   auth: {  
-    user: '2580575484@qq.com',  
-    pass: '' 
+    user: emailConf.ivwebMailuser,  
+    pass: emailConf.ivwebMailpass
   }  
 });
 

@@ -189,7 +189,6 @@ connect()
         param.id = id;
 
         try {
-            console.log(param)
             interceptor.invoke({
                 req: req,
                 data: param
