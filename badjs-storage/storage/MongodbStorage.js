@@ -27,12 +27,13 @@ var tryInit = function (db , collectionName , cb){
 
     hadCreatedCollection[collectionName] = "ping";
     db.createCollection(collectionName , function (err , collection){
-        collection.indexExists('date_-1_level_1' , function (errForIE , result ){
+        collection.indexExists('$**_text' , function (errForIE , result ){
+
             if(errForIE){
                 throw errForIE;
             }
             if(!result){
-                collection.createIndex( {date : -1 , level : 1 } , function (errForCI){
+                collection.createIndexes( [{"$**": "text" }, {"date": -1, "level": 1}] , function (errForCI){
                     if(errForCI){
                         throw errForCI;
                     }
@@ -74,7 +75,7 @@ var insertDocuments = function(db , model) {
             model.model
         ] , function (err , result){
             if( global.debug){
-                logger.debug("save one log : " + JSON.stringify(model.model));
+               logger.debug("save one log : " + JSON.stringify(model.model));
             }
         });
     })
@@ -134,12 +135,13 @@ module.exports = function (){
        var id = data.id;
        delete data.id;
 
+/*
        var all = '';
        for(var key in data ) {
             all += ';'+key+'=' + data[key];
        }
        data.all = all;
-       data.date = new Date(data.date);
+*/
 
 
        insertDocuments(mongoDB , {id : id,
