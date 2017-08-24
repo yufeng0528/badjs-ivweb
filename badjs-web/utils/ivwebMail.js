@@ -1,9 +1,11 @@
 
 'use strict';
+const path = require('path')
 const nodemailer = require('nodemailer');
 const Promise = require('bluebird')
 const log4js = require('log4js');
 const logger = log4js.getLogger();
+global.pjconfig = require(path.join(__dirname, '../project.json'))
 
 const emailConf = global.pjconfig.email;
 
