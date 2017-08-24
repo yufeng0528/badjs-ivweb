@@ -33,30 +33,36 @@ var tryInit = function (db , collectionName , cb){
                 throw errForIE;
             }
             if(!result){
-                collection.createIndexes( [{"msg": "text", 'from': 'text', 'uin': 'text', 'ip': 'text' , 'userAgent': 'text'}, {"date": -1, "level": 1}] , function (errForCI){
-                    if(errForCI){
-                        throw errForCI;
-                    }
-                    if (global.MONGODB.isShard){
-                        adminMongoDB.command({
-                            shardcollection: "badjs." + collectionName,
-                            key: {_id: "hashed"}
-                        }, function (errForShard, info) {
-                            if (errForShard) {
-                                throw errForShard;
-                            } else {
-                                logger.info(collectionName + " shard correctly");
-                                cb(null , collection);
-                                hadCreatedCollection[collectionName] = true;
 
-                            }
-                        });
-                    }else {
-                        cb(null , collection);
-                        hadCreatedCollection[collectionName] = true;
-                    }
+                collection.createIndex( {"$**": 'text'} , function (errForCI2){
+					if(errForCI2){
+						throw errForCI2;
+					}
+					collection.createIndex( {"date": -1, "level": 1} , function (errForCI){
+						if(errForCI){
+							throw errForCI;
+						}
+						if (global.MONGODB.isShard){
+							adminMongoDB.command({
+								shardcollection: "badjs." + collectionName,
+								key: {_id: "hashed"}
+							}, function (errForShard, info) {
+								if (errForShard) {
+									throw errForShard;
+								} else {
+									logger.info(collectionName + " shard correctly");
+									cb(null , collection);
+									hadCreatedCollection[collectionName] = true;
 
-                });
+								}
+							});
+						}else {
+							cb(null , collection);
+							hadCreatedCollection[collectionName] = true;
+						}
+
+					});
+				});
             }else {
                 cb(null , collection);
                 hadCreatedCollection[collectionName] = true;
