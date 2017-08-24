@@ -33,7 +33,7 @@ var tryInit = function (db , collectionName , cb){
                 throw errForIE;
             }
             if(!result){
-                collection.createIndexes( [{"$**": "text" }, {"date": -1, "level": 1}] , function (errForCI){
+                collection.createIndexes( [{"msg": "text", 'from': 'text', 'uin': 'text', 'ip': 'text' , 'userAgent': 'text'}, {"date": -1, "level": 1}] , function (errForCI){
                     if(errForCI){
                         throw errForCI;
                     }
