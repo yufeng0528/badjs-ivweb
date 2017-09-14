@@ -1,11 +1,10 @@
 
-[安装](#install)
+[安装](#安装)
 
 
 
-# <span id="install">安装</span>
-badjs 快捷安装模块
 
+# badjs 快捷安装模块
 
 #### 依赖以下组件：
 - node.js
