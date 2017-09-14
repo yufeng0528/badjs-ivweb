@@ -1,9 +1,9 @@
-# badjs 升级
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/gogoday/track/master/upgrade/upgrade.sh?v=1)"
-```
 
-# badjs-installer
+[安装](#install)
+
+
+
+# <span id="install">安装</span>
 badjs 快捷安装模块
 
 
@@ -35,3 +35,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/BetterJS/badjs-installer/m
 ```bat
 TODO
 ```
+
+# 升级
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/gogoday/track/master/upgrade/upgrade.sh?v=1)"
+```
+
+
