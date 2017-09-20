@@ -1,5 +1,10 @@
-# badjs-installer
-badjs 快捷安装模块
+
+[安装](#安装)
+
+
+
+
+# badjs 快捷安装模块
 
 #### 依赖以下组件：
 - node.js
@@ -23,8 +28,16 @@ docker run -i -d -p 80:80 -p 8081:8081 docker.io/caihuijigood/badjs-docker bash 
 复制这行代码到命令行执行
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/BetterJS/badjs-installer/master/install.sh)"
+
 ```
 ## Windows 安装
 ```bat
 TODO
 ```
+
+# 升级
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/gogoday/track/master/upgrade/upgrade.sh?v=1)"
+```
+
+
