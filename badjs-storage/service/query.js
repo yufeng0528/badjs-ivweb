@@ -268,26 +268,33 @@ module.exports = function() {
                 startDate = json.startDate.getTime(),
                 endDate = json.endDate.getTime();
 
-            var queryJSON = {};
+            var queryJSON = {
+                all: {}
+            };
 
             var includeJSON = [];
-            var text = [];
-
             json.include.forEach(function(value, key) {
-
-				value = '\"' + value + '\"';
-				text.push(value);
-
+                includeJSON.push(new RegExp(value));
             });
 
+            if (includeJSON.length > 0) {
+                queryJSON.all.$all = includeJSON;
+            }
+
+            var excludeJSON = [];
             json.exclude.forEach(function(value, key) {
-
-                if (value.indexOf(/\s/) > -1) {
-				    value = '\"' + value + '\"';
-				}
-				text.push('-' + value);
+                excludeJSON.push(new RegExp(value));
             });
 
+            if (excludeJSON.length > 0) {
+                queryJSON.all.$not = {
+                    $in: excludeJSON
+                };
+            }
+
+            if (includeJSON.length <= 0 && excludeJSON.length <= 0) {
+                delete queryJSON.all;
+            }
 
             json.level.forEach(function(value, key) {
                 json.level[key] = value - 0;
@@ -304,33 +311,36 @@ module.exports = function() {
                 $in: json.level
             };
 
-
             if (json.index - 0) {
                 json.index = (json.index - 0);
             } else {
                 json.index = 0;
             }
 
-			if (text.length > 0) {
-			    queryJSON.$text = {$search: text.join(' ')};
-			}
-
-
-            if( global.debug){
+            if (global.debug) {
                 logger.debug("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
             }
+            logger.info("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
+
+            mongoDB.collection('badjslog_' + id).find(queryJSON, function(error, cursor) {
+                res.writeHead(200, {
+                    'Content-Type': 'text/json'
+                });
+
+                cursor.sort({
+                        'date': -1
+                    })
+                    .skip(json.index * LIMIT)
+                    .limit(LIMIT)
+                    .toArray(function(err, item) {
+                        res.write(JSON.stringify(item));
+                        res.end();
+
+                    });
 
 
-            mongoDB.collection('badjslog_' + id).find(queryJSON)
-				.sort({"date": -1})
-				.skip(json.index * LIMIT)
-				.limit(LIMIT)
-			    .toArray((err, docs) => {
+            });
 
-					res.write(JSON.stringify(docs));
-					res.end();
-				})
-					
 
         })
         .use('/errorMsgTop', connect.query())
@@ -409,4 +419,3 @@ module.exports = function() {
 
     logger.info('query server start ok , listen '  + GLOBAL.pjconfig.port);
 };
-

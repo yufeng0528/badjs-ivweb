@@ -38,7 +38,7 @@ function getScoreData(param, db) {
 
 function getApplyList(db) {
     return new Promise((resolve, reject) => {
-        var sql = "select * from b_apply;";
+        var sql = "select * from b_apply where status=1;";
         db.driver.execQuery(sql, (err, data) => {
             resolve(data)
             })

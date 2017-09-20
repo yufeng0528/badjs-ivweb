@@ -215,7 +215,7 @@ connect()
 
     })
     //.use('/offlineLog', connect.bodyParser())
-    .use('/offlineLog', function(req, res) {
+    .use('/badjs/offlineLog', function(req, res) {
 
         // 大于 10ms , forbidden
         if(parseInt(req.headers['content-length']) > 10485760){
@@ -259,8 +259,8 @@ connect()
         })
 
     })
-    .use('/offlineAuto', connect.query())
-    .use('/offlineAuto', function(req, res) {
+    .use('/badjs/offlineAuto', connect.query())
+    .use('/badjs/offlineAuto', function(req, res) {
         var param = req.query;
 
         http.get( global.pjconfig.offline.offlineLogCheck + "?id="+param.id +"&uin="+ param.uin , function (clientRes){

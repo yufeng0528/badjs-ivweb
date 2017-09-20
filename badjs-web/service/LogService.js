@@ -47,7 +47,7 @@ LogService.prototype = {
             }
         }
         strParams += '_=1';
-        logger.debug('query param : ' + strParams);
+        logger.info('query param : ' + strParams);
         http.get(this.queryUrl + '?' + strParams, function(res) {
             var buffer = '';
             res.on('data', function(chunk) {
