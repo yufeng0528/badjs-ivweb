@@ -231,3 +231,5 @@ badjs-web/static/scoreimg/
 #############
 .idea/
 badjs-installer
+%*
+offline_log
