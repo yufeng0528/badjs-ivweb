@@ -1,140 +1,100 @@
+'use strict';
 var moment = require('moment');
+var Promise = require('bluebird');
+const getBaseScore = require('../lib/getScore.js');
 
-const orm = require('orm');
+/**
+ * 得到红黑榜分数
+     红黑榜加减分规则
+     100 < badjs评分 < 80 ：-1分
+     80 < badjs评分 < 50 ：-2分
+     50 < badjs评分 ：-3分
+    每人当月最多扣 5分
+    badjs评分 == 100 业务负责人 ： 每个业务 +1分
+    每人当月最多 + 5 分
+ */
+function getScore(db) {
 
-var pv = {}, pvlist = [], badjsid;
+    return new Promise((resolve, reject) => {
 
-var mysqlUrl  = 'mysql://root:root@localhost:3306/badjs';
+        let html = [],
+            hhScoreData = [];
+        let d = moment().subtract(7, 'days').format('YYYYMMDD');
 
-var getYesterday = function() {
-    var date = new Date();
-    date.setDate(date.getDate() - 1);
-    date.setHours(0, 0, 0, 0);
-    return date;
-};
-
-var getYesterdayForPv = function() {
-    var y = getYesterday();
-    return moment(y.getTime()).format('YYYYMMDD');
-};
-
-
-var mysqlUrl  = 'mysql://root:root@localhost:3306/badjs';
-
-var mdb = orm.connect(mysqlUrl, function(err, db){
-
-    var pv = db.define("b_pv", {
-        id          : Number,
-        badjsid          : Number,
-        pv          : Number,
-        date          : Number
-    });
-
-    var param = {
+        // scoreData 加上用户id 和 rtx名
         
-        date: getYesterdayForPv()
-    }
-    console.log(param)
+        //let sql = 'select badjsid, AVG(rate) as rate, AVG(pv) as pv, AVG(badjscount) as badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010 group by q.badjsid;';
+        //let sql = 'select q.badjsid, q.rate, q.pv, q.badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010;';
+        let sql = 'select badjsid, sum(pv) as pv, sum(badjscount) as badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>'+d+' group by q.badjsid;';
 
-    pv.find(param, function(err, items) {
-        if (!err) {
-            console.log('ok')
+        db.driver.execQuery(sql, (err, data) => {
 
-            console.log(JSON.stringify(items))
+            let hhScoreByRtx = {};
 
-            // 插入score
-            createScore(db, items);
-        } else {
-            console.log(err);
-        }
-    })
-
-})
-
-// pvlist pv的元数据
-function createScore(db, pvlist) {
-
-    var Statistics = db.define('b_statistics',  {
-        id: Number,
-        projectId: Number, 
-        startDate : Date,
-        endDate : Date,
-        content: String,
-        total : Number
-    });
-
-    var param = {
-        startDate: getYesterday()
-    };
-
-    console.log(param);
-
-    Statistics.find(param, (err, data) => {
-
-	    var scoreList = [];
-
-        if (err) {
-            console.log('error')
-            console.log(err)
-        } else {
-
- //           console.log(data[0].startDate)
-  //          return;
-        // data 所有的项目
             data.forEach(item => {
+                item.score = getBaseScore.handleScore(item.pv, item.badjscount) - 0;
 
-                var proId  = item.projectId,
-                badjsTotal = item.total,
-                pv = 0, score = 0;
+                if (item.score == 100) {
+                    item.hhScore = 1;
+                } else if (item.score >= 80) {
+                    item.hhScore = -1;
+                } else if (item .score >= 50) {
+                    item.hhScore = -2;
+                } else {
+                    item.hhScore = -3;
+                }
 
-                pvlist.forEach(item => {
-                    if (item.badjsid == proId) {
-                        
-                        pv = item.pv;
-                    }
-                })
-                console.log(pv)
-                //score = scoreLib.handleScore(pv, badjsTotal)
-                console.log(`badjsid: ${proId}, badjsTotal: ${badjsTotal}, pv: ${pv}, date: ${getYesterdayForPv()}`)
+                if (!hhScoreByRtx[item.userName]) {
+                    hhScoreByRtx[item.userName] = [];
+                }
 
-                if (pv > 0) {
-                    score = ((badjsTotal / pv) * 100).toFixed(5);
-                } 
-
-                scoreList.push({
-                    badjsid: proId,
-                    rate: score,
-                    pv: pv,
-                    badjscount: badjsTotal,
-                    date: getYesterdayForPv() 
-                });
-            })
-
-
-            console.log(scoreList);
-
-            var Quality = db.define('b_quality',  {
-                id: Number,
-                badjsid: Number, 
-                rate: String,
-                pv: Number,
-                badjscount: Number,
-                date : Number
+                hhScoreByRtx[item.userName].push(item);
             });
 
-            Quality.create(scoreList, function(err, data) {
-                mdb.close();
-                if (!err) {
-                    console.log('ok')
+            //console.log(hhScoreByRtx);
 
+            for(let i in hhScoreByRtx) {
 
+                let item = {
+                    plusScore: 0,
+                    cutScore: 0
+                };
+                item.userName = i;
+                hhScoreByRtx[i].forEach(score_item => {
+
+                    if (score_item.hhScore=== 1) {
+                        item.plusScore += 1;
+                        if (item.plusScore > 5) {
+                            item.plusScore = 5
+                        }
+                        
+                    } else {
+                        item.cutScore += score_item.hhScore;
+                        if (item.cutScore < -5) {
+                            item.cutScore = -5;
+                        }
+
+                    }
+                })
+                hhScoreData.push(item);
+            }
+
+            hhScoreData.sort((a, b) => {
+                if (a.cutScore < b.cutScore) {
+                    return 1;
+                } else if (a.cutScore < b.cutScore) {
+                    return -1;
                 } else {
-                    console.log(err);
+                    return 0;
                 }
             })
-
+            //console.log(hhScoreData);
             
-        }
+
+
+            resolve(_render(hhScoreData));
+
+        })
 
     })
 
@@ -142,4 +102,39 @@ function createScore(db, pvlist) {
 }
 
 
+function _render(data) {
+
+    let html = [];
+
+    html.push();
+    html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 20px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
+    html.push('<h4>最近7天红黑榜加减分</h4>')
+    html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>用户</th><th>加分</th><th>减分</th></tr>');
+    data.forEach(item => {
+        html.push('<tr>');
+        html.push(`<td>${item.userName}</td>`);
+        html.push(`<td>${item.plusScore}</td>`);
+        html.push(`<td>${item.cutScore}</td>`);
+        html.push('</tr>');
+    })
+    html.push('</table>');
+	html.push('<p>红黑榜加减分规则</p> <div>100 < badjs评分 < 80 ：-1分</div> <div>80 < badjs评分 < 50 ：-2分</div> <div>50 < badjs评分 ：-3分</div> <div>每人当月最多扣 5分</div> <div>badjs评分 == 100 业务负责人 ： 每个业务 +1分</div> <div>每人当月最多 + 5 分</div>');
+    return html.join('');
+}
+
+/*
+function test() {
+    const orm = require('orm');
+    var mysqlUrl  = 'mysql://root:root@localhost:3306/badjs';
+    var mdb = orm.connect(mysqlUrl, function(err, db){
+        getScore(db).then(data => {
+            console.log(data);
+        })
+    })
+}
+
+test();
+*/
+
+module.exports = getScore
 

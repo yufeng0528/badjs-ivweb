@@ -4,6 +4,7 @@ const getImgLib = require('../lib/getImg.js');
 const moment = require('moment');
 const getScore = require('../lib/getScore.js');
 const path = require('path')
+const hhScore = require('./handle-hongheibang.js');
 
 const mail = require("../utils/ivwebMail.js");
 
@@ -52,11 +53,13 @@ function handleScorePic(Score, db, closeCallback) {
     var param = getScoreParam(Score),
         getScore_pro = getScoreData(param, db),
         getApply_pro = getApplyList(db),
+        gethhScore = hhScore(db),
         perCount = 8; 
 
     // 拿到数据
-    Promise.all([getScore_pro, getApply_pro]).then(data => {
+    Promise.all([getScore_pro, getApply_pro, gethhScore]).then(data => {
         var scoreData = data[0],
+            hhd = data[2],
         applyList = data[1];
 
         var applyMap = {};
@@ -163,6 +166,9 @@ function handleScorePic(Score, db, closeCallback) {
         html.push('</table>');
 
 	    html.push('<p>注：badjs得分规则</p> <p>（1）当报错率 <= 0.5%： badjs得分=100</p> <p>（2）当 0.5%< 报错率 < 10%：badjs得分： 100 - 10 * 报错率</p> <p>（3）当报错率 >= 10%： badjs得分=0</p>');
+
+        html.push(hhd);
+
         return [html.join(''), arrData[1]];
 
         
