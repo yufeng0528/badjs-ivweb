@@ -214,7 +214,10 @@ EmailService.prototype = {
                             startDate: that.date
                         }, function(err, data) {
                             if (err) return logger.error('Send email statisticsService queryById error ' + applyId);
-                            if (data && data.length > 0) {
+
+                            if (data && data.length > 0 && data[0].content && data[0].content.length > 0) {
+
+
                                 that.statisticsService.queryByChart({
                                     projectId: applyId,
                                     timeScope: 2
@@ -297,6 +300,12 @@ EmailService.prototype = {
             that.queryAll();
         }, timeDiff);
         logger.info('Email service will start after: ' + timeDiff);
+    },
+    test_start: function() {
+        this.queryAll(false, {
+sendToList: ['sampsonwang@tencent.com']
+                });
+        logger.info('test Email service start');
     }
 };
 
