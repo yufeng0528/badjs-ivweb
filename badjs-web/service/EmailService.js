@@ -301,6 +301,12 @@ EmailService.prototype = {
             that.queryAll();
         }, timeDiff);
         logger.info('Email service will start after: ' + timeDiff);
+    },
+    test_start: function() {
+        this.queryAll(false, {
+sendToList: ['sampsonwang@tencent.com']
+                });
+        logger.info('test Email service start');
     }
 };
 

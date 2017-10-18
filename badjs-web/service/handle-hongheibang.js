@@ -89,8 +89,6 @@ function getScore(db) {
                 }
             })
             //console.log(hhScoreData);
-            
-
 
             resolve(_render(hhScoreData));
 
@@ -131,10 +129,6 @@ function test() {
             console.log(data);
         })
     })
-}
-
-test();
 */
 
 module.exports = getScore
-
