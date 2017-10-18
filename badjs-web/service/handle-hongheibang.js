@@ -81,14 +81,14 @@ function getScore(db) {
 
             hhScoreData.sort((a, b) => {
                 if (a.cutScore < b.cutScore) {
-                    return 1;
-                } else if (a.cutScore < b.cutScore) {
                     return -1;
+                } else if (a.cutScore > b.cutScore) {
+                    return 1;
                 } else {
                     return 0;
                 }
             })
-            //console.log(hhScoreData);
+            console.log(hhScoreData);
 
             resolve(_render(hhScoreData));
 
@@ -107,7 +107,7 @@ function _render(data) {
     html.push();
     html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 20px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
     html.push('<h4>最近7天红黑榜加减分</h4>')
-    html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>用户</th><th>加分</th><th>减分</th></tr>');
+    html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>rtx</th><th>加分</th><th>减分</th></tr>');
     data.forEach(item => {
         html.push('<tr>');
         html.push(`<td>${item.userName}</td>`);
@@ -129,6 +129,9 @@ function test() {
             console.log(data);
         })
     })
+
+}   
+test();
 */
 
 module.exports = getScore

@@ -54,13 +54,15 @@ function handleScorePic(Score, db, closeCallback) {
         getScore_pro = getScoreData(param, db),
         getApply_pro = getApplyList(db),
         gethhScore = hhScore(db),
+        hhd = '',
         perCount = 8; 
 
     // 拿到数据
     Promise.all([getScore_pro, getApply_pro, gethhScore]).then(data => {
         var scoreData = data[0],
-            hhd = data[2],
         applyList = data[1];
+
+        hhd = data[2];
 
         var applyMap = {};
         applyList.forEach(item => {
