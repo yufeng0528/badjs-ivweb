@@ -208,13 +208,17 @@ EmailService.prototype = {
                             }
                             cc_list = [];
                         }
+
+                        // 处理业务数据
                         that.statisticsService.queryById({
                             top: that.top,
                             projectId: applyId,
                             startDate: that.date
                         }, function(err, data) {
                             if (err) return logger.error('Send email statisticsService queryById error ' + applyId);
-                            if (data && data.length > 0) {
+
+                            if (data && data.length > 0 && data[0].content && data[0].content.length > 0) {
+
                                 that.statisticsService.queryByChart({
                                     projectId: applyId,
                                     timeScope: 2
@@ -239,12 +243,12 @@ EmailService.prototype = {
                                                 } else {
                                                     var imagePath = "static/img/tmp/" + (new Date - 0 + applyId) + ".png";
                                                     fs.writeFile(path.join(__dirname, "..", imagePath), new Buffer(image, 'base64'), function() {
-							that.sendEmail({
-							    to: to_list,
-							    cc: cc_list,
-							    title: name,
-							    imagePath: imagePath
-							}, data[0], applyId);
+                                                        that.sendEmail({
+                                                            to: to_list,
+                                                            cc: cc_list,
+                                                            title: name,
+                                                            imagePath: imagePath
+                                                        }, data[0], applyId);
                                                     });
                                                 }
                                             });

@@ -40,7 +40,7 @@ module.exports = function(app){
     app.get('/user/index.html', function (req , res){
         IndexAction.index({} , req , res);
     } );
-
+/*
     app.use('/login.html', function (req , res, next){
         if (pluginHandler.login) {
             res.redirect('/user/index.html');
@@ -48,7 +48,7 @@ module.exports = function(app){
             UserAction.login({}, req , res);
         }
     } );
-
+*/
     app.use('/register.html', function (req , res){
         UserAction.register({}, req , res);
     } );
