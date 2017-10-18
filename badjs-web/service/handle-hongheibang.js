@@ -136,4 +136,3 @@ function test() {
 test();
 
 module.exports = getScore
-
