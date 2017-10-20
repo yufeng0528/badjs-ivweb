@@ -25,7 +25,7 @@ function getScore(db) {
         
         //let sql = 'select badjsid, AVG(rate) as rate, AVG(pv) as pv, AVG(badjscount) as badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010 group by q.badjsid;';
         //let sql = 'select q.badjsid, q.rate, q.pv, q.badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010;';
-        let sql = 'select q.badjsid, sum(q.pv) as pv, sum(q.badjscount) as badjscount, a.userName, a.name, a.limitpv from b_quality as q, b_apply as a where q.badjsid=a.id and a.online=2 and q.pv>a.limitpv and q.date>'+d+' group by q.badjsid;';
+        let sql = 'select q.badjsid, sum(q.pv) as pv, sum(q.badjscount) as badjscount, a.userName, a.name, a.limitpv from b_quality as q, b_apply as a where q.badjsid=a.id and a.status=1 and a.status=1 and a.online=2 and q.pv>a.limitpv and q.date>'+d+' group by q.badjsid;';
 
         db.driver.execQuery(sql, (err, data) => {
 
@@ -81,6 +81,7 @@ function getScore(db) {
                         }
 
                     }
+                    item.detail = hhScoreByRtx[i];
                 })
                 hhScoreData.push(item);
             }
@@ -94,10 +95,8 @@ function getScore(db) {
                     return 0;
                 }
             })
-            console.log(hhScoreData);
 
-
-            resolve([_render(hhScoreData), _renderDetail(hhScoreByRtx)]);
+            resolve(_render(hhScoreData));
 
         })
 
@@ -114,47 +113,34 @@ function _render(data) {
     html.push();
     html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 2px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
     html.push('<h4>最近10天红黑榜加减分</h4>')
-    html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>rtx</th><th>加分</th><th>减分</th></tr>');
+    html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>rtx</th><th>加分</th><th>减分</th><td>badjs id</td><th>项目名称</th><th>总pv</th><th>总badjs</th><th>错误率</th><th>评分</th><th>加减分</th></tr>');
     data.forEach(item => {
-        html.push('<tr>');
-        html.push(`<td>${item.userName}</td>`);
-        html.push(`<td>${item.plusScore}</td>`);
-        html.push(`<td>${item.cutScore}</td>`);
+
+        item.detail.forEach((detail_item, n) => {})
+
+            let rate = ((detail_item.badjscount / detail_item.pv) * 100).toFixed(2) + '%';
+
+            html.push('<tr>');
+
+            if (n == 0) {
+                html.push(`<td rowspan="${item.detail.length}">${item.userName}</td>`);
+                html.push(`<td rowspan="${item.detail.length}">${item.plusScore}</td>`);
+                html.push(`<td rowspan="${item.detail.length}">${item.cutScore}</td>`);
+            }
+
+            html.push(`<td>${detail_item.badjsid}</td>`);
+            html.push(`<td>${detail_item.name}</td>`);
+            html.push(`<td>${detail_item.pv}</td>`);
+            html.push(`<td>${detail_item.badjscount}</td>`);
+            html.push(`<td>${rate}</td>`);
+            html.push(`<td>${detail_item.score}</td>`);
+            html.push(`<td>${detail_item.hhScore}</td>`);
+            html.push('</tr>');
+
         html.push('</tr>');
     })
     html.push('</table>');
-	html.push('<p>红黑榜加减分规则</p> <div>100 < badjs评分 < 80 ：-1分</div> <div>80 < badjs评分 < 50 ：-2分</div> <div>50 < badjs评分 ：-3分</div> <div>每人当月最多扣 5分</div> <div>badjs评分 == 100 业务负责人 ： 每个业务 +1分</div> <div>每人当月最多 + 5 分</div>');
-    return html.join('');
-}
-
-function _renderDetail(data) {
-
-    let html = [];
-
-    html.push();
-    html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 2px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
-    html.push('<h4>最近10天项目评分明细</h4>')
-    html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>rtx</th><td>badjs id</td><th>项目名称</th><th>总pv</th><th>总badjs</th><th>错误率</th><th>评分</th><th>加减分</th></tr>');
-    for(let i in data) {
-        let item_rtx = data[i];
-
-        html.push('<tr>');
-        html.push(`<td colspan="8">${item.userName}</td>`);
-
-        item_rtx.forEach(item => {
-            let rate = (item.badjscount / item.pv).toFixed(5);
-            html.push('<tr>');
-            html.push(`<td>${item.badjsid}</td>`);
-            html.push(`<td>${item.name}</td>`);
-            html.push(`<td>${item.pv}</td>`);
-            html.push(`<td>${item.badjscount}</td>`);
-            html.push(`<td>${rate}</td>`);
-            html.push(`<td>${item.score}</td>`);
-            html.push(`<td>${item.hhScore}</td>`);
-            html.push('</tr>');
-        })
-    }
-    html.push('</table>');
+	html.push('<p>红黑榜加减分规则</p> <div>100 > badjs评分 > 80 ：-1分</div> <div>80 > badjs评分 > 50 ：-2分</div> <div>50 > badjs评分 ：-3分</div> <div>每人当月最多扣 5分</div> <div>badjs评分 == 100 业务负责人 ： 每个业务 +1分</div> <div>每人当月最多 + 5 分</div>');
     return html.join('');
 }
 

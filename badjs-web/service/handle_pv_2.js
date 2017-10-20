@@ -21,7 +21,7 @@ function getScoreParam(Score) {
 function getScoreData(param, db) {
 
     return new Promise((resolve, reject) => {
-        var sql = "select s.*, a.name from b_quality as s, b_apply as a where s.badjsid=a.id and s.pv>0 and s.date>" + param.date + " order by s.date;";
+        var sql = "select s.*, a.name from b_quality as s, b_apply as a where s.badjsid=a.id and a.status=1 and s.pv>0 and s.date>" + param.date + " order by s.date;";
         db.driver.execQuery(sql, (err, data) => {
             resolve(data);
 
