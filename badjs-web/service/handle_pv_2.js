@@ -149,7 +149,7 @@ function handleScorePic(Score, db, closeCallback) {
 
         var html = [];
         html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
-        html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>业务名称</th><th>负责人</th><th>评分</th><th>错误率</th><th>pv</th><th>badjs错误量</th><th>日期</th></tr>');
+        html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>业务名称</th><th>负责人</th><th>评分</th><th>错误率</th><th>pv</th><th>badjs错误量</th><td>上线</th><th>设定pv</td><th>日期</th></tr>');
         applyList.forEach(item => {
 
             html.push('<tr>');
@@ -158,7 +158,7 @@ function handleScorePic(Score, db, closeCallback) {
 
             html.push(`<td>${item.score > 100 ? '-' : item.score}</td>`);
 
-            ['rate', 'pv', 'badjscount', 'date'].forEach(item2 => {
+            ['rate', 'pv', 'badjscount','online', 'limitpv', 'date'].forEach(item2 => {
                 html.push(`<td>${item[item2] !== undefined ? item[item2] : '-'}</td>`);
             })
 
@@ -173,11 +173,11 @@ function handleScorePic(Score, db, closeCallback) {
 
         return [html.join(''), arrData[1]];
 
-        
+       console.log(html.join(''));
 
     }).then( (data) => {
         setTimeout(() => {
-             sendMail(data);
+         //    sendMail(data);
         }, 5000)
     })
 }

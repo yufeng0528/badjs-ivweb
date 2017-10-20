@@ -1,15 +1,15 @@
-webpackJsonp([8],{
+webpackJsonp([6],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var projectTotal = __webpack_require__(17);
+	var projectTotal = __webpack_require__(18);
 
 	projectTotal.init();
 
 /***/ },
 
-/***/ 17:
+/***/ 18:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {/* global _ */
@@ -18,11 +18,11 @@ webpackJsonp([8],{
 	 * @author coverguo
 	 *
 	 */
-	__webpack_require__(22);
-	__webpack_require__(27);
-	__webpack_require__(28);
-	var Dialog = __webpack_require__(26);
-	var statisticsTpl = __webpack_require__(150);
+	__webpack_require__(23);
+	__webpack_require__(142);
+	__webpack_require__(143);
+	var Dialog = __webpack_require__(141);
+	var statisticsTpl = __webpack_require__(151);
 
 	var dayNumber = 0,
 	    days = [];
@@ -334,7 +334,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 22:
+/***/ 23:
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -2193,7 +2193,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 26:
+/***/ 141:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
@@ -2245,7 +2245,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 27:
+/***/ 142:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {/*
@@ -2558,7 +2558,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 28:
+/***/ 143:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2661,7 +2661,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 150:
+/***/ 151:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {module.exports = function (obj) {

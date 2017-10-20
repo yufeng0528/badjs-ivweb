@@ -19,15 +19,21 @@ function getScore(db) {
 
         let html = [],
             hhScoreData = [];
-        let d = moment().subtract(7, 'days').format('YYYYMMDD');
+        let d = moment().subtract(10, 'days').format('YYYYMMDD');
 
         // scoreData 加上用户id 和 rtx名
         
         //let sql = 'select badjsid, AVG(rate) as rate, AVG(pv) as pv, AVG(badjscount) as badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010 group by q.badjsid;';
         //let sql = 'select q.badjsid, q.rate, q.pv, q.badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010;';
-        let sql = 'select badjsid, sum(pv) as pv, sum(badjscount) as badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>'+d+' group by q.badjsid;';
+        let sql = 'select q.badjsid, sum(q.pv) as pv, sum(q.badjscount) as badjscount, a.userName, a.name, a.limitpv from b_quality as q, b_apply as a where q.badjsid=a.id and a.online=2 and q.pv>a.limitpv and q.date>'+d+' group by q.badjsid;';
 
         db.driver.execQuery(sql, (err, data) => {
+
+            if (err) {
+                console.log('获取红黑榜数据时有问题');
+                console.error(err);
+                return;
+            }
 
             let hhScoreByRtx = {};
 
@@ -51,7 +57,7 @@ function getScore(db) {
                 hhScoreByRtx[item.userName].push(item);
             });
 
-            //console.log(hhScoreByRtx);
+            console.log(hhScoreByRtx);
 
             for(let i in hhScoreByRtx) {
 
@@ -90,7 +96,8 @@ function getScore(db) {
             })
             console.log(hhScoreData);
 
-            resolve(_render(hhScoreData));
+
+            resolve([_render(hhScoreData), _renderDetail(hhScoreByRtx)]);
 
         })
 
@@ -105,8 +112,8 @@ function _render(data) {
     let html = [];
 
     html.push();
-    html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 20px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
-    html.push('<h4>最近7天红黑榜加减分</h4>')
+    html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 2px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
+    html.push('<h4>最近10天红黑榜加减分</h4>')
     html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>rtx</th><th>加分</th><th>减分</th></tr>');
     data.forEach(item => {
         html.push('<tr>');
@@ -120,18 +127,48 @@ function _render(data) {
     return html.join('');
 }
 
-/*
+function _renderDetail(data) {
+
+    let html = [];
+
+    html.push();
+    html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 2px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
+    html.push('<h4>最近10天项目评分明细</h4>')
+    html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>rtx</th><td>badjs id</td><th>项目名称</th><th>总pv</th><th>总badjs</th><th>错误率</th><th>评分</th><th>加减分</th></tr>');
+    for(let i in data) {
+        let item_rtx = data[i];
+
+        html.push('<tr>');
+        html.push(`<td colspan="8">${item.userName}</td>`);
+
+        item_rtx.forEach(item => {
+            let rate = (item.badjscount / item.pv).toFixed(5);
+            html.push('<tr>');
+            html.push(`<td>${item.badjsid}</td>`);
+            html.push(`<td>${item.name}</td>`);
+            html.push(`<td>${item.pv}</td>`);
+            html.push(`<td>${item.badjscount}</td>`);
+            html.push(`<td>${rate}</td>`);
+            html.push(`<td>${item.score}</td>`);
+            html.push(`<td>${item.hhScore}</td>`);
+            html.push('</tr>');
+        })
+    }
+    html.push('</table>');
+    return html.join('');
+}
+
 function test() {
     const orm = require('orm');
     var mysqlUrl  = 'mysql://root:root@localhost:3306/badjs';
     var mdb = orm.connect(mysqlUrl, function(err, db){
-        getScore(db).then(data => {
+        getScore(db).then((data) => {
             console.log(data);
         })
     })
 
 }   
+
 test();
-*/
 
 module.exports = getScore

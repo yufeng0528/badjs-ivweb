@@ -3,15 +3,15 @@ webpackJsonp([7],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var statistics = __webpack_require__(18);
+	var statistics = __webpack_require__(16);
 	statistics.init();
 
-	var last_select = __webpack_require__(14);
+	var last_select = __webpack_require__(13);
 	last_select.init();
 
 /***/ },
 
-/***/ 14:
+/***/ 13:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
@@ -36,7 +36,7 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 18:
+/***/ 16:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -45,9 +45,9 @@ webpackJsonp([7],{
 	 * */
 
 
-	__webpack_require__(22);
-	var Dialog = __webpack_require__(26);
-	var statisticsTpl = __webpack_require__(151);
+	__webpack_require__(23);
+	var Dialog = __webpack_require__(141);
+	var statisticsTpl = __webpack_require__(148);
 	var scoreLib = __webpack_require__(24)
 
 	var encodeHtml = function (str) {
@@ -288,7 +288,7 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 22:
+/***/ 23:
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -2150,7 +2150,16 @@ webpackJsonp([7],{
 /***/ 24:
 /***/ function(module, exports, __webpack_require__) {
 
-	
+	/**
+	 注：badjs得分规则
+
+	（1）当报错率 <= 0.5%： badjs得分=100
+
+	（2）当 0.5%< 报错率 < 10%：badjs得分： 100 - 10 * 报错率
+
+	（3）当报错率 >= 10%： badjs得分=0
+	 */
+
 	var handleScore = function (pv, e_pv) {
 	    
 	    // 算分
@@ -2174,7 +2183,7 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 26:
+/***/ 141:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
@@ -2226,7 +2235,7 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 151:
+/***/ 148:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {module.exports = function (obj) {
