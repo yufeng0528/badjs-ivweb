@@ -19,7 +19,7 @@ function getScore(db) {
 
         let html = [],
             hhScoreData = [];
-        let d = moment().subtract(10, 'days').format('YYYYMMDD');
+        let d = moment().subtract(7, 'days').format('YYYYMMDD');
 
         // scoreData 加上用户id 和 rtx名
         
@@ -112,11 +112,11 @@ function _render(data) {
 
     html.push();
     html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 2px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
-    html.push('<h4>最近10天红黑榜加减分</h4>')
+    html.push('<h4>最近7天红黑榜加减分</h4>')
     html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>rtx</th><th>加分</th><th>减分</th><td>badjs id</td><th>项目名称</th><th>总pv</th><th>总badjs</th><th>错误率</th><th>评分</th><th>加减分</th></tr>');
     data.forEach(item => {
 
-        item.detail.forEach((detail_item, n) => {})
+        item.detail.forEach((detail_item, n) => {
 
             let rate = ((detail_item.badjscount / detail_item.pv) * 100).toFixed(2) + '%';
 
@@ -136,8 +136,9 @@ function _render(data) {
             html.push(`<td>${detail_item.score}</td>`);
             html.push(`<td>${detail_item.hhScore}</td>`);
             html.push('</tr>');
+        })
 
-        html.push('</tr>');
+
     })
     html.push('</table>');
 	html.push('<p>红黑榜加减分规则</p> <div>100 > badjs评分 > 80 ：-1分</div> <div>80 > badjs评分 > 50 ：-2分</div> <div>50 > badjs评分 ：-3分</div> <div>每人当月最多扣 5分</div> <div>badjs评分 == 100 业务负责人 ： 每个业务 +1分</div> <div>每人当月最多 + 5 分</div>');
@@ -155,6 +156,7 @@ function test() {
 
 }   
 
-test();
+//test();
+
 
 module.exports = getScore

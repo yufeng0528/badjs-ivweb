@@ -147,6 +147,18 @@ function handleScorePic(Score, db, closeCallback) {
 
         // console.log(JSON.stringify(applyList));
 
+        applyList = applyList.sort((a, b) => {
+
+            if (a.online< b.online) {
+                return -1;
+            } else if (a.online > b.online) {
+                return 1;
+            } else {
+                return 0;
+            }
+           
+        })
+
         var html = [];
         html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
         html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>业务名称</th><th>负责人</th><th>评分</th><th>错误率</th><th>pv</th><th>badjs错误量</th><td>上线</th><th>设定pv</td><th>日期</th></tr>');
@@ -157,6 +169,8 @@ function handleScorePic(Score, db, closeCallback) {
             html.push(`<td>${item.userName}</td>`);
 
             html.push(`<td>${item.score > 100 ? '-' : item.score}</td>`);
+
+            item.online = item.online == 2 ? '上线' : '下线';
 
             ['rate', 'pv', 'badjscount','online', 'limitpv', 'date'].forEach(item2 => {
                 html.push(`<td>${item[item2] !== undefined ? item[item2] : '-'}</td>`);
@@ -171,13 +185,14 @@ function handleScorePic(Score, db, closeCallback) {
 
         html.push(hhd);
 
+        // console.log(html.join(''));
+
         return [html.join(''), arrData[1]];
 
-       console.log(html.join(''));
 
     }).then( (data) => {
         setTimeout(() => {
-         //    sendMail(data);
+            sendMail(data);
         }, 5000)
     })
 }
@@ -216,7 +231,7 @@ function sendMail(data) {
 
     var attachments =  ac;
 
-     mail('', 'herbertliu@tencent.com,kurtshen@tencent.com,lindazhu@tencent.com,linjianghe@tencent.com,linkzhu@tencent.com,richcao@tencent.com,ryanjschen@tencent.com,sampsonwang@tencent.com,seanxie@tencent.com,willliang@tencent.com,xuchenzhang@tencent.com,zhuoyingmo@tencent.com,lewischeng@tencent.com,adamhe@tencent.com,kevinyyang@tencent.com,jeremygao@tencent.com,jimmytian@tencent.com', 'sampsonwang@tencent.com', 'IVWEB badjs质量评分日报', content.join(''), attachments);
+     mail('', 'herbertliu@tencent.com,kurtshen@tencent.com,lindazhu@tencent.com,linjianghe@tencent.com,linkzhu@tencent.com,richcao@tencent.com,ryanjschen@tencent.com,sampsonwang@tencent.com,seanxie@tencent.com,willliang@tencent.com,xuchenzhang@tencent.com,zhuoyingmo@tencent.com,lewischeng@tencent.com,adamhe@tencent.com,kevinyyang@tencent.com,jeremygao@tencent.com,jimmytian@tencent.com', '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
      // mail('', 'sampsonwang@tencent.com', 'sampsonwang@tencent.com', 'IVWEB badjs质量评分日报', content.join(''), attachments);
 
 }
