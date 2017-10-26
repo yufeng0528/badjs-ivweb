@@ -142,22 +142,18 @@ function handleScorePic(Score, db, closeCallback) {
                     return 0;
                 }
             }
-           
         })
-
-        // console.log(JSON.stringify(applyList));
 
         applyList = applyList.sort((a, b) => {
-
-            if (a.online< b.online) {
+            if (a.online > b.online) {
                 return -1;
-            } else if (a.online > b.online) {
+            } else if (a.online < b.online) {
                 return 1;
             } else {
-                return 0;
+               return 0;
             }
-           
         })
+
 
         var html = [];
         html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
@@ -185,7 +181,7 @@ function handleScorePic(Score, db, closeCallback) {
 
         html.push(hhd);
 
-        // console.log(html.join(''));
+        //console.log(html.join(''));
 
         return [html.join(''), arrData[1]];
 
