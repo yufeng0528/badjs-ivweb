@@ -144,15 +144,16 @@ function handleScorePic(Score, db, closeCallback) {
             }
         })
 
-        applyList = applyList.sort((a, b) => {
-            if (a.online > b.online) {
-                return -1;
-            } else if (a.online < b.online) {
-                return 1;
-            } else {
-               return 0;
-            }
+        var applyList_offline = [];
+        applyList = applyList.filter( item => {
+             if (item.online == 2) {
+                 return true;
+             } else {
+                 applyList_offline.push(item);
+             }
         })
+
+        applyList = applyList.concat(applyList_offline);
 
 
         var html = [];
