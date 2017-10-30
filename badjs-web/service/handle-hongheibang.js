@@ -113,7 +113,7 @@ function _render(data) {
     html.push();
     html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2; padding: 2px 2px;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
     html.push('<h4>最近7天红黑榜加减分</h4>')
-    html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>rtx</th><th>加分</th><th>减分</th><td>badjs id</td><th>项目名称</th><th>总pv</th><th>总badjs</th><th>错误率</th><th>评分</th><th>加减分</th></tr>');
+    html.push('<table border="1" cellspacing="0" cellpadding="0"><tr><th>rtx</th><th>加分</th><th>减分</th><td>badjs id</td><th>项目名称</th><th>总pv</th><th>总badjs</th><th>错误率</th><th>评分</th><th>加减分</th></tr>');
     data.forEach(item => {
 
         item.detail.forEach((detail_item, n) => {

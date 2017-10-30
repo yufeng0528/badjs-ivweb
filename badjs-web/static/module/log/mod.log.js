@@ -28,7 +28,7 @@ var logConfig = {
         return str.replace(/@/gi , '<br/><b style="color:#A78830">@</b> ')
     };
 
-var maxDate = 60 * 60 * 1000 * 24 * 2;
+var maxDate = 60 * 60 * 1000 * 6;
 
 var currentSelectId = -1,
     currentIndex = 0,
