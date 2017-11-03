@@ -1,4 +1,0 @@
-{
-    "auth": "https://login.oa.tencent.com/Connect/Authorize.ashx",
-    "logout": "https://login.oa.tencent.com/Modules/SignOut.ashx"
-}
