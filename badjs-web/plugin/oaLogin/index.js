@@ -4,7 +4,7 @@
 const http = require('http');
 const Promise = require('bluebird');
 const api = require(global.apiPath);
-const config = require('config.json')
+const config = require('./config.json')
 
 const whiteList = ['ivweb']
 
