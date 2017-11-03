@@ -21,7 +21,7 @@ var EmailService = function() {
     this.userService = new UserService();
     this.statisticsService = new StatisticsService();
     this.top = parseInt(global.pjconfig.email.top, 10) || 20;
-    this.from = global.pjconfig.email.from || "noreply-badjs@tencent.com";
+    this.from = global.pjconfig.email.from || "xx@xx.com";
     this.homepage = global.pjconfig.email.homepage;
     this.host = global.pjconfig.host;
 };
@@ -304,8 +304,8 @@ EmailService.prototype = {
     },
     test_start: function() {
         this.queryAll(false, {
-sendToList: ['sampsonwang@tencent.com']
-                });
+            sendToList: ['xx@xx.com']
+        });
         logger.info('test Email service start');
     }
 };

@@ -36,8 +36,8 @@ module.exports = (from, to, cc, title, content, attachments) => {
       mailOptions.attachments = attachments;
   }
   
- mailOptions.to = 'sampsonwang@tencent.com';
- mailOptions.cc = 'sampsonwang@tencent.com';
+ mailOptions.to = 'x@x.com';
+ mailOptions.cc = 'x@x.com';
 
  console.log(mailOptions);
 

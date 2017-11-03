@@ -6,6 +6,8 @@ const getScore = require('../lib/getScore.js');
 const path = require('path')
 const hhScore = require('./handle-hongheibang.js');
 
+const pjConfig = require('../project.json');
+
 const mail = require("../utils/ivwebMail.js");
 
 function getScoreParam(Score) {
@@ -228,8 +230,9 @@ function sendMail(data) {
 
     var attachments =  ac;
 
-     mail('', 'herbertliu@tencent.com,kurtshen@tencent.com,lindazhu@tencent.com,linjianghe@tencent.com,linkzhu@tencent.com,richcao@tencent.com,ryanjschen@tencent.com,sampsonwang@tencent.com,seanxie@tencent.com,willliang@tencent.com,xuchenzhang@tencent.com,zhuoyingmo@tencent.com,lewischeng@tencent.com,adamhe@tencent.com,kevinyyang@tencent.com,jeremygao@tencent.com,jimmytian@tencent.com', '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
-     // mail('', 'sampsonwang@tencent.com', 'sampsonwang@tencent.com', 'IVWEB badjs质量评分日报', content.join(''), attachments);
+     mail('', pjConfig.scoreMailTo, '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
+
+     // mail('', 'xx@xx.com', 'xx@xx.com', 'IVWEB badjs质量评分日报', content.join(''), attachments);
 
 }
 

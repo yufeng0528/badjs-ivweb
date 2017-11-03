@@ -19,7 +19,7 @@ orm.connect(GLOBAL.pjconfig.mysql.url, function(err, db) {
     var emailService = new EmailService;
     emailService.queryAll(undefined, {
         sendId: 991,
-        sendToList: ['chriscai@tencent.com', 'kaelyang@tencent.com'],
+        sendToList: ['xx@xx.com', 'xx@xx.com'],
         sendCcList: []
     });
 

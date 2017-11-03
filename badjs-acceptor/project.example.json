@@ -21,6 +21,6 @@
     ],
     "blackList" :{
         "ip" : [ "999.9.9.9" , "999.9.*" ,  "999.9.*.*"],
-        "ua": ["Baiduspider" , "Tencent_Security_Team" ]
+        "ua": ["Baiduspider" , "*_Security_Team" ]
     }
 }

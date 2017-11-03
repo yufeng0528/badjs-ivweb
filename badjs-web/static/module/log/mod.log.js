@@ -28,7 +28,7 @@ var logConfig = {
         return str.replace(/@/gi , '<br/><b style="color:#A78830">@</b> ')
     };
 
-var maxDate = 60 * 60 * 1000 * 6;
+var maxDate = 60 * 60 * 1000 * 24 * 2;
 
 var currentSelectId = -1,
     currentIndex = 0,
@@ -305,7 +305,7 @@ function init() {
         format: 'YYYY-MM-DD HH:mm'
     }).data("DateTimePicker").setMaxDate(new Date());
 
-    $('#startTime').data("DateTimePicker").setDate(new Date(new Date() - maxDate));
+    $('#startTime').data("DateTimePicker").setDate(new Date(new Date() - 6 * 60 * 60 * 1000));
     $('#endTime').data("DateTimePicker").setDate(new Date());
 }
 

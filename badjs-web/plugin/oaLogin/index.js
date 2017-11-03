@@ -4,6 +4,7 @@
 const http = require('http');
 const Promise = require('bluebird');
 const api = require(global.apiPath);
+const config = require('config.json')
 
 const whiteList = ['ivweb']
 
@@ -53,7 +54,7 @@ function check(req, res, next) {
     } else {
         console.log('oalogin not login.')
 
-        redirect(req, res, 'https://login.oa.tencent.com/Connect/Authorize.ashx');
+        redirect(req, res, config.auth);
 
     }
 
@@ -122,7 +123,7 @@ function doLogin(req, res, next) {
     }).catch(e => {
         if (e.retcode == 5) {
 
-            redirect(req, res, 'https://login.oa.tencent.com/Connect/Authorize.ashx')
+            redirect(req, res, config.auth)
 
         } else {
             res.end(JSON.stringify(e));
@@ -138,7 +139,7 @@ function doLogin(req, res, next) {
 
 function logout(req, res, next) {
     req.session.user = null;
-    redirect(req, res, 'https://login.oa.tencent.com/Modules/SignOut.ashx');
+    redirect(req, res, config.logout);
 }
 
 

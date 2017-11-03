@@ -41,8 +41,8 @@ module.exports = (from, to, cc, title, content, attachments) => {
     }
 
     // console.log(content);
-     // _mailOptions.to = 'sampsonwang@tencent.com';
-     // _mailOptions.cc = 'sampsonwang@tencent.com';
+     // _mailOptions.to = 'xx@x.com';
+     // _mailOptions.cc = 'x@x.com';
 
     console.log(_mailOptions);
 
