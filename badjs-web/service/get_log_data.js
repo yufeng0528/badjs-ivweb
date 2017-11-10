@@ -1,6 +1,6 @@
-`use strict`;
-var moment = require(`moment`);
-var Promise = require(`bluebird`);
+'use strict';
+var moment = require('moment');
+var Promise = require('bluebird');
 
 /**
  */
@@ -8,10 +8,10 @@ function getLogData(db) {
 
     return new Promise((resolve, reject) => {
 
-        let html = [],
-        let d = moment().subtract(7, `days`).format(`YYYYMMDD`);
+        let html = [];
+        let d = moment().subtract(7, 'days').format('YYYYMMDD');
 
-        let sql = `select * rom b_log_data where date>=${d};`;
+        let sql = `select * from b_log_data where date>=${d};`;
 
         db.driver.execQuery(sql, (err, data) => {
 
@@ -39,11 +39,11 @@ function _render(data) {
         html.push(`</tr>`);
     })
     html.push(`</table>`);
-    return html.join(``);
+    return html.join('');
 }
 
 function test() {
-    const orm = require(`orm`);
+    const orm = require('orm');
     var mysqlUrl  = `mysql://root:root@localhost:3306/badjs`;
     var mdb = orm.connect(mysqlUrl, function(err, db){
         getLogData(db).then((data) => {
