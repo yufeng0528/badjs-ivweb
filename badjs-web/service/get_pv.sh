@@ -4,7 +4,7 @@
 # read nginx access log file
 
 logs_path="/data/data2/nginx_log/access/"
-logs_path_log="/data/data2/nginx_log/access/"
+logs_path_log="/data/data2/nginx_log/logaccess/"
 
 logs_file=${logs_path}access_$(date -d "yesterday" +"%Y%m%d").log
 

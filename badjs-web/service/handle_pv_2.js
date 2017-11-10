@@ -5,6 +5,7 @@ const moment = require('moment');
 const getScore = require('../lib/getScore.js');
 const path = require('path')
 const hhScore = require('./handle-hongheibang.js');
+const getLogDataInt = require('./get_log_data.js');
 
 const pjConfig = require('../project.json');
 
@@ -56,15 +57,18 @@ function handleScorePic(Score, db, closeCallback) {
         getScore_pro = getScoreData(param, db),
         getApply_pro = getApplyList(db),
         gethhScore = hhScore(db),
+        getLogData = getLogDataInt(db),
         hhd = '',
+        logdata = '',
         perCount = 8; 
 
     // 拿到数据
-    Promise.all([getScore_pro, getApply_pro, gethhScore]).then(data => {
+    Promise.all([getScore_pro, getApply_pro, gethhScore, getLogData]).then(data => {
         var scoreData = data[0],
         applyList = data[1];
 
         hhd = data[2];
+        logdata = data[3];
 
         var applyMap = {};
         applyList.forEach(item => {
@@ -183,6 +187,7 @@ function handleScorePic(Score, db, closeCallback) {
 	    html.push('<p>注：badjs得分规则</p> <p>（1）当报错率 <= 0.5%： badjs得分=100</p> <p>（2）当 0.5%< 报错率 < 10%：badjs得分： 100 - 10 * 报错率</p> <p>（3）当报错率 >= 10%： badjs得分=0</p>');
 
         html.push(hhd);
+        html.push(logdata);
 
         //console.log(html.join(''));
 
