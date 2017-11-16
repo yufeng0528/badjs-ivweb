@@ -152,7 +152,7 @@ function handleScorePic(Score, db, closeCallback) {
 
         var applyList_offline = [];
         applyList = applyList.filter( item => {
-             if (item.online == 2 || item.limitpv > item.pv) {
+             if (item.online == 2 && item.pv > 0 && item.limitpv < item.pv) {
                  return true;
              } else {
                  applyList_offline.push(item);
