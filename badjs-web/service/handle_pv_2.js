@@ -127,7 +127,7 @@ function handleScorePic(Score, db, closeCallback) {
             }
         })
 
-
+        // sort by pv
         applyList = applyList.map(item => {
             if (item.score === undefined) 
                 item.score = 110;
@@ -152,7 +152,7 @@ function handleScorePic(Score, db, closeCallback) {
 
         var applyList_offline = [];
         applyList = applyList.filter( item => {
-             if (item.online == 2) {
+             if (item.online == 2 || item.limitpv > item.pv) {
                  return true;
              } else {
                  applyList_offline.push(item);
