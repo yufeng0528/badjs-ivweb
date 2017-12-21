@@ -61,7 +61,6 @@ function getScore(db) {
                 hhScoreByRtx[item.userName].push(item);
             });
 
-
             console.log(hhScoreByRtx);
 
             for(let i in hhScoreByRtx) {

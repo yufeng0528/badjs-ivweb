@@ -3,6 +3,7 @@
  */
 
 var MongoClient = require('mongodb').MongoClient,
+    http = require('http'),
     map = require('map-stream');
 
 var log4js = require('log4js'),
@@ -75,6 +76,12 @@ var insertDocuments = function(db , model) {
         ] , function (err , result){
             if( global.debug){
                 logger.debug("save one log : " + JSON.stringify(model.model));
+            }
+
+            if (err) {
+                errorNum ++; 
+            } else {
+                count ++;
             }
         });
     })
@@ -152,3 +159,13 @@ module.exports = function (){
 
     });
 }
+
+var count = 0, errorNum = 0;
+http.createServer((req, res) => {
+   res.end(`${count},${errorNum}`);
+   count = 0;
+   errorNum = 0;
+}).listen(2002, () => {
+    console.log('report server listen at 2002.');
+});
+
