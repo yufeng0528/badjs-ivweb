@@ -25,7 +25,9 @@ function getScore(db) {
         
         //let sql = 'select badjsid, AVG(rate) as rate, AVG(pv) as pv, AVG(badjscount) as badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010 group by q.badjsid;';
         //let sql = 'select q.badjsid, q.rate, q.pv, q.badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010;';
-        let sql = 'select q.badjsid, sum(q.pv) as pv, sum(q.badjscount) as badjscount, a.userName, a.name, a.limitpv from b_quality as q, b_apply as a where q.badjsid=a.id and a.status=1 and a.online=2 and q.pv>a.limitpv and q.date>='+d+' group by q.badjsid;';
+        // 现网
+        let sql = 'select q.badjsid, sum(q.pv) as pv, sum(q.badjscount) as badjscount, a.userName, a.name, a.limitpv from b_quality as q, b_apply as a where q.badjsid=a.id and a.status=1 and a.status=1 and a.online=2 and q.pv>a.limitpv and q.date>='+d+' group by q.badjsid;';
+        // let sql = 'select q.badjsid, sum(q.pv) as pv, sum(q.badjscount) as badjscount, a.userName, a.name, a.limitpv from b_quality as q, b_apply as a where q.badjsid=a.id and a.status=1 and a.status=1 and a.online=2 and q.pv>a.limitpv and q.date>=20171124 and q.date<=20171130 group by q.badjsid;';
 
         db.driver.execQuery(sql, (err, data) => {
 
@@ -39,6 +41,8 @@ function getScore(db) {
 
             data.forEach(item => {
                 item.score = getBaseScore.handleScore(item.pv, item.badjscount) - 0;
+
+                //console.log(JSON.stringify(item));
 
                 if (item.score == 100) {
                     item.hhScore = 1;

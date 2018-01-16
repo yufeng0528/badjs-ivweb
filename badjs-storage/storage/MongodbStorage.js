@@ -160,7 +160,6 @@ module.exports = function (){
     });
 }
 
-
 var count = 0, errorNum = 0;
 http.createServer((req, res) => {
    res.end(`${count},${errorNum}`);
