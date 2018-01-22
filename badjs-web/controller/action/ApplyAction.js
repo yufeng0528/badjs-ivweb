@@ -75,7 +75,6 @@ var applyAction = {
             if (apply.limitpv == '') {
                 apply.limitpv = 0;
             }
-
             applyService.add(apply, function(err, items) {
                 if (isError(res, err)) {
                     return;
