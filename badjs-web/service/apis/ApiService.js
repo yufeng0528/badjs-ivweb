@@ -88,6 +88,8 @@ function registApply(applyObj) {
         mail: '',
         createTime : new Date(),
         passTime: new Date(),
+        online: 1,
+        limitpv: 0,
     }
 
     return getUser(apply.userName).then(data => {
