@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "axon": "^2.0.0",
+    "bluebird": "^3.5.1",
     "body-parser": "^1.9.0",
     "compression": "^1.7.0",
     "connect-flash": "^0.1.1",
@@ -22,6 +23,8 @@
     "moment": "^2.10.2",
     "mysql": "^2.11.1",
     "node-highcharts-exporting": "0.0.9",
+    "node-highcharts-exporting-v2": "^1.0.2",
+    "nodemailer": "^2.6.4",
     "orm": "^3.1.0",
     "orm-transaction": "0.0.2",
     "passport": "^0.2.1",
