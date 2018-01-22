@@ -71,7 +71,7 @@ var applyAction = {
             apply.status = 0;
             apply.createTime = new Date();
             apply.appkey = crypto.createHash("md5").update(new Date - 0 + "badjsappkey" + params.user.loginName).digest('hex');
-            // 给个默认值
+
             if (apply.limitpv == '') {
                 apply.limitpv = 0;
             }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "connect": "^3.0.0",
+    "connect": "^2.30.2",
     "map-stream": "^0.1.0",
     "axon": "^2.0.0",
     "log4js": "^0.6.2",
