@@ -29,7 +29,7 @@ module.exports = function (){
         pushProject();
 
 
-         require("../service/OfflineLogService")();
+         // require("../service/OfflineLogService")();
 
 
         // 邮件报表
