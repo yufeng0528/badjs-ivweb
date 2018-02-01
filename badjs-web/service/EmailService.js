@@ -256,7 +256,7 @@ EmailService.prototype = {
                                     }
                                 });
                             } else {
-                                logger.error('Send email data format error by ' + applyId );
+                                logger.error('Send email data format error, no badjs msg, by ' + applyId );
                             }
                         }); // jshint ignore:line
                     })(orderByApplyId[applyId], applyId); // jshint ignore:line
@@ -303,9 +303,7 @@ EmailService.prototype = {
         logger.info('Email service will start after: ' + timeDiff);
     },
     test_start: function() {
-        this.queryAll(false, {
-            sendToList: ['xx@xx.com']
-        });
+        this.queryAll(false);
         logger.info('test Email service start');
     }
 };

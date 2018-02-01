@@ -44,7 +44,7 @@ module.exports = (from, to, cc, title, content, attachments) => {
      // _mailOptions.to = 'xx@x.com';
      // _mailOptions.cc = 'x@x.com';
 
-    console.log(_mailOptions);
+    console.log(`to: ${to}, cc: ${cc}, subject: ${title}`);
 
     // 第一次进来开始倒计时，后面进来的不走这个逻辑
     if (mailList.length == 0) {
@@ -86,7 +86,9 @@ function timeoutSendMail() {
                 path: 'http://xxxx/static/img/tmp/15164856044013.png',
         cid: '000950' } ] }
            */
-            item.to.forEach(to_item => {
+            var toMail = item.to;
+            toMail = toMail.concat(item.cc);
+            toMail.forEach(to_item => {
                          
                 if (!userList[to_item]) {
                     userList[to_item] = [];
@@ -95,7 +97,14 @@ function timeoutSendMail() {
             })
         })
 
-        console.log(userList);
+	console.log('userList')
+	for (var i in userList) {
+            console.log('user: ' + i);
+	    console.log('mailLenth: ' + userList[i].length);
+	    userList[i].forEach(item => {
+                console.log(item.subject);
+            })
+	}
 
         let newMailList = [];
         for(var i in userList) {
@@ -115,7 +124,11 @@ function timeoutSendMail() {
             newMailList.push(concatMailObj)
         }
 
-        console.log(newMailList);
+        console.log('newMailList');
+        newMailList.forEach(item => {
+            console.log('to: ' + item.to)
+            console.log('attachments.length: ' + item.attachments.length);
+        })
 
 
         // 开始 每隔 180s 发一封邮件
