@@ -284,8 +284,8 @@ EmailService.prototype = {
 
             var attachments = [{
                 filename: data.cid1 + '01.png',
-            path: that.host + emails.imagePath,
-            cid: data.cid1
+                path: that.host + emails.imagePath,
+                cid: data.cid1
             }]
             sendEmail(this.from, emails.to, emails.cc, title, content, attachments);
         })

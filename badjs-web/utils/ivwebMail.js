@@ -63,20 +63,86 @@ module.exports = (from, to, cc, title, content, attachments) => {
 
 function timeoutSendMail() {
 
-    let mailTimmer = setInterval(() => {
+    // 3 分钟后 处理mailList 中的数据 合并同一个的人的邮件，变成每个人只发一封邮件，避免发邮件失败的情况
+    setTimeout(() => {
 
         console.log(`mailList.length: ${mailList.length}`)
 
+        let from = global.pjconfig.email.from || "xx@xx.com";
+        let userList = {};
 
-        if (mailList.length <= 0 ) {
-            clearInterval(mailTimmer);
-            return;
+        // 从邮件纬度变成用户纬度
+        mailList.forEach(item => {
+            // 一个邮件item的结构是怎样的
+            /*
+           { from: '"IVWEB" 2580575484@qq.com',
+           to: [ 'sampsonwang@tencent.com' ],
+           cc: [],
+           // 标题需要统一 "【IVWEB BadJs】top error日报"
+           subject: '标题',
+           html: '邮件正文',
+           // 附件这里需要合并数组
+           attachments:
+            [ { filename: '00095001.png',
+                path: 'http://211.159.184.209:8081/static/img/tmp/15164856044013.png',
+        cid: '000950' } ] }
+           */
+            item.to.forEach(to_item => {
+                         
+                if (!userList[to_item]) {
+                    userList[to_item] = [];
+                }
+                userList[to_item].push(item);
+            })
+        })
+
+        console.log(userList);
+
+        let newMailList = [];
+        for(var i in userList) {
+            let concatMailObj = {
+                from: from,
+                to: [i],
+                cc: [],
+                subject: '【IVWEB BadJs】top error日报',
+                html: [],
+                attachments: []
+            };
+            userList[i].forEach(item => {
+                concatMailObj.html.push(item.html);
+                concatMailObj.attachments = concatMailObj.attachments.concat(item.attachments);
+            })
+            concatMailObj.html = concatMailObj.html.join('<br/><br/>');
+            newMailList.push(concatMailObj)
         }
 
-        let mailItemOp = mailList.shift();
-        sendMail(mailItemOp);
+        console.log(newMailList);
 
-    }, 110 * 1000)
+
+        // 开始 每隔 180s 发一封邮件
+        intervalMail(newMailList);
+
+
+    }, 180 * 1000)
+
+    function intervalMail(list) {
+        
+        let mailTimmer = setInterval(() => {
+
+            console.log(`mailList.length: ${list.length}`)
+
+
+            if (list.length <= 0 ) {
+                clearInterval(mailTimmer);
+                return;
+            }
+
+            let mailItemOp = list.shift();
+            sendMail(mailItemOp);
+
+        }, 180 * 1000)
+    }
+
 }
 
 function sendMail(maildata) {
