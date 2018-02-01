@@ -68,15 +68,14 @@ function timeoutSendMail() {
 
         console.log(`mailList.length: ${mailList.length}`)
 
-        let from = global.pjconfig.email.from || "xx@xx.com";
         let userList = {};
 
         // 从邮件纬度变成用户纬度
         mailList.forEach(item => {
             // 一个邮件item的结构是怎样的
             /*
-           { from: '"IVWEB" 2580575484@qq.com',
-           to: [ 'sampsonwang@tencent.com' ],
+           { from: '',
+           to: [ 'xxxx@xxxx.com' ],
            cc: [],
            // 标题需要统一 "【IVWEB BadJs】top error日报"
            subject: '标题',
@@ -84,7 +83,7 @@ function timeoutSendMail() {
            // 附件这里需要合并数组
            attachments:
             [ { filename: '00095001.png',
-                path: 'http://211.159.184.209:8081/static/img/tmp/15164856044013.png',
+                path: 'http://xxxx/static/img/tmp/15164856044013.png',
         cid: '000950' } ] }
            */
             item.to.forEach(to_item => {
@@ -101,7 +100,7 @@ function timeoutSendMail() {
         let newMailList = [];
         for(var i in userList) {
             let concatMailObj = {
-                from: from,
+                from: mailOptions.from,
                 to: [i],
                 cc: [],
                 subject: '【IVWEB BadJs】top error日报',
