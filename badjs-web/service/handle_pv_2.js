@@ -9,7 +9,7 @@ const getLogDataInt = require('./get_log_data.js');
 
 const pjConfig = require('../project.json');
 
-const mail = require("../utils/ivwebMail.js");
+const mail = require("../utils/ivwebMail_for_single.js");
 
 function getScoreParam(Score) {
     var param = {
