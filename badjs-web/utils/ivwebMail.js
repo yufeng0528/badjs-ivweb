@@ -97,14 +97,17 @@ function timeoutSendMail() {
             })
         })
 
-	console.log('userList')
-	for (var i in userList) {
-            console.log('user: ' + i);
-	    console.log('mailLenth: ' + userList[i].length);
-	    userList[i].forEach(item => {
-                console.log(item.subject);
-            })
-	}
+        // 3分钟后清空mailList，保证第二天进来后可以倒计时
+        mailList = [];
+
+        console.log('userList')
+        for (var i in userList) {
+                console.log('user: ' + i);
+            console.log('mailLenth: ' + userList[i].length);
+            userList[i].forEach(item => {
+                    console.log(item.subject);
+                })
+        }
 
         let newMailList = [];
         for(var i in userList) {
