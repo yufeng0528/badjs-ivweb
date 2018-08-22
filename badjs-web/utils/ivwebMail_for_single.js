@@ -40,20 +40,22 @@ module.exports = (from, to, cc, title, content, attachments) => {
         _mailOptions.attachments = attachments;
     }
 
-    // console.log(content);
-     // _mailOptions.to = 'xx@x.com';
-     // _mailOptions.cc = 'x@x.com';
-
     console.log(`to: ${to}, cc: ${cc}, subject: ${title}`);
 
-
-    //sendMail(_mailOptions);
-    // 先放到池子中，再每隔一段时间发送，避免触发频率限制，疑似垃圾邮件
-    sendMail(_mailOptions);
-
-    // console.log('mailList');
-    // console.log(mailList)
-
+    sendMail(_mailOptions).then(info => {
+	logger.info(info);
+    }).catch(err => {
+	logger.error(err);
+	// 间隔时间重试
+	setTimeout(() => {
+            const  cp = require('child_process');
+            cp.exec('/data/server/node/node-v4.2.3-linux-x64/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log' , (err, out, stderr) => {
+                if (err) { logger.error(err) }
+                logger.info(out)
+                logger.info(stderr)
+            })
+        }, 10000)
+    })
 }
 
 
@@ -69,6 +71,7 @@ function sendMail(maildata) {
           if(error){
               console.log(error);
               reject(error)
+              
           } else {
             resolve(info)
            logger.info('Message sent: ' + info.response);

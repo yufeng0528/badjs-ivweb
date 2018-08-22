@@ -38,11 +38,13 @@ module.exports = function () {
             if(!limitTotal[id]){
                 total = limitTotal[id] = arr.length;
             }else {
-                total = limitTotal[id]+ arr.length;
+                limitTotal[id] += arr.length;
+                total = limitTotal[id];
             }
 
+
             if (total >= 10000){
-                logger.warn("id " + id + " total is exceed 10000")
+                // console.log("id " + id + " total is exceed 10000")
                 return false;
             }
         }

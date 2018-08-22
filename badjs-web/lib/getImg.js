@@ -6,6 +6,7 @@ var logger = require('log4js').getLogger();
 var exporting = require('node-highcharts-exporting-v2');
 var fs = require('fs');
 
+
 var dateKey = [];
  
 // busId, key, value, tableName, valueName, path
@@ -140,12 +141,21 @@ function getImg(xkey, data, extParam, index) {
         var yestday = moment().subtract(1, 'day').format('YYYYMMDD');
         imgFullPath = [extParam.path, '/', yestday, '-',index, 'all.png'].join(''); 
         var _path = path.join(__dirname, "..", imgFullPath);
-        console.log(_path);
+/*
+	if (_path.indexOf('9') >= 0) {
+		_path = '/adfadfadsf/adf/adf/adf.png'
+	}
 
+        console.log('get image path : ' + _path);
+*/
         // console.log(image)
         fs.writeFile(_path, new Buffer(image, 'base64'), function(err) {
             if (err) {
+		console.log('create img file error: ')
 		console.error(err);
+		const mail = require("../utils/ivwebMail_for_single.js");
+		mail('', 'wsf_123456@126.com', '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err);
+
             }
         })
     })

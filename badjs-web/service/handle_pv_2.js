@@ -197,7 +197,7 @@ function handleScorePic(Score, db, closeCallback) {
     }).then( (data) => {
         setTimeout(() => {
             sendMail(data);
-        }, 5000)
+        }, 10000)
     })
 }
 
@@ -235,9 +235,9 @@ function sendMail(data) {
 
     var attachments =  ac;
 
-    mail('', pjConfig.scoreMailTo, '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
+     mail('', pjConfig.scoreMailTo, '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
 
-     // mail('', 'xx@xx.com', 'xx@xx.com', 'IVWEB badjs质量评分日报', content.join(''), attachments);
+    //  mail('', 'wsf_123456@126.com', '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
 
 }
 
