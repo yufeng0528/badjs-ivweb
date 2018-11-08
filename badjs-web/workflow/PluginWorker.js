@@ -66,10 +66,13 @@ function getList() {
 function checkReq (req, res, next) {
 
    var ffname = req.cookies._ffname,
-       md5str = crypto.createHash("md5").update(req.query.applyName + req.query.userName + 'feflow').digest('hex');
+       md5str = crypto.createHash("md5").update(req.query.applyName + req.query.userName + 'feflow', 'utf8').digest('hex');
+   logger.info(`req _ffname: ${ffname}, server md5str: ${md5str}`);
+   logger.info(`params: applyName: ${req.query.applyName}, userName: ${req.query.userName}`)
    if (ffname == md5str) {
        next();
    } else {
+       logger.info('sign not match');
        res.json({recode: 3, msg: 'ill request.'})
    }
 }
