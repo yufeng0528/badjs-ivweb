@@ -29,7 +29,8 @@ var userAction = {
             if (isError(res, err)) {
                 return;
             }
-            emailService.sendApplySuccessEmail(user, items);
+            var loginUser = req.session.user;
+            emailService.sendApplySuccessEmail(user, loginUser, items);
             res.json({ret: 0, msg: "success-add"});
         });
     },

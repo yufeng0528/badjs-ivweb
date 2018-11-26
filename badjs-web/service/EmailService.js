@@ -14,7 +14,7 @@ var exporting = require('node-highcharts-exporting-v2');
 var StatisticsService = require('./StatisticsService');
 var scoreLib = require('../lib/getScore.js');
 var sendEmail = require("../utils/" + global.pjconfig.email.module);
-var sendApplyEmail = require('../utils/email');
+var sendApplyEmail = require('../utils/ivwebMail_for_single');
 
 var DAY_LENGTH = 30;
 
@@ -291,14 +291,14 @@ EmailService.prototype = {
             sendEmail(this.from, emails.to, emails.cc, title, content, attachments);
         })
     },
-    sendApplySuccessEmail: function (user, items) {
+    sendApplySuccessEmail: function (user, loginUser, items) {
         this.date = new Date();
         sendApplyEmail(
             this.from,
             [user.email],
-            [],
-            "【BadJS 授权成功】 " + dateFormat(this.date, "yyyy-MM-dd") + "】",
-            '<html><h1>您申请的Badjs, id：' + `${items.id} `+ '授权成功</h1></html>'
+            [loginUser.email],
+            "【BadJS 授权成功 " + dateFormat(this.date, "yyyy-MM-dd") + "】",
+            '<html><h3>用户' + user.loginName + '申请的BadJS-id：' + `${items.id} `+ '授权成功</h3></html>'
         );
     },
     start: function() {
