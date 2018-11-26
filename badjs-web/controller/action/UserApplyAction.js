@@ -5,6 +5,7 @@
 var log4js = require('log4js'),
     logger = log4js.getLogger(),
     UserApplyService = require('../../service/UserApplyService'),
+    EmailService = require('../../service/EmailService'),
     isError = function (res , error){
         if(error){
             res.json({ret : 1 , msg : error});
@@ -23,10 +24,12 @@ var userAction = {
         }
         userApply.createTime = new Date();
         var userApplyService = new UserApplyService();
-        userApplyService.add(userApply,function(err, items) {
+        var emailService = new EmailService();
+        userApplyService.add(userApply,function(err, user, items) {
             if (isError(res, err)) {
                 return;
             }
+            emailService.sendApplySuccessEmail(user, items);
             res.json({ret: 0, msg: "success-add"});
         });
     },

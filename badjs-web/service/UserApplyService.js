@@ -41,7 +41,7 @@ userApplyService.prototype = {
                         return;
                     }
                     logger.info("Insert into b_user_apply success! target1: " + items.id);
-                    callback(null);
+                    callback(null, item, items);
                     return;
                 });
             }else {

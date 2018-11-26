@@ -84,7 +84,7 @@ var getImageData = function(name, data) {
             },
             series: [{
                 data: totalArray,
-                name: 'badjs count' 
+                name: 'badjs count'
             }]
         }
     };
@@ -278,7 +278,7 @@ EmailService.prototype = {
             date: dateFormat(this.date,  "yyyyMMdd")
         }
         this.statisticsService.getPvById(pvParam, function (err, pvdata) {
-            data.pvData = pvdata; 
+            data.pvData = pvdata;
             data.cid1 = '000' + parseInt(Math.random() * 1000);
             var content = that.render(data, emails.imagePath);
 
@@ -289,6 +289,15 @@ EmailService.prototype = {
             }]
             sendEmail(this.from, emails.to, emails.cc, title, content, attachments);
         })
+    },
+    sendApplySuccessEmail: function (user, items) {
+        sendEmail(
+            this.from,
+            [user.email],
+            [],
+            "【BadJS 授权成功】 " + dateFormat(this.date, "yyyy-MM-dd") + "】",
+            '<html><h1>您申请的Badjs, id：' + `${items.id} `+ '授权成功</h1></html>'
+        );
     },
     start: function() {
         var that = this;
