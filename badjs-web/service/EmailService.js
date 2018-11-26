@@ -14,6 +14,7 @@ var exporting = require('node-highcharts-exporting-v2');
 var StatisticsService = require('./StatisticsService');
 var scoreLib = require('../lib/getScore.js');
 var sendEmail = require("../utils/" + global.pjconfig.email.module);
+var sendApplyEmail = require('../utils/email');
 
 var DAY_LENGTH = 30;
 
@@ -292,7 +293,7 @@ EmailService.prototype = {
     },
     sendApplySuccessEmail: function (user, items) {
         this.date = new Date();
-        sendEmail(
+        sendApplyEmail(
             this.from,
             [user.email],
             [],
