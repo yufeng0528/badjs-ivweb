@@ -291,6 +291,7 @@ EmailService.prototype = {
         })
     },
     sendApplySuccessEmail: function (user, items) {
+        this.date = new Date();
         sendEmail(
             this.from,
             [user.email],
