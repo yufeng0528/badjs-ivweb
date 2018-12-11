@@ -8,6 +8,7 @@ var log4js = require('log4js'),
     crypto = require('crypto'),
     xss = require('xss-filters'),
     BusinessService = require('../../service/BusinessService'),
+    pluginHandler = require('../../workflow/PluginWorker'),
     isError = function (res , error){
         if(error){
             res.json({ret : 1 , msg : error});
@@ -71,10 +72,10 @@ var userAction = {
     },
 
     register : function (params , req ,  res){
-
-
-        res.render('noregister');
-        return;
+        if (!pluginHandler.login) {
+            res.render('noregister');
+            return;
+        }
 
         var method = req.method.toLowerCase();
         if(method == "post"){
