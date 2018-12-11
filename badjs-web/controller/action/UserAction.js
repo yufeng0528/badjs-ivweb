@@ -72,7 +72,7 @@ var userAction = {
     },
 
     register : function (params , req ,  res){
-        if (!pluginHandler.login) {
+        if (pluginHandler.login) {
             res.render('noregister');
             return;
         }
