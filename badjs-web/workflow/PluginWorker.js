@@ -92,8 +92,7 @@ function registerRoute(app) {
 
 module.exports = {
    getList,
-   registerRoute,
-   login
+   registerRoute
 }
 
 
