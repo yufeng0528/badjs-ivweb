@@ -213,6 +213,23 @@ var userAction = {
         })
     },
 
+    getBusiness: function (params, req, res) {
+        var user = req.session.user;
+        
+        var businessService =  new BusinessService();
+
+        businessService.findBusinessByUser(user.loginName , function (err, item){
+            if(isError(res, err)){
+                return;
+            }
+
+            res.json({
+                ret: 0, 
+                item: item
+            });
+        });
+    },
+
     authUser : function (params , req ,  res){
         var userService = new UserService();
         userService.update({id : params.id, role : params.role} , function (err ){
