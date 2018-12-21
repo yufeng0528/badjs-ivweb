@@ -46,8 +46,7 @@ var data = [
             score: String,
             date : Number
         });
-        console.log(pv.getImg)
-        pv.getImg(Score, db);
+        pv.getImg(Score, db, ()=>{});
     })
 
 
