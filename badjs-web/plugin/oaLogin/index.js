@@ -59,7 +59,7 @@ function check(req, res, next) {
 
 function getOAUser(code) {
     return new Promise((resolve, reject) => {
-        const url = `http://now.qq.com/zxjg/cgi-bin/tofhander/?type=1&code=RpasOajCN4u*sUexo9lEr*NeQrWoF*1C*ylqI7LAr90.${code}`;
+        const url = `http://now.qq.com/zxjg/cgi-bin/tofhander/?type=1&code=${code}`;
 
         http.get(url, res => {
             const statusCode = res.statusCode;
