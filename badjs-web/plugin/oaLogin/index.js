@@ -59,8 +59,7 @@ function check(req, res, next) {
 
 function getOAUser(code) {
     return new Promise((resolve, reject) => {
-
-        const url = `http://idc.esb.oa.com:8080/TOF/api/PassportTicket/Accesstoken?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&code=${code}`;
+        const url = `http://now.qq.com/zxjg/cgi-bin/tofhander/?type=1&code=RpasOajCN4u*sUexo9lEr*NeQrWoF*1C*ylqI7LAr90.${code}`;
 
         http.get(url, res => {
             const statusCode = res.statusCode;
