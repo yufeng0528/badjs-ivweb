@@ -19,4 +19,6 @@ http.get(url, _res => {
             console.log(parseData);
         });
     }
+}).on('error', e => {
+    console.log(e)
 })
