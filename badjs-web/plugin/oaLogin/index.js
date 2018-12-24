@@ -53,19 +53,14 @@ function check(req, res, next) {
         doLogin(req, res, next);
     } else {
         console.log('oalogin not login.')
-
         redirect(req, res, config.auth);
-
     }
-
-
-
 }
 
 function getOAUser(code) {
     return new Promise((resolve, reject) => {
 
-        const url = `http://now.qq.com/zxjg/cgi-bin/tofhander/?type=1&code=${code}`;
+        const url = `http://idc.esb.oa.com:8080/TOF/api/PassportTicket/Accesstoken?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&code=${code}`;
 
         http.get(url, res => {
             const statusCode = res.statusCode;
@@ -98,7 +93,7 @@ function getOAUser(code) {
 }
 
 function doLogin(req, res, next) {
-    
+
     var code = req.query.code;
 
     getOAUser(code).then(data => {
@@ -129,7 +124,7 @@ function doLogin(req, res, next) {
             res.end(JSON.stringify(e));
         }
     })
-    
+
 
 
 
