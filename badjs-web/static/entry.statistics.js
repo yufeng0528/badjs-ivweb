@@ -16,13 +16,13 @@ webpackJsonp([9],{
 
 	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
 		var last_select = -1;
-		
+
 		try {
 
 		    last_select = localStorage.last_select >> 0; // jshint ignore:line
-			
+
 			var $sb = $('#select-business');
-			
+
 			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
 
 			$sb.on('change', function(){
@@ -79,7 +79,7 @@ webpackJsonp([9],{
 	                    return ;
 	                }
 
-	                $.getJSON("/controller/statisticsAction/queryById.do" , {projectId : projectId , startDate : new Date($('#startTime').val() + " 00:00:00") - 0} , function (data){
+	                $.getJSON("/controller/statisticsAction/queryById.do" , {projectId : projectId , startDate : new Date($('#startTime').val()) - 0} , function (data){
 	                        $('#table-content').html(statisticsTpl({it : data,  opt : {encodeHtml : encodeHtml }}));
 	                    if(  data && data.data[0] ){
 	                        $('#error-count').html(data.data[0].total || 0 );
@@ -2161,7 +2161,7 @@ webpackJsonp([9],{
 	 */
 
 	var handleScore = function (pv, e_pv) {
-	    
+
 	    // 算分
 	    var e_rate = e_pv / pv;
 	    var score;
