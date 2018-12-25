@@ -38,7 +38,7 @@ var encodeHtml = function (str) {
                     return ;
                 }
 
-                $.getJSON("/controller/statisticsAction/queryById.do" , {projectId : projectId , startDate : new Date($('#startTime').val()) - 0} , function (data){
+                $.getJSON("/controller/statisticsAction/queryById.do" , {projectId : projectId , startDate : $('#startTime').val()} , function (data){
                         $('#table-content').html(statisticsTpl({it : data,  opt : {encodeHtml : encodeHtml }}));
                     if(  data && data.data[0] ){
                         $('#error-count').html(data.data[0].total || 0 );

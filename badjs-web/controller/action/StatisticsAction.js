@@ -112,11 +112,11 @@ var StatisticsAction = {
             });
             return;
         }
-        //console.log(param);
+        let startDate = new Date(param.startDate + ' 00:00:00');
         statisticsService.queryById({
             userName: param.user.loginName,
             projectId: req.query.projectId - 0,
-            startDate: new Date(param.startDate - 0)
+            startDate
         }, function(err, data) {
             if (err) {
                 res.json({
