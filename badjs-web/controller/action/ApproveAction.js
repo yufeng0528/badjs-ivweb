@@ -56,7 +56,7 @@ var approveAction = {
         var as = new ApproveService();
         as.query(params,cb);
     },
-    update:function(){
+    update:function(params,cb){
         var as = new ApproveService();
         as.update(params,cb);
     },

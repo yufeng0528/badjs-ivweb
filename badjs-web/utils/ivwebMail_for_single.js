@@ -45,7 +45,7 @@ module.exports = (from, to, cc, title, content, attachments) => {
         logger.info(info);
     }).catch(err => {
         logger.error(err);
-        // 间隔时间重试
+        // 两分钟后重试
         setTimeout(() => {
             const cp = require('child_process');
             cp.exec('/data/server/node/node-v4.2.3-linux-x64/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log',
@@ -56,7 +56,7 @@ module.exports = (from, to, cc, title, content, attachments) => {
                     logger.info(out);
                     logger.info(stderr);
                 });
-        }, 10000);
+        }, 2 * 60 * 1000);
     });
 };
 
