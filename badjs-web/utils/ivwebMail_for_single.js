@@ -13,11 +13,11 @@ const emailConf = global.pjconfig.email;
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
-  service: 'qq',  
-  auth: {  
-    user: emailConf.ivwebMailuser,  
+  service: 'qq',
+  auth: {
+    user: emailConf.ivwebMailuser,
     pass: emailConf.ivwebMailpass
-  }  
+  }
 });
 
 // setup e-mail data with unicode symbols
@@ -64,14 +64,13 @@ function sendMail(maildata) {
 
 
   console.log('send email ....')
-      console.log(maildata);
   return new Promise((resolve, reject) => {
       // send mail with defined transport object
       transporter.sendMail(maildata, function(error, info){
           if(error){
               console.log(error);
               reject(error)
-              
+
           } else {
             resolve(info)
            logger.info('Message sent: ' + info.response);

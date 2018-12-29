@@ -210,7 +210,7 @@ function sendMail(data) {
     const r = '00123'; //new Date().getTime();
     var ac = [];
 
-    content = [];
+    var content = [];
     content.push('<html>');
 
     for(var i = 0; i < picNum; i++) {

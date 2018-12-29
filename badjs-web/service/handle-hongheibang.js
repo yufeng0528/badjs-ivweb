@@ -22,7 +22,7 @@ function getScore(db) {
         let d = moment().subtract(7, 'days').format('YYYYMMDD');
 
         // scoreData 加上用户id 和 rtx名
-        
+
         //let sql = 'select badjsid, AVG(rate) as rate, AVG(pv) as pv, AVG(badjscount) as badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010 group by q.badjsid;';
         //let sql = 'select q.badjsid, q.rate, q.pv, q.badjscount, a.userName from b_quality as q, b_apply as a where q.badjsid=a.id and q.date>20171010;';
         // 现网
@@ -61,8 +61,6 @@ function getScore(db) {
                 hhScoreByRtx[item.userName].push(item);
             });
 
-            console.log(hhScoreByRtx);
-
             for(let i in hhScoreByRtx) {
 
                 let item = {
@@ -77,7 +75,7 @@ function getScore(db) {
                         if (item.plusScore > 5) {
                             item.plusScore = 5
                         }
-                        
+
                     } else {
                         item.cutScore += score_item.hhScore;
                         if (item.cutScore < -5) {
@@ -158,7 +156,7 @@ function test() {
         })
     })
 
-}   
+}
 
 //test();
 
