@@ -233,7 +233,7 @@ function sendMail(data) {
 
     var attachments =  ac;
 
-     mail('', pjConfig.scoreMailTo, '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
+    mail('', pjConfig.scoreMailTo, '', 'IVWEB badjs质量评分日报', content.join(''), attachments, true);
 
     //  mail('', 'wsf_123456@126.com', '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
 

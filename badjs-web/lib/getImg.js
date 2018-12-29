@@ -133,8 +133,7 @@ function getImg (xkey, data, extParam, index) {
                 console.log('create img file error: ')
                 console.error(err);
                 const mail = require("../utils/ivwebMail_for_single.js");
-                mail('', '380034641@qq.com', '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err);
-
+                mail('', '380034641@qq.com', '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err, false);
             }
         });
     });

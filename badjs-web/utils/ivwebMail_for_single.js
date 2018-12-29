@@ -26,7 +26,7 @@ let mailOptions = {
 
 let mailList = [];
 
-module.exports = (from, to, cc, title, content, attachments) => {
+module.exports = (from, to, cc, title, content, attachments, retry = false) => {
 
     let _mailOptions = Object.assign({}, mailOptions);
 
@@ -45,18 +45,20 @@ module.exports = (from, to, cc, title, content, attachments) => {
         logger.info(info);
     }).catch(err => {
         logger.error(err);
-        // 两分钟后重试
-        setTimeout(() => {
-            const cp = require('child_process');
-            cp.exec('/data/server/node/node-v4.2.3-linux-x64/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log',
-                (err, out, stderr) => {
-                    if (err) {
-                        logger.error(err);
-                    }
-                    logger.info(out);
-                    logger.info(stderr);
-                });
-        }, 2 * 60 * 1000);
+        if (retry) {
+            // 两分钟后重试
+            setTimeout(() => {
+                const cp = require('child_process');
+                cp.exec('/data/server/node/node-v4.2.3-linux-x64/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log',
+                    (err, out, stderr) => {
+                        if (err) {
+                            logger.error(err);
+                        }
+                        logger.info(out);
+                        logger.info(stderr);
+                    });
+            }, 2 * 60 * 1000);
+        }
     });
 };
 
