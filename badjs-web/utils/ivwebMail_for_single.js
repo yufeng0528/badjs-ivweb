@@ -1,4 +1,3 @@
-
 'use strict';
 const path = require('path')
 const nodemailer = require('nodemailer');
@@ -10,14 +9,13 @@ global.pjconfig = require(path.join(__dirname, '../project.json'))
 const emailConf = global.pjconfig.email;
 
 
-
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
-  service: 'qq',
-  auth: {
-    user: emailConf.ivwebMailuser,
-    pass: emailConf.ivwebMailpass
-  }
+    service: 'qq',
+    auth: {
+        user: emailConf.ivwebMailuser,
+        pass: emailConf.ivwebMailpass
+    }
 });
 
 // setup e-mail data with unicode symbols
@@ -29,7 +27,7 @@ let mailList = [];
 
 module.exports = (from, to, cc, title, content, attachments) => {
 
-    let  _mailOptions = Object.assign({}, mailOptions);
+    let _mailOptions = Object.assign({}, mailOptions);
 
     _mailOptions.to = to;
     _mailOptions.cc = cc;
@@ -43,14 +41,16 @@ module.exports = (from, to, cc, title, content, attachments) => {
     console.log(`to: ${to}, cc: ${cc}, subject: ${title}`);
 
     sendMail(_mailOptions).then(info => {
-	logger.info(info);
+        logger.info(info);
     }).catch(err => {
-	logger.error(err);
-	// 间隔时间重试
-	setTimeout(() => {
-            const  cp = require('child_process');
-            cp.exec('/data/server/node/node-v4.2.3-linux-x64/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log' , (err, out, stderr) => {
-                if (err) { logger.error(err) }
+        logger.error(err);
+        // 间隔时间重试
+        setTimeout(() => {
+            const cp = require('child_process');
+            cp.exec('/data/server/node/node-v4.2.3-linux-x64/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log', (err,
+                if (err) {
+                    logger.error(err)
+                }
                 logger.info(out)
                 logger.info(stderr)
             })
@@ -59,24 +59,22 @@ module.exports = (from, to, cc, title, content, attachments) => {
 }
 
 
+function sendMail (maildata) {
+    debugger
+    console.log('send email ....')
+    return new Promise((resolve, reject) => {
+        // send mail with defined transport object
+        transporter.sendMail(maildata, function (error, info) {
+            if (error) {
+                console.log(error);
+                reject(error)
 
-function sendMail(maildata) {
+            } else {
+                resolve(info)
+                logger.info('Message sent: ' + info.response);
+            }
+        });
 
-
-  console.log('send email ....')
-  return new Promise((resolve, reject) => {
-      // send mail with defined transport object
-      transporter.sendMail(maildata, function(error, info){
-          if(error){
-              console.log(error);
-              reject(error)
-
-          } else {
-            resolve(info)
-           logger.info('Message sent: ' + info.response);
-          }
-      });
-
-  })
+    })
 
 }
