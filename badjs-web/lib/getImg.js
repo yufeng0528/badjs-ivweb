@@ -8,9 +8,9 @@ var fs = require('fs');
 
 
 var dateKey = [];
- 
+
 // busId, key, value, tableName, valueName, path
-module.exports = function(data, extParam) {
+module.exports = function (data, extParam) {
 
     var list = {}, _key;
     // data 是数据库表数据 元数据
@@ -24,7 +24,7 @@ module.exports = function(data, extParam) {
         list[busKey].push(item);
 
         // 生成x轴
-        _key = item[extParam.key]; 
+        _key = item[extParam.key];
         if (dateKey.indexOf(_key) < 0) {
             dateKey.push(_key - 0);
         }
@@ -32,16 +32,14 @@ module.exports = function(data, extParam) {
     });
 
     dateKey.sort();
-    
+
     console.log(dateKey);
 
     // list 保存了badjsid 和 业务数据的map
-    for(var i in list) {
+    for (var i in list) {
         //saveImg(list[i], i, extParam);
         handleImgData(list[i], i, extParam);
-
     }
-
 
 
     // 按平均分来倒序排名
@@ -59,18 +57,15 @@ module.exports = function(data, extParam) {
     })
     // 每8个分割数组
     var result = [];
-    for(var i=0,len=chartData.length;i<len;i+=extParam.perCount){
-           result.push(chartData.slice(i,i+extParam.perCount));
+    for (var j = 0, len = chartData.length; j < len; j += extParam.perCount) {
+        result.push(chartData.slice(j, j + extParam.perCount));
     }
 
-    console.log(JSON.stringify(result));
-
     // 循环数组生成合并图片
-    result.forEach((item, index)  => {
-
+    result.forEach((item, index) => {
         getImg(dateKey, item, extParam, index);
     })
-    
+
 
     return result;
 
@@ -78,21 +73,22 @@ module.exports = function(data, extParam) {
 }
 
 var chartData = [];
-// items 是一个项目
-function handleImgData(items, busId, extParam) {
 
-    var xdata = [], _key, _score; 
+// items 是一个项目
+function handleImgData (items, busId, extParam) {
+
+    var xdata = [], _key, _score;
 
     // 生成数据
     var _index;
     dateKey.forEach(item => {
         xdata.push(null);
     })
-    
+
     items.forEach((item, index) => {
 
-            // 判断当前这个值在x轴的哪个位置
-        _key = item[extParam.key]; 
+        // 判断当前这个值在x轴的哪个位置
+        _key = item[extParam.key];
         _index = dateKey.indexOf(_key);
 
 
@@ -100,17 +96,16 @@ function handleImgData(items, busId, extParam) {
         xdata[_index] = (_score > 10 ? 10 : _score);
     })
 
-    var avg  = xdata.reduce((pre, cur) => cur += pre?pre:0) / items.length;
+    var avg = xdata.reduce((pre, cur) => cur += pre ? pre : 0) / items.length;
 
     chartData.push({
         data: xdata,
         avg,
         name: extParam.apply[busId]
-    })
+    });
 }
 
-function getImg(xkey, data, extParam, index) {
-
+function getImg (xkey, data, extParam, index) {
 
 
     var _d = {
@@ -134,31 +129,31 @@ function getImg(xkey, data, extParam, index) {
     };
 
 
-    exporting(_d, (err, image)=> {
+    exporting(_d, (err, image) => {
         if (err) {
             console.log(err);
         }
         var yestday = moment().subtract(1, 'day').format('YYYYMMDD');
-        imgFullPath = [extParam.path, '/', yestday, '-',index, 'all.png'].join(''); 
+        var imgFullPath = [extParam.path, '/', yestday, '-', index, 'all.png'].join('');
         var _path = path.join(__dirname, "..", imgFullPath);
-/*
-	if (_path.indexOf('9') >= 0) {
-		_path = '/adfadfadsf/adf/adf/adf.png'
-	}
+        /*
+            if (_path.indexOf('9') >= 0) {
+                _path = '/adfadfadsf/adf/adf/adf.png'
+            }
 
-        console.log('get image path : ' + _path);
-*/
+                console.log('get image path : ' + _path);
+        */
         // console.log(image)
-        fs.writeFile(_path, new Buffer(image, 'base64'), function(err) {
+        fs.writeFile(_path, new Buffer(image, 'base64'), function (err) {
             if (err) {
-		console.log('create img file error: ')
-		console.error(err);
-		const mail = require("../utils/ivwebMail_for_single.js");
-		mail('', 'wsf_123456@126.com', '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err);
+                console.log('create img file error: ')
+                console.error(err);
+                const mail = require("../utils/ivwebMail_for_single.js");
+                mail('', 'wsf_123456@126.com', '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err);
 
             }
-        })
-    })
+        });
+    });
 }
 
 
