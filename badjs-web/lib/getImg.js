@@ -1,6 +1,5 @@
 var path = require('path')
 
-var Promise = require('bluebird')
 var moment = require('moment');
 var logger = require('log4js').getLogger();
 var exporting = require('node-highcharts-exporting-v2');
@@ -33,7 +32,7 @@ module.exports = function (data, extParam) {
 
     dateKey.sort();
 
-    console.log(dateKey);
+    console.log('全部日期', dateKey.join(';'));
 
     // list 保存了badjsid 和 业务数据的map
     for (var i in list) {
@@ -41,10 +40,8 @@ module.exports = function (data, extParam) {
         handleImgData(list[i], i, extParam);
     }
 
-
     // 按平均分来倒序排名
     chartData = chartData.sort((a, b) => {
-
         var a_s = a.avg,
             b_s = b.avg;
         if (a_s > b_s) {
@@ -66,10 +63,7 @@ module.exports = function (data, extParam) {
         getImg(dateKey, item, extParam, index);
     })
 
-
     return result;
-
-
 }
 
 var chartData = [];
@@ -106,8 +100,6 @@ function handleImgData (items, busId, extParam) {
 }
 
 function getImg (xkey, data, extParam, index) {
-
-
     var _d = {
         data: {
             width: 800,
@@ -136,20 +128,12 @@ function getImg (xkey, data, extParam, index) {
         var yestday = moment().subtract(1, 'day').format('YYYYMMDD');
         var imgFullPath = [extParam.path, '/', yestday, '-', index, 'all.png'].join('');
         var _path = path.join(__dirname, "..", imgFullPath);
-        /*
-            if (_path.indexOf('9') >= 0) {
-                _path = '/adfadfadsf/adf/adf/adf.png'
-            }
-
-                console.log('get image path : ' + _path);
-        */
-        // console.log(image)
         fs.writeFile(_path, new Buffer(image, 'base64'), function (err) {
             if (err) {
                 console.log('create img file error: ')
                 console.error(err);
                 const mail = require("../utils/ivwebMail_for_single.js");
-                mail('', 'wsf_123456@126.com', '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err);
+                mail('', '380034641@qq.com', '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err);
 
             }
         });
