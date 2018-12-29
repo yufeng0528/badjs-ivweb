@@ -26,7 +26,7 @@ let mailOptions = {
 
 let mailList = [];
 
-module.exports = (from, to, cc, title, content, attachments, retry = false) => {
+module.exports = (from, to, cc, title, content, attachments, retry) => {
 
     let _mailOptions = Object.assign({}, mailOptions);
 
