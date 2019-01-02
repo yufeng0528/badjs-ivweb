@@ -298,7 +298,7 @@ webpackJsonp([10],{
 	                    var arr = item.id.split("_");
 	                    var itemName = arr[0];
 	                    if(arr[2]){
-	                        var dateStr = _.formatDate(new Date(arr[2]-0) , 'YYYY-MM-DD hh:mm');
+	                        var dateStr = _.formatDate(new Date(arr[2]-0) , 'MM-DD hh:mm');
 	                        itemName += " (" + dateStr +")";
 	                    }
 
