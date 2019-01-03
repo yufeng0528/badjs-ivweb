@@ -82,6 +82,8 @@ CREATE TABLE IF NOT EXISTS `b_user` (
   `role` int(11) NOT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `verify_state` int(1) DEFAULT 0,
+  `openid` varchar(32),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
