@@ -36,6 +36,37 @@ router.post('/login', function (req, res){
     });
 });
 
+router.get('/update_session', function (req, res){
+    const { userDao } = req.models;
+    const { loginName } = req.session.user; 
+
+    if (!loginName) return res.json({
+        code: -1, message: '请登录'
+    }); 
+
+    // console.log('UserInfo Upadte Session', req.session); 
+
+    userDao.one({ loginName } , (err, user) => {
+        if (!user) return res.json({
+            code: 1100, 
+            error: 'LOGIN_ERR', 
+            message: '登陆失败，请检查账号'
+        })
+
+        req.session.user = {
+            role : user.role,
+            id : user.id,
+            email : user.email,
+            loginName : user.loginName ,
+            chineseName : user.chineseName, 
+            verify_state: parseInt(user.verify_state, 10), 
+            openid: user.openid
+        }
+
+        MeAction(req, res); 
+    });
+});
+
 /**
  * 绑定并注册
  */

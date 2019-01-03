@@ -41,7 +41,15 @@ router.get('/users', function(req, res) {
 
 router.post('/trust_him', function(req, res) {
     const userService = new UserService();
-    const loginName = req.body.loginName.trim(); 
+    const loginName = (req.body.loginName || '').trim(); 
+
+    if (!loginName) {
+        res.json({
+            code: 2000, 
+            error: 'INVALID_VERIFY_STATE', 
+            message: '传参无效'
+        })
+    }
 
     userService.userDao.one({ loginName }, (err, user) => {
         if (err) {
@@ -67,9 +75,6 @@ router.post('/trust_him', function(req, res) {
             // 设为 2 表示已绑定
             user.verify_state = 2; 
             user.save(err => {
-                // session 同步修改 
-                req.session.user.verify_state = 2; 
-
                 res.json({
                     code: 0, 
                     message: '审核成功'
