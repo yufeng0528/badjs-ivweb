@@ -289,7 +289,7 @@ EmailService.prototype = {
                 cid: data.cid1
             }]
             sendEmail(this.from, emails.to, emails.cc, title, content, attachments);
-        })
+        });
     },
     sendApplySuccessEmail: function (user, loginUser, items) {
         this.date = new Date();
@@ -298,7 +298,8 @@ EmailService.prototype = {
             [user.email],
             [loginUser.email],
             "【BadJS 授权成功 " + dateFormat(this.date, "yyyy-MM-dd hh:mm:ss") + "】",
-            '<html><h3>用户 ' + user.loginName + ' 申请的 BadJS-id：' + items.applyId+ ' 授权成功</h3></html>'
+            '<html><h3>用户 ' + user.loginName + ' 申请的 BadJS-id：' + items.applyId+ ' 授权成功</h3></html>',
+            false
         );
     },
     start: function() {

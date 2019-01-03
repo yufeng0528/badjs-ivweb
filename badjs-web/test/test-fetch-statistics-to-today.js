@@ -26,7 +26,7 @@ orm.connect( mysqlUrl, function(err , db) {
     var aa = new StatisticsService();
 
 
-    var startDate = new Date('2017-07-29 00:00:00');
+    var startDate = new Date('2018-12-23 00:00:00');
     var nowDate = new Date;
 
     //fetch data until today
@@ -43,7 +43,7 @@ orm.connect( mysqlUrl, function(err , db) {
     }
 
 
-    for(var i=28; i<40; i++) {
+    for(var i=0; i<433; i++) {
 
     fetch(i , startDate);
     }

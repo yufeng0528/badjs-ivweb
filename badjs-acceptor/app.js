@@ -241,10 +241,10 @@ connect()
             'Content-Type': 'image/jpeg',
             'Connection': 'close'
         };
-        
+
 
         var param = req.query;
-        if (req.method === "POST") {
+        if (req.method === "POST" && !!req.body.id) {
             param = req.body;
         }
 
@@ -287,7 +287,7 @@ connect()
 
         logger.debug('===== complete a message =====');
         res.end();
-        
+
 
     })
     //.use('/offlineLog', connect.bodyParser())

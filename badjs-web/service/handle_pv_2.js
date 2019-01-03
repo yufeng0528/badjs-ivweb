@@ -60,7 +60,7 @@ function handleScorePic(Score, db, closeCallback) {
         getLogData = getLogDataInt(db),
         hhd = '',
         logdata = '',
-        perCount = 8; 
+        perCount = 8;
 
     // 拿到数据
     Promise.all([getScore_pro, getApply_pro, gethhScore, getLogData]).then(data => {
@@ -78,14 +78,14 @@ function handleScorePic(Score, db, closeCallback) {
         closeCallback();
 
         // 调用图像接口获得图像
-        
+
         var _num = getImgLib(scoreData, {
             busId: 'badjsid',
             key: 'date',
             value: 'rate',
             path: '/static/scoreimg/',
             apply: applyMap,
-            perCount 
+            perCount
 
         });
         return [data, _num.length];
@@ -93,7 +93,7 @@ function handleScorePic(Score, db, closeCallback) {
     }).then(arrData => {
 
         var data = arrData[0];
-        
+
         var scoreData = data[0],
         applyList = data[1];
 
@@ -107,7 +107,7 @@ function handleScorePic(Score, db, closeCallback) {
             } else {
                 return false;
             }
-            
+
         })
         // console.log(JSON.stringify(scoreData));
 
@@ -129,7 +129,7 @@ function handleScorePic(Score, db, closeCallback) {
 
         // sort by pv
         applyList = applyList.map(item => {
-            if (item.score === undefined) 
+            if (item.score === undefined)
                 item.score = 110;
             return item;
 
@@ -210,7 +210,7 @@ function sendMail(data) {
     const r = '00123'; //new Date().getTime();
     var ac = [];
 
-    content = [];
+    var content = [];
     content.push('<html>');
 
     for(var i = 0; i < picNum; i++) {
@@ -225,17 +225,15 @@ function sendMail(data) {
             cid: r + i
         });
     }
-        
+
     content.push(html);
 
 
     content.push('</html>');
 
-    console.log(content.join(''));
-
     var attachments =  ac;
 
-     mail('', pjConfig.scoreMailTo, '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
+    mail('', pjConfig.scoreMailTo, '', 'IVWEB badjs质量评分日报', content.join(''), attachments, true);
 
     //  mail('', 'wsf_123456@126.com', '', 'IVWEB badjs质量评分日报', content.join(''), attachments);
 

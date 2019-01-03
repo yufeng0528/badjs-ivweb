@@ -581,7 +581,7 @@ form
 }
 #content .right-side .setting-msg.offline-type li
 {
-
+    line-height: 42px;
     width: 42px;
     height: 42px;
     font-size: 12px;
