@@ -27,6 +27,7 @@ app.engine('html', tpl.__express);
 app.use(compress());
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 120 * 60 * 1000 } }));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({}));
 app.use(cookieParser());
 app.use('/static' , serveStatic(path.join(__dirname , ".." , "static")));
 
@@ -86,6 +87,7 @@ router(app);
 // 注册插件路由事件
 pluginHandler.registerRoute(app);
 
+logger.info('Listen At Port: ' + GLOBAL.pjconfig.port); 
 var port = parseInt(GLOBAL.pjconfig.port, 10) || 80;
 module.exports = function (){
     app.listen(port);
