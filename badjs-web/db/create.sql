@@ -45,6 +45,8 @@ CREATE TABLE `b_apply` (
   `mail` varchar(80) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `passTime` datetime DEFAULT NULL,
+  `online` int(2) DEFAULT 1,
+  `limitpv` int(5) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
