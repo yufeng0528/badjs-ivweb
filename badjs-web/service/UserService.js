@@ -21,7 +21,7 @@ var UserService = function (){
 
 
 UserService.prototype = {
-    queryUser: function(target, callback = x => x) {
+    queryUser: function(target, callback) {
         const args = [];
         const sql = `SELECT * FROM b_user WHERE `;
 
@@ -31,7 +31,7 @@ UserService.prototype = {
         }).join(' AND ');
 
         console.log('sql + condition', sql + condition, args); 
-        this.db.driver.execQuery(sql + condition, args, callback);
+        this.db.driver.execQuery(sql + condition, args, callback || (x => x));
     },
 
     queryListByCondition : function (target , callback){

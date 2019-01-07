@@ -8,7 +8,7 @@ const UserService = require('../../service/UserService');
 module.exports = router; 
 
 router.post('/login', function (req, res){
-    const { userDao } = req.models;
+    const userDao = req.models.userDao;
 
     userDao.one({ loginName : req.body.username } , (err, user) => {
         if (err || !user || (crypto.createHash("md5").update(req.body.password).digest('hex') != user.password)){
@@ -37,8 +37,8 @@ router.post('/login', function (req, res){
 });
 
 router.get('/update_session', function (req, res){
-    const { userDao } = req.models;
-    const { loginName } = req.session.user; 
+    const userDao = req.models.userDao; 
+    const loginName = req.session.user.loginName;
 
     if (!loginName) return res.json({
         code: -1, message: '请登录'
@@ -71,7 +71,7 @@ router.get('/update_session', function (req, res){
  * 绑定并注册
  */
 router.post('/bind-openid', function(req, res) {
-    const { userDao } = req.models;
+    const userDao = req.models.userDao;
     const loginName = (req.body.loginName || '').trim(); 
     const openid = (req.body.openid || '').trim(); 
 
@@ -157,7 +157,7 @@ router.post('/bind-openid', function(req, res) {
  * 用 code 登陆
  */
 router.post('/login-by-code', function(req, res) {
-    const { userDao } = req.models;
+    const userDao = req.models.userDao;
 
     QQConnect.code2openid(
         req.body.code || '', req.body.redirect_uri || ''
@@ -217,13 +217,14 @@ function MeAction(req, res) {
             data: null
         }); 
     } else {
-        const { loginName, role, email, chineseName, verify_state } = req.session.user; 
-
         res.json({
             code: 0, 
             data: {
-                loginName, role, email, chineseName, 
-                verify_state: parseInt(verify_state, 10)
+                loginName: req.session.user.loginName,
+                role: req.session.user.role,
+                email: req.session.user.email,
+                chineseName: req.session.user.chineseName, 
+                verify_state: parseInt(req.session.user.verify_state, 10)
             }
         }); 
     }

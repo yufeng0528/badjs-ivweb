@@ -30,7 +30,9 @@ QQConnect.code2accessToken = function(code, redirect_uri) {
 
     return httpGet(fullUrl).then(res => {
         return res.split('&').reduce((acc, e) => {
-            const [k, v] = e.split('='); 
+            const t = e.split('='); 
+            const k = t[0];
+            const v = t[1];
             acc[k] = decodeURIComponent(v); 
             return acc; 
         }, {}).access_token || null; 
