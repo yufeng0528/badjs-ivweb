@@ -233,5 +233,6 @@ badjs-web/static/scoreimg/
 badjs-installer
 %*
 offline_log
+uploads
 *.example
 *config.json
