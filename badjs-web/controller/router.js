@@ -12,8 +12,8 @@ var LogAction = require('./action/LogAction'),
     ApproveAction = require("./action/ApproveAction"),
     realtimeService = require("../service/RealtimeService"),
     UserApplyAction = require("./action/UserApplyAction"),
-    pluginHandler = require('../workflow/PluginWorker');
-    ApiRouter = require('./api'); 
+    pluginHandler = require('../workflow/PluginWorker'),
+    ApiRouter = require('./api');
 
 var _ = require("underscore");
 
@@ -49,6 +49,15 @@ module.exports = function(app){
             UserAction.login({}, req , res);
         }
     } );
+
+    app.use('/upload.html', function (req, res, next) {
+        var user  = req.session.user;
+        if (user && user.id) {
+            res.render('upload', {});
+        } else {
+            res.redirect('/user/index.html');
+        }
+    });
 
     app.use('/register.html', function (req , res){
         UserAction.register({}, req , res);
@@ -106,7 +115,7 @@ module.exports = function(app){
     });
 
     // GLOBAL.pjconfig.QQConnect
-    app.use('/api', ApiRouter); 
+    app.use('/api', ApiRouter);
 
 
     /**

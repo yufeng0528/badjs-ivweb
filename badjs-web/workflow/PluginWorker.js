@@ -53,7 +53,7 @@ function getLoginPluginInfo(plugin) {
     if (plugin.login) {
 
         login = plugin.login;
-        
+
     }
 }
 
@@ -86,13 +86,12 @@ function registerRoute(app) {
             app.use('/plugin/' + item.path, item.handle);
             console.log('plugin registerRoute succ. ')
         }
-    })    
+    })
 }
-
 
 module.exports = {
    getList,
-   login, // 注释表示暂时不使用 oa 验证
+   // login, // 注释表示暂时不使用 oa 验证
    registerRoute
 }
 
