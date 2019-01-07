@@ -13,7 +13,9 @@ var LogAction = require('./action/LogAction'),
     realtimeService = require("../service/RealtimeService"),
     UserApplyAction = require("./action/UserApplyAction"),
     pluginHandler = require('../workflow/PluginWorker'),
-    ApiRouter = require('./api');
+    ApiRouter = require('./api'),
+    path = require('path'),
+    multer = require('multer');
 
 var _ = require("underscore");
 
@@ -130,6 +132,41 @@ module.exports = function(app){
             delete req.session.user;
             res.redirect(homeUrl);
         }
+    });
+
+
+    var storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, path.join(__dirname, '..'  , 'uploads'));
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.originalname);
+        }
+    })
+
+    var fileFilter = function (req, file, cb) {
+        if (file.originalname.endsWith('.map')) {
+            cb(null, true);
+        } else {
+            cb(null, false);
+        }
+    }
+
+    var upload = multer({
+        storage: storage,
+        limits: {
+            fileSize: 20 * 1024 * 1024,
+            files: 10
+        },
+        fileFilter: fileFilter
+    });
+
+    app.post('/upload-sourcemap', upload.array('sourcemap'), function (req, res, next) {
+        var names = [];
+        for (var i = 0; i < req.files.length; i++) {
+            names.push(req.files[i]['originalname']);
+        }
+        res.send({ret: 1, filename: names.join(', ')});
     });
 
 

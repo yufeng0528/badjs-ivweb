@@ -10,7 +10,6 @@ var router = require('../controller/router');
 var compress = require('compression');
 var orm = require('orm');
 var pluginHandler = require('./PluginWorker');
-var multer = require('multer');
 var path = require('path');
 
 var log4js = require('log4js'),
@@ -51,26 +50,6 @@ app.use(orm.express(msqlUrl, {
         next();
     }
 }));
-
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-})
-
-var upload = multer({storage: storage});
-
-app.post('/upload-sourcemap', upload.array('sourcemap'), function (req, res, next) {
-    var names = [];
-    for (var i = 0; i < req.files.length; i++) {
-        names.push(req.files[i]['originalname']);
-    }
-    res.send({ret: 1, filename: names.join(', ')});
-});
-
 
 app.use(function (err, req, res, next) {
     res.send(err.stack);
