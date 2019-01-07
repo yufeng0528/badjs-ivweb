@@ -1,0 +1,16 @@
+<%=include('./common/commonLinks.html')(it, opt)%>
+<%=include('./common/indexHeader.html')(it, opt)%>
+
+<main class="index-container" style="padding:250px;">
+    <form action="/upload-sourcemap" method="post" enctype="multipart/form-data" style="margin:0">
+        <h2>SourceMap 上传</h2>
+        <input type="file" name="sourcemap" multiple>
+        <input type="submit" value="提交">
+    </form>
+</main>
+
+<%=include('./common/footer.html')(it)%>
+<script>
+</script>
+</body>
+</html>
