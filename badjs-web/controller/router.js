@@ -13,6 +13,7 @@ var LogAction = require('./action/LogAction'),
     realtimeService = require("../service/RealtimeService"),
     UserApplyAction = require("./action/UserApplyAction"),
     pluginHandler = require('../workflow/PluginWorker');
+    ApiRouter = require('./api'); 
 
 var _ = require("underscore");
 
@@ -103,6 +104,9 @@ module.exports = function(app){
     app.get('/user/monitor.html' , function (req , res){
         res.render('monitor', { layout: false, user: req.session.user, index:'guide', guideTitle: '实时监控'});
     });
+
+    // GLOBAL.pjconfig.QQConnect
+    app.use('/api', ApiRouter); 
 
 
     /**

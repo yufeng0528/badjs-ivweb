@@ -12,7 +12,9 @@ module.exports  = function (db){
         chineseName : String,
         role        : Number,
         email        : String,
-        password        : String
+        password        : String, 
+        verify_state: Number,
+        openid: String
     });
 
     return user;
