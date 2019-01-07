@@ -23,7 +23,7 @@ var UserService = function (){
 UserService.prototype = {
     queryUser: function(target, callback) {
         const args = [];
-        const sql = `SELECT * FROM b_user WHERE `;
+        const sql = `SELECT loginName,chineseName,role,email,verify_state,openid FROM b_user WHERE `;
 
         const condition = Object.keys(target).map(key => {
             args.push(target[key]); 
