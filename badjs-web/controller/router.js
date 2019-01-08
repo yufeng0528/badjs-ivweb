@@ -14,6 +14,7 @@ var LogAction = require('./action/LogAction'),
     UserApplyAction = require("./action/UserApplyAction"),
     pluginHandler = require('../workflow/PluginWorker'),
     ApiRouter = require('./api'),
+    StaticServe = require('./static-serve'), 
     path = require('path'),
     multer = require('multer');
 
@@ -119,6 +120,8 @@ module.exports = function(app){
     // GLOBAL.pjconfig.QQConnect
     app.use('/api', ApiRouter);
 
+    // GLOBAL.pjconfig.http_public
+    app.use('/badjs3', StaticServe);
 
     /**
      * 登出
