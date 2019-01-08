@@ -5,6 +5,6 @@ module.exports = router;
 
 // GLOBAL.pjconfig.QQConnect
 router.use(express.static(
-    GLOBAL.pjconfig.http_public
+    GLOBAL.pjconfig.http_public || __dirname
 )); 
 
