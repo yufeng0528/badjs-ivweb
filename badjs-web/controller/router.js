@@ -14,8 +14,9 @@ var LogAction = require('./action/LogAction'),
     UserApplyAction = require("./action/UserApplyAction"),
     pluginHandler = require('../workflow/PluginWorker'),
     ApiRouter = require('./api'),
-    StaticServe = require('./static-serve'), 
+    StaticServe = require('./static-serve'),
     path = require('path'),
+    fs = require('fs'),
     multer = require('multer');
 
 var _ = require("underscore");
@@ -140,12 +141,22 @@ module.exports = function(app){
 
     var storage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, path.join(__dirname, '..'  , 'uploads'));
+            var projectName = req.body.projectName || 'no-project';
+            var filepath = path.join(__dirname, '..'  , 'uploads/' + projectName);
+            fs.exists(filepath, function(exists) {
+                if (exists) {
+                    cb(null, filepath);
+                } else {
+                    fs.mkdir(filepath, () => {
+                        cb(null, filepath);
+                    });
+                }
+            });
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname);
         }
-    })
+    });
 
     var fileFilter = function (req, file, cb) {
         if (file.originalname.endsWith('.map')) {
@@ -153,7 +164,7 @@ module.exports = function(app){
         } else {
             cb(null, false);
         }
-    }
+    };
 
     var upload = multer({
         storage: storage,
