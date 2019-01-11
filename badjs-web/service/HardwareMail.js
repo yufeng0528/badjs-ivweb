@@ -1,7 +1,8 @@
 var child_process = require('child_process');
 var mail = require('../utils/ivwebMail_for_single.js');
 var moment = require('moment');
-var pjConfig = require('../../project.debug.json');
+var path = require('path');
+var pjConfig = require(path.join(__dirname, '..', 'project.json'));
 
 var child = child_process.spawn('df', ['-h']);
 
