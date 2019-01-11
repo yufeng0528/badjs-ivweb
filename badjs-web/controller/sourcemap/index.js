@@ -4,6 +4,7 @@ var multer = require('multer');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 var soucemap = GLOBAL.pjconfig.sourcemap;
+var SourceMapAction = require('../action/SourceMapAction');
 
 function removePromise(dir) {
     return new Promise(function (resolve, reject) {
@@ -24,6 +25,9 @@ function removePromise(dir) {
     });
 }
 
+function persistPath2DB (path, project, name) {
+    SourceMapAction.add({path, project, name});
+}
 
 // 保留最后三个版本的数据
 function removeFolder(fold) {
@@ -53,6 +57,7 @@ var storage = multer.diskStorage({
                 cb(null, filepath);
             }
         });
+        persistPath2DB(filepath, projectName, file.originalname);
         // 异步删除文件夹
         removeFolder(path.join(soucemap, projectName));
     },

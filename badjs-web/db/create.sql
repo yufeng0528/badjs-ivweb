@@ -115,6 +115,22 @@ CREATE TABLE `b_user_apply` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 
--- Dump completed on 2015-01-20  9:43:38
+--
+-- Table structure for table `b_sourcemap`
+--
+
+DROP TABLE IF EXISTS `b_sourcemap`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `b_sourcemap` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `path` varchar(200) NOT NULL,
+  `createTime` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name_idx` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
 
 

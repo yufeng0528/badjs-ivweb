@@ -38,6 +38,7 @@ app.use(orm.express(msqlUrl, {
         db.use(require('orm-transaction'));
         models.userDao = require('../dao/UserDao')(db);
         models.applyDao = require('../dao/ApplyDao')(db);
+        models.sourcemapDao = require('../dao/sourcemapDao')(db);
         models.approveDao = require('../dao/ApproveDao')(db);
         models.userApplyDao = require('../dao/UserApplyDao')(db);
         models.statisticsDao = require('../dao/StatisticsDao')(db);

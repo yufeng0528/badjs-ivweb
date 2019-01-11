@@ -6,6 +6,7 @@
 
 var LogAction = require('./action/LogAction'),
     ApplyAction = require('./action/ApplyAction'),
+    SourceMapAction = require('./action/SourceMapAction'),
     UserAction = require("./action/UserAction"),
     IndexAction = require("./action/IndexAction"),
     StatisticsAction = require("./action/StatisticsAction"),
