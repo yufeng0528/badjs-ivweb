@@ -120,17 +120,30 @@ CREATE TABLE `b_user_apply` (
 --
 
 DROP TABLE IF EXISTS `b_sourcemap`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `b_sourcemap` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project` varchar(100) NOT NULL,
   `name` varchar(100) NOT NULL,
   `path` varchar(200) NOT NULL,
-  `createTime` timestamp NULL DEFAULT NULL,
+  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `name_idx` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 
+--
+-- Table structure for table `b_hardware`
+--
 
+DROP TABLE IF EXISTS `b_hardware`;
+
+CREATE TABLE `b_hardware` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fullSize` int(5) NOT NULL,
+  `remains` int(5) NOT NULL,
+  `usedSize` int(5) NOT NULL,
+  `usedPercent` varchar(10) NOT NULL,
+  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
