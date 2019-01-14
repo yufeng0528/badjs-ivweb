@@ -170,21 +170,23 @@ webpackJsonp([10],{
 	                    $(".setting-search").text("查询日志")
 	                    var offlineLogs = JSON.parse(data.data);
 	                    var newLogs = []
-	                    offlineLogs.logs.forEach(function (item){
-	                        var  date = new Date(item.time);
-	                        item.userAgent = offlineLogs.userAgent;
-	                        item.date = _.formatDate(date , 'YYYY-MM-DD hh:mm:ss');
-	                        var all = "";
-	                        for(var key in item ) {
-	                            if(key == 'time'){
-	                                continue
-	                            }
-	                            all += ';'+key+'=' + item[key];
-	                        }
-	                        item.date = date;
-	                        item.all = all;
-	                        newLogs.push(item)
-	                    })
+                        if (offlineLogs.logs && offlineLogs.logs.length) {
+                            offlineLogs.logs.forEach(function (item){
+                                var  date = new Date(item.time);
+                                item.userAgent = offlineLogs.userAgent;
+                                item.date = _.formatDate(date , 'YYYY-MM-DD hh:mm:ss');
+                                var all = "";
+                                for(var key in item ) {
+                                    if(key == 'time'){
+                                        continue
+                                    }
+                                    all += ';'+key+'=' + item[key];
+                                }
+                                item.date = date;
+                                item.all = all;
+                                newLogs.push(item)
+                            })
+                        }
 
 	                    offlineLogCache[fileId] = newLogs
 
