@@ -10,16 +10,16 @@ var mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
 function constructEmail(items) {
 
     var html = ['<html>'];
-    html.push('<head><style>tbody {text-align: center} td,th {padding: 4px; border-bottom: 1px solid #b7a2a2; border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} </style></head>')
+    html.push('<head><style>tbody {text-align: center} td,th {padding: 4px; border-bottom: 1px solid #b7a2a2; border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} .red {color: red}</style></head>')
     html.push('<body><h2>BadJS服务器磁盘占用情况</h2>');
-    html.push(`<h3>目前使用磁盘 ${items[0].usedPercent}</h3>`);
-    html.push('<h3>最近7天占有情况统计：</h3>');
+    html.push(`<h3>目前使用磁盘 <span class="red">${items[0].usedPercent}</span></h3>`);
+    html.push('<h3>最近7天占用情况统计：</h3>');
     html.push(`<table><tr>
                 <th>日期</th>
-                <th>文件系统总容量</th>
-                <th>剩余容量</th>
-                <th>已用容量</th>
-                <th>已用</th>
+                <th>文件系统总容量(GB)</th>
+                <th>剩余容量(GB)</th>
+                <th>已用容量(GB)</th>
+                <th>已用占比(%)</th>
                </tr>`);
     items.forEach(item => {
         var createTime = moment(item.createTime).format('YYYY-MM-DD hh:mm:ss');
@@ -32,7 +32,7 @@ function constructEmail(items) {
                     <td>${fullSize}</td>
                     <td>${remains}</td>
                     <td>${usedSize}</td>
-                    <td>${usedPercent}</td>
+                    <td class="red">${usedPercent}</td>
                    </tr>`);
     })
 
@@ -69,9 +69,10 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
             hardware.find({}, ['id', 'Z'], 7, function (err, items) {
                 if (!err) {
                     var html = constructEmail(items);
-                    console.log(html);
                     if (pjConfig.scoreMailToOwner) {
-                        mail('', pjConfig.scoreMailToOwner, '', 'badjs服务器磁盘占用情况', html, '', true);
+                        mail('', pjConfig.scoreMailToOwner, '', 'BadJS服务器磁盘占用情况', html, '', true);
+                    } else {
+                        console.log(html);
                     }
                 }
                 mdb.close();
