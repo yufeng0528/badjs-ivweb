@@ -170,7 +170,6 @@ module.exports = function (app) {
             res.json({ret: -2, msg: "should login"});
             return;
         }
-
         //根据不同actionName 调用不同action
         try {
             switch (action) {
@@ -191,6 +190,9 @@ module.exports = function (app) {
                     break;
                 case "statistics" :
                     StatisticsAction[operation](params, req, res);
+                    break;
+                case 'sourcemap':
+                    SourceMapAction[operation](params, req, res);
                     break;
 
                 default  :

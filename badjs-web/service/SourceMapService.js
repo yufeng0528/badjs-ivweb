@@ -24,11 +24,15 @@ SourceMapService.prototype = {
             });
         });
     },
-    add: function (target, callback) {
-        this.sourcemapDao.create(target, function (err, items) {
-
+    add: function (sourcemap, callback) {
+        sourcemap.createTime = new Date();
+        this.sourcemapDao.create(sourcemap, function (err, items) {
+            callback(null, {
+                ret: 0,
+                msg: "success",
+                data: items
+            });
         });
-
     },
     remove: function (target, callback) {
 
