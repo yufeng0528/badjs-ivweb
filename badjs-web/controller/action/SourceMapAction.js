@@ -15,7 +15,7 @@ var sourceMapAction = {
             project: params.project,
             name: params.name
         }, function (err, res) {
-            if (!res) {
+            if (!err && !res.data.length) {
                 service.add(params, function (err, items) {
                     console.log(items);
                 });
