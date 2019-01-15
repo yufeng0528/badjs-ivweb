@@ -191,7 +191,8 @@ function bindEvent() {
                 uin :$target.siblings('.td-4').text(),
                 ip :$target.siblings('.td-5').text(),
                 agent : $target.siblings('.td-6').attr("title"),
-                source :   $target.siblings('.td-7').html() ,
+                source :   $target.siblings('.td-7').html(),
+                version: $target.siblings('.td-8').text()
             })
         }).on('change', 'selectBusiness', function() {
             var val = $(this).val() - 0;

@@ -354,7 +354,9 @@ form
     width: 150px;
 }
 #content .mid-side .main-table td.td-6,
-#content .mid-side .main-table th.td-6
+#content .mid-side .main-table th.td-6,
+#content .mid-side .main-table td.td-8,
+#content .mid-side .main-table th.td-8
 {
     width: 80px;
 }
