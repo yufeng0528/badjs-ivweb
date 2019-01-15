@@ -158,7 +158,7 @@ function bindEvent() {
                             var all = "";
                             for(var key in item ) {
                                 if(key == 'time'){
-                                    continue
+                                    continue;
                                 }
                                 all += ';'+key+'=' + item[key];
                             }
@@ -280,7 +280,7 @@ function fetchOfflineFile (id){
                 $.each(data.data, function (key , item){
                     var arr = item.id.split("_");
                     var itemName = arr[0];
-                    if(arr[2){
+                    if(arr[2]){
                         var dateStr = _.formatDate(new Date(arr[2]-0) , 'MM-DD hh:mm');
                         itemName += " (" + dateStr +")";
                     }

@@ -1,15 +1,15 @@
-webpackJsonp([6],{
+webpackJsonp([4],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var usermanger = __webpack_require__(10);
+	var usermanger = __webpack_require__(11);
 
 	usermanger.init();
 
 /***/ },
 
-/***/ 10:
+/***/ 11:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -17,7 +17,7 @@ webpackJsonp([6],{
 	 * @author coverguo
 	 * */
 
-	var userTable = __webpack_require__(146);
+	var userTable = __webpack_require__(153);
 
 
 	    var encodeHtml = function (str) {
@@ -92,11 +92,11 @@ webpackJsonp([6],{
 	        }
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
-/***/ 146:
+/***/ 153:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {

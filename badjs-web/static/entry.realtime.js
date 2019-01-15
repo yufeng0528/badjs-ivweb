@@ -1,94 +1,28 @@
-webpackJsonp([3],{
+webpackJsonp([8],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var log = __webpack_require__(17);
+	var log = __webpack_require__(12);
 	log.init();
 
 	var source_trigger = __webpack_require__(13);
 	source_trigger.init();
 
-	var last_select = __webpack_require__(15);
+	var last_select = __webpack_require__(14);
 	last_select.init();
 
 /***/ },
 
-/***/ 13:
+/***/ 12:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {exports.init = function() {
-		var not_show_source_page = false;
-		var hideform_class_name = 'main-table-hidefrom';
+	/* WEBPACK VAR INJECTION */(function($) {var dialog = __webpack_require__(25);
+	var Delegator = __webpack_require__(22);
 
-		try {
-			not_show_source_page = !!localStorage.not_show_source_page;
-			$('.main-table')[not_show_source_page ? 'addClass' : 'removeClass'](hideform_class_name);
-		} catch (ex) {}
-
-		var update_source = function(show_source_page) {
-			if (show_source_page) {
-				$('.main-table').removeClass(hideform_class_name);
-				$('#log-table .source_page_link').each(function() {
-					var $this = $(this);
-					$this.text($this.data('viewlink'));
-				});
-			} else {
-				$('.main-table').addClass(hideform_class_name);
-				$('#log-table .source_page_link').each(function() {
-					var $this = $(this);
-					$this.text($this.data('viewtext'));
-				});
-			}
-		};
-
-		var $ssp = $('#show_source_page');
-		$ssp.prop('checked', !not_show_source_page).on('change', function() {
-			try {
-				var show_source_page = $ssp.prop('checked');
-				localStorage.not_show_source_page = show_source_page ? '' : '1';
-				update_source(show_source_page);
-			} catch (ex) {}
-		});
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-
-/***/ 15:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
-		var last_select = -1;
-
-		try {
-
-		    last_select = localStorage.last_select >> 0; // jshint ignore:line
-
-			var $sb = $('#select-business');
-
-			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
-
-			$sb.on('change', function(){
-				localStorage.last_select = $sb.val();
-			});
-
-		} catch (ex) {}
-
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-
-/***/ 17:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {var dialog = __webpack_require__(141);
-	var Delegator = __webpack_require__(21);
-
-	var logTable = __webpack_require__(147);
-	var keyword = __webpack_require__(148);
-	var debar = __webpack_require__(149);
+	var logTable = __webpack_require__(155);
+	var keyword = __webpack_require__(156);
+	var debar = __webpack_require__(157);
 	var logDetailDialog = __webpack_require__(23);
 
 	var logConfig = {
@@ -213,7 +147,7 @@ webpackJsonp([3],{
 	                ip :$target.siblings('.td-5').text(),
 	                agent : $target.siblings('.td-6').attr("title"),
 	                source :   $target.siblings('.td-7').html() ,
-                    version: $target.siblings('.td-8').text()
+	                version: $target.siblings('.td-8').text()
 	            })
 
 	        }).on('change', 'selectBusiness', function() {
@@ -356,11 +290,77 @@ webpackJsonp([3],{
 
 	exports.init = init;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
-/***/ 21:
+/***/ 13:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {exports.init = function() {
+		var not_show_source_page = false;
+		var hideform_class_name = 'main-table-hidefrom';
+
+		try {
+			not_show_source_page = !!localStorage.not_show_source_page;
+			$('.main-table')[not_show_source_page ? 'addClass' : 'removeClass'](hideform_class_name);
+		} catch (ex) {}
+
+		var update_source = function(show_source_page) {
+			if (show_source_page) {
+				$('.main-table').removeClass(hideform_class_name);
+				$('#log-table .source_page_link').each(function() {
+					var $this = $(this);
+					$this.text($this.data('viewlink'));
+				});
+			} else {
+				$('.main-table').addClass(hideform_class_name);
+				$('#log-table .source_page_link').each(function() {
+					var $this = $(this);
+					$this.text($this.data('viewtext'));
+				});
+			}
+		};
+
+		var $ssp = $('#show_source_page');
+		$ssp.prop('checked', !not_show_source_page).on('change', function() {
+			try {
+				var show_source_page = $ssp.prop('checked');
+				localStorage.not_show_source_page = show_source_page ? '' : '1';
+				update_source(show_source_page);
+			} catch (ex) {}
+		});
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+
+/***/ 14:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
+		var last_select = -1;
+		
+		try {
+
+		    last_select = localStorage.last_select >> 0; // jshint ignore:line
+			
+			var $sb = $('#select-business');
+			
+			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
+
+			$sb.on('change', function(){
+				localStorage.last_select = $sb.val();
+			});
+
+		} catch (ex) {}
+
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+
+/***/ 22:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -536,15 +536,15 @@ webpackJsonp([3],{
 
 	module.exports = Delegator;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
 /***/ 23:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
-	var dialogTpl = __webpack_require__(155);
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(22);
+	var dialogTpl = __webpack_require__(161);
 
 	    var container;
 
@@ -591,15 +591,15 @@ webpackJsonp([3],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
-/***/ 141:
+/***/ 25:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
-	var modal = __webpack_require__(156);
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(22);
+	var modal = __webpack_require__(162);
 
 	    var container;
 
@@ -643,11 +643,11 @@ webpackJsonp([3],{
 	    Dialog.hide = hide;
 
 	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
-/***/ 147:
+/***/ 155:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {module.exports = function (obj) {
@@ -817,7 +817,11 @@ webpackJsonp([3],{
 	((__t = (sourcePage(it[i], 'viewlink', opt))) == null ? '' : __t) +
 	'"\n        >' +
 	((__t = (sourcePage(it[i], 'view', opt))) == null ? '' : __t) +
-	'</a>\n    </td>\n</tr>\n';
+	'</a>\n    </td>\n    <td class="td-8 ' +
+	((__t = (classes['td-8'] )) == null ? '' : __t) +
+	'">\n        ' +
+	((__t = (it[i].version||0)) == null ? '' : __t) +
+	'\n    </td>\n</tr>\n';
 	 } ;
 	__p += '\n\n';
 	 if(it.length === 0 ){;
@@ -828,11 +832,11 @@ webpackJsonp([3],{
 	}
 	return __p
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
-/***/ 148:
+/***/ 156:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -851,7 +855,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 149:
+/***/ 157:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -870,7 +874,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 155:
+/***/ 161:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -897,7 +901,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 156:
+/***/ 162:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {

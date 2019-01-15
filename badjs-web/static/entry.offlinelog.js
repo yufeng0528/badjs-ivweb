@@ -3,7 +3,7 @@ webpackJsonp([10],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var log = __webpack_require__(12);
+	var log = __webpack_require__(19);
 	log.init();
 
 	var source_trigger = __webpack_require__(13);
@@ -15,16 +15,57 @@ webpackJsonp([10],{
 
 /***/ },
 
-/***/ 12:
+/***/ 13:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($, _) {var dialog = __webpack_require__(141);
-	var Delegator = __webpack_require__(21);
+	/* WEBPACK VAR INJECTION */(function($) {exports.init = function() {
+		var not_show_source_page = false;
+		var hideform_class_name = 'main-table-hidefrom';
 
-	var logTable = __webpack_require__(147);
-	var keyword = __webpack_require__(148);
-	var debar = __webpack_require__(149);
-	var offlineDialog = __webpack_require__(22);
+		try {
+			not_show_source_page = !!localStorage.not_show_source_page;
+			$('.main-table')[not_show_source_page ? 'addClass' : 'removeClass'](hideform_class_name);
+		} catch (ex) {}
+
+		var update_source = function(show_source_page) {
+			if (show_source_page) {
+				$('.main-table').removeClass(hideform_class_name);
+				$('#log-table .source_page_link').each(function() {
+					var $this = $(this);
+					$this.text($this.data('viewlink'));
+				});
+			} else {
+				$('.main-table').addClass(hideform_class_name);
+				$('#log-table .source_page_link').each(function() {
+					var $this = $(this);
+					$this.text($this.data('viewtext'));
+				});
+			}
+		};
+
+		var $ssp = $('#show_source_page');
+		$ssp.prop('checked', !not_show_source_page).on('change', function() {
+			try {
+				var show_source_page = $ssp.prop('checked');
+				localStorage.not_show_source_page = show_source_page ? '' : '1';
+				update_source(show_source_page);
+			} catch (ex) {}
+		});
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+
+/***/ 19:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($, _) {var dialog = __webpack_require__(25);
+	var Delegator = __webpack_require__(22);
+
+	var logTable = __webpack_require__(155);
+	var keyword = __webpack_require__(156);
+	var debar = __webpack_require__(157);
+	var offlineDialog = __webpack_require__(151);
 	var logDetailDialog = __webpack_require__(23);
 
 	var offlineLogCache = {};
@@ -170,23 +211,23 @@ webpackJsonp([10],{
 	                    $(".setting-search").text("查询日志")
 	                    var offlineLogs = JSON.parse(data.data);
 	                    var newLogs = []
-                        if (offlineLogs.logs && offlineLogs.logs.length) {
-                            offlineLogs.logs.forEach(function (item){
-                                var  date = new Date(item.time);
-                                item.userAgent = offlineLogs.userAgent;
-                                item.date = _.formatDate(date , 'YYYY-MM-DD hh:mm:ss');
-                                var all = "";
-                                for(var key in item ) {
-                                    if(key == 'time'){
-                                        continue
-                                    }
-                                    all += ';'+key+'=' + item[key];
-                                }
-                                item.date = date;
-                                item.all = all;
-                                newLogs.push(item)
-                            })
-                        }
+	                    if (offlineLogs.logs && offlineLogs.logs.length) {
+	                        offlineLogs.logs.forEach(function (item){
+	                            var  date = new Date(item.time);
+	                            item.userAgent = offlineLogs.userAgent;
+	                            item.date = _.formatDate(date , 'YYYY-MM-DD hh:mm:ss');
+	                            var all = "";
+	                            for(var key in item ) {
+	                                if(key == 'time'){
+	                                    continue;
+	                                }
+	                                all += ';'+key+'=' + item[key];
+	                            }
+	                            item.date = date;
+	                            item.all = all;
+	                            newLogs.push(item)
+	                        })
+	                    }
 
 	                    offlineLogCache[fileId] = newLogs
 
@@ -211,7 +252,8 @@ webpackJsonp([10],{
 	                uin :$target.siblings('.td-4').text(),
 	                ip :$target.siblings('.td-5').text(),
 	                agent : $target.siblings('.td-6').attr("title"),
-	                source :   $target.siblings('.td-7').html() ,
+	                source :   $target.siblings('.td-7').html(),
+	                version: $target.siblings('.td-8').text()
 	            })
 	        }).on('change', 'selectBusiness', function() {
 	            var val = $(this).val() - 0;
@@ -397,52 +439,11 @@ webpackJsonp([10],{
 
 	exports.init = init;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)))
 
 /***/ },
 
-/***/ 13:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {exports.init = function() {
-		var not_show_source_page = false;
-		var hideform_class_name = 'main-table-hidefrom';
-
-		try {
-			not_show_source_page = !!localStorage.not_show_source_page;
-			$('.main-table')[not_show_source_page ? 'addClass' : 'removeClass'](hideform_class_name);
-		} catch (ex) {}
-
-		var update_source = function(show_source_page) {
-			if (show_source_page) {
-				$('.main-table').removeClass(hideform_class_name);
-				$('#log-table .source_page_link').each(function() {
-					var $this = $(this);
-					$this.text($this.data('viewlink'));
-				});
-			} else {
-				$('.main-table').addClass(hideform_class_name);
-				$('#log-table .source_page_link').each(function() {
-					var $this = $(this);
-					$this.text($this.data('viewtext'));
-				});
-			}
-		};
-
-		var $ssp = $('#show_source_page');
-		$ssp.prop('checked', !not_show_source_page).on('change', function() {
-			try {
-				var show_source_page = $ssp.prop('checked');
-				localStorage.not_show_source_page = show_source_page ? '' : '1';
-				update_source(show_source_page);
-			} catch (ex) {}
-		});
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-
-/***/ 21:
+/***/ 22:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -618,16 +619,123 @@ webpackJsonp([10],{
 
 	module.exports = Delegator;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
-/***/ 22:
+/***/ 23:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($, _) {var Delegator = __webpack_require__(21);
-	var offline_monitor_row = __webpack_require__(153);
-	var dialogTpl = __webpack_require__(154);
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(22);
+	var dialogTpl = __webpack_require__(161);
+
+	    var container;
+
+	    function hide() {
+	        container.removeClass('in');
+	        container.find('.modal-backdrop').removeClass('in');
+	        setTimeout(function () {
+	            container.remove();
+	            container = undefined;
+	        }, 300);
+	    }
+
+
+	    function Dialog (param) {
+	        if (container) {
+	            container.remove();
+	            container = undefined;
+	        }
+	        container = $(dialogTpl(param))
+	            .appendTo(document.body)
+	            .show();
+
+	        var key,
+	            action,
+	            delegator,
+	            on =  {};
+
+	        delegator = (new Delegator(container))
+	            .on('click', 'close', hide);
+
+	        for (key in on) {
+	            action = key.split('/');
+	            delegator.on(action[0], action[1], on[key]);
+	        }
+
+	        setTimeout(function () {
+	            container.addClass('in');
+	            container.find('.modal-backdrop').addClass('in');
+
+	        }, 0);
+	    }
+
+	    Dialog.hide = hide;
+
+	module.exports =  Dialog;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+
+/***/ 25:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(22);
+	var modal = __webpack_require__(162);
+
+	    var container;
+
+	    function hide() {
+	        container.removeClass('in');
+	        container.find('.modal-backdrop').removeClass('in');
+	        setTimeout(function () {
+	            container.remove();
+	            container = undefined;
+	        }, 300);
+	    }
+
+	    function Dialog (param) {
+	        if (container) {
+	            container.remove();
+	            container = undefined;
+	        }
+	        container = $(modal({it :param}))
+	            .appendTo(document.body)
+	            .show();
+
+	        var key,
+	            action,
+	            delegator,
+	            on = param.on || {};
+
+	        delegator = (new Delegator(container))
+	            .on('click', 'close', hide);
+
+	        for (key in on) {
+	            action = key.split('/');
+	            delegator.on(action[0], action[1], on[key]);
+	        }
+
+	        setTimeout(function () {
+	            container.addClass('in');
+	            container.find('.modal-backdrop').addClass('in');
+	        }, 0);
+	    }
+
+	    Dialog.hide = hide;
+
+	module.exports =  Dialog;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+
+/***/ 151:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($, _) {var Delegator = __webpack_require__(22);
+	var offline_monitor_row = __webpack_require__(163);
+	var dialogTpl = __webpack_require__(164);
 
 	    var container;
 
@@ -736,118 +844,11 @@ webpackJsonp([10],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)))
 
 /***/ },
 
-/***/ 23:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
-	var dialogTpl = __webpack_require__(155);
-
-	    var container;
-
-	    function hide() {
-	        container.removeClass('in');
-	        container.find('.modal-backdrop').removeClass('in');
-	        setTimeout(function () {
-	            container.remove();
-	            container = undefined;
-	        }, 300);
-	    }
-
-
-	    function Dialog (param) {
-	        if (container) {
-	            container.remove();
-	            container = undefined;
-	        }
-	        container = $(dialogTpl(param))
-	            .appendTo(document.body)
-	            .show();
-
-	        var key,
-	            action,
-	            delegator,
-	            on =  {};
-
-	        delegator = (new Delegator(container))
-	            .on('click', 'close', hide);
-
-	        for (key in on) {
-	            action = key.split('/');
-	            delegator.on(action[0], action[1], on[key]);
-	        }
-
-	        setTimeout(function () {
-	            container.addClass('in');
-	            container.find('.modal-backdrop').addClass('in');
-
-	        }, 0);
-	    }
-
-	    Dialog.hide = hide;
-
-	module.exports =  Dialog;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-
-/***/ 141:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
-	var modal = __webpack_require__(156);
-
-	    var container;
-
-	    function hide() {
-	        container.removeClass('in');
-	        container.find('.modal-backdrop').removeClass('in');
-	        setTimeout(function () {
-	            container.remove();
-	            container = undefined;
-	        }, 300);
-	    }
-
-	    function Dialog (param) {
-	        if (container) {
-	            container.remove();
-	            container = undefined;
-	        }
-	        container = $(modal({it :param}))
-	            .appendTo(document.body)
-	            .show();
-
-	        var key,
-	            action,
-	            delegator,
-	            on = param.on || {};
-
-	        delegator = (new Delegator(container))
-	            .on('click', 'close', hide);
-
-	        for (key in on) {
-	            action = key.split('/');
-	            delegator.on(action[0], action[1], on[key]);
-	        }
-
-	        setTimeout(function () {
-	            container.addClass('in');
-	            container.find('.modal-backdrop').addClass('in');
-	        }, 0);
-	    }
-
-	    Dialog.hide = hide;
-
-	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-
-/***/ 147:
+/***/ 155:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {module.exports = function (obj) {
@@ -1017,7 +1018,11 @@ webpackJsonp([10],{
 	((__t = (sourcePage(it[i], 'viewlink', opt))) == null ? '' : __t) +
 	'"\n        >' +
 	((__t = (sourcePage(it[i], 'view', opt))) == null ? '' : __t) +
-	'</a>\n    </td>\n</tr>\n';
+	'</a>\n    </td>\n    <td class="td-8 ' +
+	((__t = (classes['td-8'] )) == null ? '' : __t) +
+	'">\n        ' +
+	((__t = (it[i].version||0)) == null ? '' : __t) +
+	'\n    </td>\n</tr>\n';
 	 } ;
 	__p += '\n\n';
 	 if(it.length === 0 ){;
@@ -1028,11 +1033,11 @@ webpackJsonp([10],{
 	}
 	return __p
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
-/***/ 148:
+/***/ 156:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -1051,7 +1056,7 @@ webpackJsonp([10],{
 
 /***/ },
 
-/***/ 149:
+/***/ 157:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -1070,41 +1075,7 @@ webpackJsonp([10],{
 
 /***/ },
 
-/***/ 153:
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function (obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '<tr>\n    <td style="width:70%">' +
-	((__t = (uin)) == null ? '' : __t) +
-	'</td>\n    <td>监听中</td>\n    <td><a uin="' +
-	((__t = (uin)) == null ? '' : __t) +
-	'" data-event-click="deleteUin" href="javascript:;">删除</a></td>\n</tr>\n';
-
-	}
-	return __p
-	}
-
-/***/ },
-
-/***/ 154:
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function (obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="offlineConfigModal">\n    <div class="modal-backdrop fade"></div>\n    <div class="modal-dialog">\n        <div class="modal-content">\n\n            <div class="modal-header">\n                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" data-event-click="close">×</span><span class="sr-only">Close</span></button>\n                <h4 class="modal-title">设置离线日志自动拉取</h4>\n            </div>\n            <div class="modal-body">\n                <div class="form-group" style="text-align: center;">\n                    <input style="display: inline-block;width: 300px;" type="text" class="form-control" id="addUin" placeholder="添加监听的UIN">\n                    <button type="submit" class="btn btn-default" data-event-click="addUin">添加</button>\n                </div>\n                <div class="uin-list">\n                    <table class="table table-striped">\n                    </table>\n                </div>\n            </div>\n            <div class="modal-footer">\n                <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n            </div>\n\n        </div>\n    </div>\n</div>\n';
-
-	}
-	return __p
-	}
-
-/***/ },
-
-/***/ 155:
+/***/ 161:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -1131,7 +1102,7 @@ webpackJsonp([10],{
 
 /***/ },
 
-/***/ 156:
+/***/ 162:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -1145,6 +1116,40 @@ webpackJsonp([10],{
 	'</h4>\n      </div>\n      <div class="modal-body">\n        ' +
 	((__t = (it.body)) == null ? '' : __t) +
 	'\n      </div>\n      <div class="modal-footer">\n        <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n      </div>\n\n    </div>\n  </div>\n</div>';
+
+	}
+	return __p
+	}
+
+/***/ },
+
+/***/ 163:
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '<tr>\n    <td style="width:70%">' +
+	((__t = (uin)) == null ? '' : __t) +
+	'</td>\n    <td>监听中</td>\n    <td><a uin="' +
+	((__t = (uin)) == null ? '' : __t) +
+	'" data-event-click="deleteUin" href="javascript:;">删除</a></td>\n</tr>\n';
+
+	}
+	return __p
+	}
+
+/***/ },
+
+/***/ 164:
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="offlineConfigModal">\n    <div class="modal-backdrop fade"></div>\n    <div class="modal-dialog">\n        <div class="modal-content">\n\n            <div class="modal-header">\n                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" data-event-click="close">×</span><span class="sr-only">Close</span></button>\n                <h4 class="modal-title">设置离线日志自动拉取</h4>\n            </div>\n            <div class="modal-body">\n                <div class="form-group" style="text-align: center;">\n                    <input style="display: inline-block;width: 300px;" type="text" class="form-control" id="addUin" placeholder="添加监听的UIN">\n                    <button type="submit" class="btn btn-default" data-event-click="addUin">添加</button>\n                </div>\n                <div class="uin-list">\n                    <table class="table table-striped">\n                    </table>\n                </div>\n            </div>\n            <div class="modal-footer">\n                <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n            </div>\n\n        </div>\n    </div>\n</div>\n';
 
 	}
 	return __p
