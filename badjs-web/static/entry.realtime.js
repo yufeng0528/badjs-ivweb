@@ -60,13 +60,13 @@ webpackJsonp([3],{
 
 	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
 		var last_select = -1;
-		
+
 		try {
 
 		    last_select = localStorage.last_select >> 0; // jshint ignore:line
-			
+
 			var $sb = $('#select-business');
-			
+
 			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
 
 			$sb.on('change', function(){
@@ -213,6 +213,7 @@ webpackJsonp([3],{
 	                ip :$target.siblings('.td-5').text(),
 	                agent : $target.siblings('.td-6').attr("title"),
 	                source :   $target.siblings('.td-7').html() ,
+                    version: $target.siblings('.td-8').text()
 	            })
 
 	        }).on('change', 'selectBusiness', function() {
