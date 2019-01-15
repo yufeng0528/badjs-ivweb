@@ -36,6 +36,7 @@ module.exports = function() {
                 var fixedParam = {
                     id: queryData.id,
                     uin: queryData.uin,
+                    version: queryData.version
                 };
 
                 if(_.isString(queryData.from)){
