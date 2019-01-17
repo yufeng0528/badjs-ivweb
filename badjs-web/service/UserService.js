@@ -26,7 +26,7 @@ UserService.prototype = {
         
         var args = [];
         var sql = `SELECT loginName,chineseName,role,email,verify_state,openid FROM b_user `;
-        var condition = Object.keys(target).map(key => {
+        var condition = Object.keys(target).map(function(key) {
             args.push(target[key]); 
             return `${key} = ?`; 
         }).join(' AND ');
@@ -36,7 +36,7 @@ UserService.prototype = {
         }
 
         console.log('sql + condition', sql, args); 
-        this.db.driver.execQuery(sql, args, callback || (x => x));
+        this.db.driver.execQuery(sql, args, callback);
     },
 
     queryListByCondition : function (target , callback){
