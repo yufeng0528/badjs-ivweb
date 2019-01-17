@@ -29,8 +29,8 @@ router.get('/users', function(req, res) {
 }); 
 
 router.post('/trust_him', function(req, res) {
-    const userService = new UserService();
-    const loginName = (req.body.loginName || '').trim(); 
+    var userService = new UserService();
+    var loginName = (req.body.loginName || '').trim(); 
 
     if (!loginName) {
         return res.json({
