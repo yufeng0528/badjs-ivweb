@@ -10,7 +10,7 @@ var log4js = require('log4js'),
     logger = log4js.getLogger(),
     ORM = require("orm");
 
-var dateFormat = function(date, fmt) {
+var dateFormat = function (date, fmt) {
     var o = {
         "M+": date.getMonth() + 1, //月份
         "d+": date.getDate(), //日
@@ -31,7 +31,7 @@ var dateFormat = function(date, fmt) {
     return fmt;
 };
 
-var StatisticsService = function() {
+var StatisticsService = function () {
 
     this.statisticsDao = global.models.statisticsDao;
     this.applyDao = global.models.applyDao;
@@ -45,11 +45,11 @@ var StatisticsService = function() {
 };
 
 StatisticsService.prototype = {
-    queryById: function(param, callback) {
+    queryById: function (param, callback) {
         this.statisticsDao.find({
             projectId: param.projectId,
             startDate: dateFormat(param.startDate, 'yyyy-MM-dd hh:mm:ss')
-        }, function(err, items) {
+        }, function (err, items) {
             if (err) {
                 callback(err);
                 return;
@@ -73,16 +73,16 @@ StatisticsService.prototype = {
         });
 
     },
-    getPvById: function(param, callback) {
-          
+    getPvById: function (param, callback) {
+
         this.pvDao.find({
             badjsid: param.badjsid,
-	        date: param.date
-        }, function(err, data) {
-	        callback(err, data);
+            date: param.date
+        }, function (err, data) {
+            callback(err, data);
         });
     },
-    queryByChart: function(param, callback) {
+    queryByChart: function (param, callback) {
         //筛选参数
         var s_params = {};
         if (param.projectId != -1) {
@@ -101,7 +101,7 @@ StatisticsService.prototype = {
         this.statisticsDao.find(s_params)
             .only("endDate", "startDate", "projectId", "id", "total")
             .where("startDate >=?", [param.startTime])
-            .all(function(err, items) {
+            .all(function (err, items) {
                 if (err) {
                     callback(err);
                     return;
@@ -111,34 +111,34 @@ StatisticsService.prototype = {
                     msg: "success",
                     data: items
                 });
-            }).where(function() {
+            }).where(function () {
 
-            });
+        });
     },
     queryScoreById: function (param, callback) {
         var id = param.id;
 
-	    this.scoreDao.find({badjsid: id})
+        this.scoreDao.find({ badjsid: id })
             .limit(30).order('-date')
             .all((err, items) => {
                 callback(items);
-            })
+            });
 
     },
-    fetchAndSave: function(id, startDate, cb) {
+    fetchAndSave: function (id, startDate, cb) {
         var self = this;
-        http.get((this.url + '?id=' + id + '&startDate=' + (startDate - 0)), function(res) {
+        http.get((this.url + '?id=' + id + '&startDate=' + (startDate - 0)), function (res) {
             var buffer = '';
-            res.on('data', function(chunk) {
+            res.on('data', function (chunk) {
                 buffer += chunk.toString();
-            }).on('end', function() {
+            }).on('end', function () {
                 var saveModel = {};
                 try {
                     //replace emoji to empty , mysql unsupported emoji code
-                    buffer=buffer.replace(/\ud83d[\udc00-\udfff]/gi , "")
+                    buffer = buffer.replace(/\ud83d[\udc00-\udfff]/gi, "");
                     var result = JSON.parse(buffer);
 
-                    _.forEach(result.item, function(value, key) {
+                    _.forEach(result.item, function (value, key) {
                         value.title = value._id;
                         delete value._id;
                     });
@@ -150,16 +150,16 @@ StatisticsService.prototype = {
                         total: result.pv
                     };
                 } catch (err) {
-                    logger.error('parse statistic result error(id='+id+') :' + err);
+                    logger.error('parse statistic result error(id=' + id + ') :' + err);
                     saveModel = {
                         startDate: startDate,
-                        endDate: new Date(+startDate + 86400000-1),
+                        endDate: new Date(+startDate + 86400000 - 1),
                         content: "[]",
                         projectId: id,
                         total: 0
                     };
                 }
-                self.statisticsDao.create(saveModel, function(err, items) {
+                self.statisticsDao.create(saveModel, function (err, items) {
                     if (err) {
                         logger.error("Insert into b_statistics error(id=", id + ") :  " + err);
                     }
@@ -168,34 +168,22 @@ StatisticsService.prototype = {
                 });
             });
 
-        }).on('error', function(err) {
+        }).on('error', function (err) {
             logger.error('error :' + err);
         });
     },
 
-    //triggerStorageCache: function(ids, startDate, cb) {
-    //    http.get((this.triggerUrl + '?ids=' + ids + '&startDate=' + (startDate - 0)), function(res) {
-    //        //  res.on("end" , function (){
-    //        cb();
-    //        // });
-    //    }).on('error', function(err) {
-    //        cb(err);
-    //        logger.error('triggerStorageCache error :' + err);
-    //    });
-    //},
-
-    startMonitor: function() {
+    startMonitor: function () {
         var self = this;
 
-
-        var getFetchDate = function() {
+        var getFetchDate = function () {
             var tomorrow = new Date(nowDate);
             tomorrow.setHours(2, 0, 0, 0);
             tomorrow.setDate(tomorrow.getDate() + 1);
             return tomorrow;
         };
 
-        var getStartDay = function() {
+        var getStartDay = function () {
             var startDate = new Date(nowDate);
             startDate.setHours(0, 0, 0, 0);
             return startDate;
@@ -204,43 +192,30 @@ StatisticsService.prototype = {
         var nowDate = new Date;
         var targetDate = getFetchDate();
 
-        var startTimeout = function() {
+        var startTimeout = function () {
             var afterDate = targetDate - nowDate;
             // after date 有误，取消循环
             if (isNaN(afterDate) || afterDate < 1000 * 60 * 60) {
                 logger.info("afterDate error : targetDate" + targetDate + " , now:" + nowDate);
                 return;
             }
-            setTimeout(function() {
+            setTimeout(function () {
                 var startDate = getStartDay();
                 self.applyDao.find({
                     status: Apply.STATUS_PASS
-                }, function(err, item) {
+                }, function (err, item) {
                     if (err) {
                         logger.error("find apply error  :  " + err);
                     }
 
-                    var ids = "0";
-                    _.each(item, function(value, key) {
-                        ids += "_" + value.id;
+                    logger.info("start fetching result ... ");
+                    var count = 0;
+                    _.each(item, function (value, key) {
+                        setTimeout(function () {
+                            self.fetchAndSave(value.id, startDate);
+                        }, count * 500);
+                        count++;
                     });
-
-                    //self.triggerStorageCache(ids, startDate, function(err) {
-                    //    logger.info("trigger success and after 5400000s fetch result");
-                        //if (!err) {
-                        //    setTimeout(function() {
-                                logger.info("start fetching result ... ");
-                                var count = 0;
-                                _.each(item, function(value, key) {
-                                    setTimeout(function (){
-                                    self.fetchAndSave(value.id, startDate);
-                                    }, count * 500)
-                                     count ++;
-                                });
-                            //}, 5400000); // 1个半小时候后，拉取统计
-
-                        //}
-                    //});
 
                     nowDate = new Date();
                     targetDate = getFetchDate();
@@ -256,7 +231,6 @@ StatisticsService.prototype = {
 
     }
 };
-
 
 
 module.exports = StatisticsService;

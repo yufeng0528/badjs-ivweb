@@ -150,6 +150,9 @@ for (var i = 0 , l = it.length, type = ''; i < l; i++) {
             data-viewlink="<%=sourcePage(it[i], 'viewlink', opt)%>"
         ><%=sourcePage(it[i], 'view', opt)%></a>
     </td>
+    <td class="td-8 <%=classes['td-8'] %>">
+        <%=it[i].version||0%>
+    </td>
 </tr>
 <% } %>
 

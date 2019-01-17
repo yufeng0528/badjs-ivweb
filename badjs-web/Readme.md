@@ -65,3 +65,28 @@ db/create.sql 是需要初始化到 mysql 的中。其中默认的超级管理�
 ### 新增用户
 INSERT INTO `b_user` VALUES (null,'xxx','xxx',0,'xxx@xxx.com','bbe4b161b9dab597e82f5fab7c9bed0d');
 
+### sourcemap 文件上传规则
+
+1. 文件名以 .map 结尾。
+2. 文件大小小于 20 m。
+3. 文件个数小于 10 个。
+
+example：
+
+```javascript
+var request = require('request')
+var fs = require('fs')
+
+request.post({
+    url: 'http://127.0.0.1:8081/upload-sourcemap',
+    formData: {
+    	projectName: 'test', 
+        sourcemap: fs.createReadStream('./jquery.min.map')
+    }
+}, (err, res) => {
+    console.log(res.body)
+})
+
+```
+
+其中 projectName 和 sourcemap 两个参数为必传项，projectName 表示当前项目名，sourcemap 为文件流。

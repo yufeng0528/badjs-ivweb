@@ -1,4 +1,3 @@
-
 var mysql = require('mysql'),
     StatisticsService = require('../service/StatisticsService'),
     orm = require('orm');
@@ -9,43 +8,43 @@ GLOBAL.pjconfig = require('../project.json');
 //GLOBAL.DEBUG = true;
 var mysqlUrl = GLOBAL.pjconfig.mysql.url
 
-orm.connect( mysqlUrl, function(err , db) {
-    if(err){
+orm.connect(mysqlUrl, function (err, db) {
+    if (err) {
         throw err;
     }
 
     global.models = {
-        userDao : require('../dao/UserDao')(db),
-        applyDao : require('../dao/ApplyDao')(db),
-        approveDao : require('../dao/ApproveDao')(db),
-        statisticsDao : require('../dao/StatisticsDao')(db),
-        db : db
+        userDao: require('../dao/UserDao')(db),
+        applyDao: require('../dao/ApplyDao')(db),
+        approveDao: require('../dao/ApproveDao')(db),
+        statisticsDao: require('../dao/StatisticsDao')(db),
+        db: db
     }
 
 
     var aa = new StatisticsService();
 
 
-    var startDate = new Date('2018-12-23 00:00:00');
+    var startDate = new Date('2019-01-10 00:00:00');
     var nowDate = new Date;
 
     //fetch data until today
-    var fetch = function (id , startDate){
-        aa.fetchAndSave(id , startDate , function (){
+    var fetch = function (id, startDate) {
+        aa.fetchAndSave(id, startDate, function () {
             console.log(startDate.toLocaleDateString() + " ok ");
-            if((startDate -0) > (nowDate - 0) ){
+            if ((startDate - 0) > (nowDate - 0)) {
                 console.log("out today");
-                return ;
+                return;
             }
             // fetch(id , new Date(startDate.getFullYear() + "-" + (startDate.getMonth()+1)+"-"+ (startDate.getDate()+1)+" 00:00:00"));
 
-        })
+        });
     }
 
 
-    for(var i=0; i<433; i++) {
+    for (var i = 0; i < 460; i++) {
 
-    fetch(i , startDate);
+        fetch(i, startDate);
     }
 
 
