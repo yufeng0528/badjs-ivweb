@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  /**
  * Created by coverguo on 2015/1/12.
@@ -22,16 +24,22 @@ var UserService = function (){
 
 UserService.prototype = {
     queryUser: function(target, callback) {
+        target = target || {}
+        
         const args = [];
-        const sql = `SELECT loginName,chineseName,role,email,verify_state,openid FROM b_user WHERE `;
+        let sql = `SELECT loginName,chineseName,role,email,verify_state,openid FROM b_user `;
 
         const condition = Object.keys(target).map(key => {
             args.push(target[key]); 
             return `${key} = ?`; 
         }).join(' AND ');
 
-        console.log('sql + condition', sql + condition, args); 
-        this.db.driver.execQuery(sql + condition, args, callback || (x => x));
+        if (condition) {
+            sql += ' WHERE ' + condition;  
+        }
+
+        console.log('sql + condition', sql, args); 
+        this.db.driver.execQuery(sql, args, callback || (x => x));
     },
 
     queryListByCondition : function (target , callback){

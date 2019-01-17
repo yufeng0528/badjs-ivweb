@@ -7,22 +7,20 @@ const UserService = require('../../service/UserService');
 module.exports = router; 
 
 router.get('/users', function(req, res) {
-    let verify_state = req.query.verify_state || 0; 
-    verify_state = parseInt(verify_state, 10); 
+    // let verify_state = req.query.verify_state || 0; 
+    // verify_state = parseInt(verify_state, 10); 
 
-    if (verify_state !== 0 && verify_state !== 1 && verify_state !== 2) {
-        return res.json({
-            code: 2000, 
-            error: 'INVALID_VERIFY_STATE', 
-            message: '传参 verify_state 无效'
-        }); 
-    }
+    // if (verify_state !== 0 && verify_state !== 1 && verify_state !== 2) {
+    //     return res.json({
+    //         code: 2000, 
+    //         error: 'INVALID_VERIFY_STATE', 
+    //         message: '传参 verify_state 无效'
+    //     }); 
+    // }
 
     const userService = new UserService();
 
-    userService.queryUser({
-        verify_state
-    }, (err, data) => {
+    userService.queryUser({}, (err, data) => {
         if (err) {
             console.log('SQL Query Error', err); 
 
