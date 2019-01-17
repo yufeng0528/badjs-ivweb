@@ -40,8 +40,6 @@ var StatisticsService = function () {
 
     //this.triggerUrl = global.pjconfig.storage.errorMsgTopCacheUrl;
     this.url = global.pjconfig.storage.errorMsgTopUrl;
-
-    logger.debug('query url : ' + this.url);
 };
 
 StatisticsService.prototype = {

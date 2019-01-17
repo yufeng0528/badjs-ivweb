@@ -116,6 +116,35 @@ CREATE TABLE `b_user_apply` (
 
 
 --
+-- Table structure for table `b_pv`
+--
+DROP TABLE IF EXISTS `b_pv`;
+
+CREATE TABLE `b_pv` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `badjsid` int(11) NOT NULL,
+  `pv` int(11) default 0,
+  `date` int(11) default 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+
+--
+-- Table structure for table `b_pv`
+--
+DROP TABLE IF EXISTS `b_quality`;
+
+CREATE TABLE `b_quality` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `badjsid` int(11) default 0,
+  `rate` varchar(10),
+  `badjscount` int(11),
+  `pv` int(11),
+  `date` int(11),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `b_sourcemap`
 --
 
