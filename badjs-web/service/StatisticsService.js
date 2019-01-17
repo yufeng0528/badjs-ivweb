@@ -208,10 +208,6 @@ StatisticsService.prototype = {
                         logger.error("find apply error  :  " + err);
                     }
 
-                    var ids = "0";
-                    _.each(item, function (value, key) {
-                        ids += "_" + value.id;
-                    });
                     logger.info("start fetching result ... ");
                     var count = 0;
                     _.each(item, function (value, key) {

@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "dev": "webpack -w --config webpack.config.js",
     "build": "webpack --config webpack.config.js"
   },
   "dependencies": {

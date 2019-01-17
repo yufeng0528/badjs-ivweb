@@ -1,9 +1,9 @@
-webpackJsonp([8],{
+webpackJsonp([1],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var log = __webpack_require__(12);
+	var log = __webpack_require__(15);
 	log.init();
 
 	var source_trigger = __webpack_require__(13);
@@ -14,15 +14,81 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 12:
+/***/ 13:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var dialog = __webpack_require__(25);
+	/* WEBPACK VAR INJECTION */(function($) {exports.init = function() {
+		var not_show_source_page = false;
+		var hideform_class_name = 'main-table-hidefrom';
+
+		try {
+			not_show_source_page = !!localStorage.not_show_source_page;
+			$('.main-table')[not_show_source_page ? 'addClass' : 'removeClass'](hideform_class_name);
+		} catch (ex) {}
+
+		var update_source = function(show_source_page) {
+			if (show_source_page) {
+				$('.main-table').removeClass(hideform_class_name);
+				$('#log-table .source_page_link').each(function() {
+					var $this = $(this);
+					$this.text($this.data('viewlink'));
+				});
+			} else {
+				$('.main-table').addClass(hideform_class_name);
+				$('#log-table .source_page_link').each(function() {
+					var $this = $(this);
+					$this.text($this.data('viewtext'));
+				});
+			}
+		};
+
+		var $ssp = $('#show_source_page');
+		$ssp.prop('checked', !not_show_source_page).on('change', function() {
+			try {
+				var show_source_page = $ssp.prop('checked');
+				localStorage.not_show_source_page = show_source_page ? '' : '1';
+				update_source(show_source_page);
+			} catch (ex) {}
+		});
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ },
+
+/***/ 14:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
+		var last_select = -1;
+		
+		try {
+
+		    last_select = localStorage.last_select >> 0; // jshint ignore:line
+			
+			var $sb = $('#select-business');
+			
+			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
+
+			$sb.on('change', function(){
+				localStorage.last_select = $sb.val();
+			});
+
+		} catch (ex) {}
+
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ },
+
+/***/ 15:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {var dialog = __webpack_require__(148);
 	var Delegator = __webpack_require__(22);
 
-	var logTable = __webpack_require__(156);
-	var keyword = __webpack_require__(157);
-	var debar = __webpack_require__(158);
+	var logTable = __webpack_require__(155);
+	var keyword = __webpack_require__(156);
+	var debar = __webpack_require__(157);
 	var logDetailDialog = __webpack_require__(23);
 
 	var logConfig = {
@@ -35,12 +101,12 @@ webpackJsonp([8],{
 	        level: [1, 2, 4]
 	    },
 
-	    encodeHtml = function(str) {
+	    encodeHtml = function (str) {
 	        return (str + '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\x60/g, '&#96;').replace(/\x27/g, '&#39;').replace(/\x22/g, '&quot;');
 	    },
 
-	    formatMsg = function (str){
-	        return str.replace(/@/gi , '<br/><b style="color:#A78830;">@</b> ')
+	    formatMsg = function (str) {
+	        return str.replace(/@/gi, '<br/><b style="color:#A78830;">@</b> ')
 	    };
 
 	var websocket;
@@ -91,110 +157,108 @@ webpackJsonp([8],{
 	}
 
 
-
 	function bindEvent() {
 	    new Delegator(document.body)
-	        .on('click', 'searchBusiness', function() {
+	        .on('click', 'searchBusiness', function () {
 	            // search business
 	        }).on('click', 'addKeyword', addKeyword)
-	        .on('keyup', 'addKeyword', function(e) {
+	        .on('keyup', 'addKeyword', function (e) {
 	            if (e.which === 13) addKeyword();
-	        }).on('click', 'removeKeywords', function() {
-	            logConfig.include.length = 0;
-	            $('#keyword-group').empty();
-	        }).on('click', 'removeKeyword', function(e, value) {
-	            $(this).closest('.keyword-tag').remove();
-	            removeValue(value, logConfig.include);
-	        }).on('click', 'addDebar', addDebar)
-	        .on('keyup', 'addDebar', function(e) {
+	        }).on('click', 'removeKeywords', function () {
+	        logConfig.include.length = 0;
+	        $('#keyword-group').empty();
+	    }).on('click', 'removeKeyword', function (e, value) {
+	        $(this).closest('.keyword-tag').remove();
+	        removeValue(value, logConfig.include);
+	    }).on('click', 'addDebar', addDebar)
+	        .on('keyup', 'addDebar', function (e) {
 	            if (e.which === 13) addDebar();
-	        }).on('click', 'removeDebars', function() {
-	            logConfig.exclude.length = 0;
-	            $('#debar-group').empty();
-	        }).on('click', 'removeDebar', function(e, value) {
-	            $(this).closest('.keyword-tag').remove();
-	            removeValue(value, logConfig.exclude);
-	        }).on('click', 'showLogs', function() {
-	            logConfig.id = $('#select-business').val() >> 0; // jshint ignore:line
-	            if (logConfig.id <= 0 || loading) {
-	                !loading && dialog({
-	                    header: '警告',
-	                    body: '请选择一个项目'
-	                });
-	                return;
-	            }
+	        }).on('click', 'removeDebars', function () {
+	        logConfig.exclude.length = 0;
+	        $('#debar-group').empty();
+	    }).on('click', 'removeDebar', function (e, value) {
+	        $(this).closest('.keyword-tag').remove();
+	        removeValue(value, logConfig.exclude);
+	    }).on('click', 'showLogs', function () {
+	        logConfig.id = $('#select-business').val() >> 0; // jshint ignore:line
+	        if (logConfig.id <= 0 || loading) {
+	            !loading && dialog({
+	                header: '警告',
+	                body: '请选择一个项目'
+	            });
+	            return;
+	        }
 
-	            if (!$(this).data("stop")) {
-	                $(this).data("stop", true);
-	                $('#log-table').html('');
-	                startMonitor(logConfig.id);
-	                $(this).addClass("stop").text('停止监听');
-	            } else {
-	                $(this).data("stop", false);
-	                websocket.close();
-	                $(this).removeClass("stop").text('开始监听');
-	            }
+	        if (!$(this).data("stop")) {
+	            $(this).data("stop", true);
+	            $('#log-table').html('');
+	            startMonitor(logConfig.id);
+	            $(this).addClass("stop").text('停止监听');
+	        } else {
+	            $(this).data("stop", false);
+	            websocket.close();
+	            $(this).removeClass("stop").text('开始监听');
+	        }
 
-	        })
-	        .on('click', 'alertModal', function(e, data) {
-	            var $target=$(e.currentTarget);
+	    })
+	        .on('click', 'alertModal', function (e, data) {
+	            var $target = $(e.currentTarget);
 
 	            logDetailDialog({
-	                id :$target.text(),
-	                time :$target.siblings('.td-2').text(),
-	                info :$target.siblings('.td-3').html(),
-	                uin :$target.siblings('.td-4').text(),
-	                ip :$target.siblings('.td-5').text(),
-	                agent : $target.siblings('.td-6').attr("title"),
-	                source :   $target.siblings('.td-7').html() ,
+	                id: $target.text(),
+	                time: $target.siblings('.td-2').text(),
+	                info: $target.siblings('.td-3').html(),
+	                uin: $target.siblings('.td-4').text(),
+	                ip: $target.siblings('.td-5').text(),
+	                agent: $target.siblings('.td-6').attr("title"),
+	                source: $target.siblings('.td-7').html(),
 	                version: $target.siblings('.td-8').text()
 	            })
 
-	        }).on('change', 'selectBusiness', function() {
-	            var val = $(this).val() - 0;
-	            currentSelectId = val;
-	            $('#log-table').html('');
-	            currentIndex = 0;
-	            noData = false;
-	            logConfig.id = val;
-	        }).on('click', 'showTd', function(e) {
-	            var $target=$(e.currentTarget).toggleClass('active');
-	            $('.main-table .'+$target.data('td')).toggleClass('active');
-	            //保存用户偏好，隐藏为true
-	            //console.log($target.data('td'));
-	            localStorage.setItem($target.data('td'),!$target.hasClass('active'));
-	            //console.log(localStorage);
-	            window.classes[$target.data('td')]=$target.hasClass('active')?'active':'';
-	        }).on('click', 'errorTypeClick', function() {
-	            if ($(this).hasClass('msg-dis')) {
-	                logConfig.level.push(4);
-	                $(this).removeClass('msg-dis');
-	            } else {
-	                logConfig.level.splice($.inArray(4, logConfig.level), 1);
-	                $(this).addClass('msg-dis');
-	            }
-	            console.log('log', logConfig.level);
+	        }).on('change', 'selectBusiness', function () {
+	        var val = $(this).val() - 0;
+	        currentSelectId = val;
+	        $('#log-table').html('');
+	        currentIndex = 0;
+	        noData = false;
+	        logConfig.id = val;
+	    }).on('click', 'showTd', function (e) {
+	        var $target = $(e.currentTarget).toggleClass('active');
+	        $('.main-table .' + $target.data('td')).toggleClass('active');
+	        //保存用户偏好，隐藏为true
+	        //console.log($target.data('td'));
+	        localStorage.setItem($target.data('td'), !$target.hasClass('active'));
+	        //console.log(localStorage);
+	        window.classes[$target.data('td')] = $target.hasClass('active') ? 'active' : '';
+	    }).on('click', 'errorTypeClick', function () {
+	        if ($(this).hasClass('msg-dis')) {
+	            logConfig.level.push(4);
+	            $(this).removeClass('msg-dis');
+	        } else {
+	            logConfig.level.splice($.inArray(4, logConfig.level), 1);
+	            $(this).addClass('msg-dis');
+	        }
+	        console.log('log', logConfig.level);
 
-	        }).on('click', 'logTypeClick', function() {
-	            if ($(this).hasClass('msg-dis')) {
-	                logConfig.level.push(2);
-	                $(this).removeClass('msg-dis');
-	            } else {
-	                logConfig.level.splice($.inArray(2, logConfig.level), 1);
-	                $(this).addClass('msg-dis');
-	            }
+	    }).on('click', 'logTypeClick', function () {
+	        if ($(this).hasClass('msg-dis')) {
+	            logConfig.level.push(2);
+	            $(this).removeClass('msg-dis');
+	        } else {
+	            logConfig.level.splice($.inArray(2, logConfig.level), 1);
+	            $(this).addClass('msg-dis');
+	        }
 
 
-	        }).on('click', 'debugTypeClick', function() {
-	            if ($(this).hasClass('msg-dis')) {
-	                logConfig.level.push(1);
-	                $(this).removeClass('msg-dis');
-	            } else {
-	                logConfig.level.splice($.inArray(1, logConfig.level), 1);
-	                $(this).addClass('msg-dis');
-	            }
-	        });
-
+	    }).on('click', 'debugTypeClick', function () {
+	        if ($(this).hasClass('msg-dis')) {
+	            logConfig.level.push(1);
+	            $(this).removeClass('msg-dis');
+	        } else {
+	            logConfig.level.splice($.inArray(1, logConfig.level), 1);
+	            $(this).addClass('msg-dis');
+	        }
+	    });
 
 
 	}
@@ -210,7 +274,7 @@ webpackJsonp([8],{
 	var keepAliveTimeoutId;
 	var currentIndex;
 	var maxShow = 100;
-	var startMonitor = function(id) {
+	var startMonitor = function (id) {
 
 	    var host = location.host;
 	    if (host.indexOf(':') < 0) {
@@ -220,15 +284,15 @@ webpackJsonp([8],{
 	    websocket = new WebSocket("ws://" + host + "/ws/realtimeLog");
 
 	    currentIndex = 0;
-	    websocket.onmessage = function(evt) {
+	    websocket.onmessage = function (evt) {
 	        showLogs(JSON.parse(evt.data).message);
 	    };
 
-	    websocket.onclose = function() {
+	    websocket.onclose = function () {
 	        clearTimeout(keepAliveTimeoutId);
 	    };
 
-	    websocket.onopen = function() {
+	    websocket.onopen = function () {
 
 	        websocket.send(JSON.stringify({
 	            type: "INIT",
@@ -238,7 +302,7 @@ webpackJsonp([8],{
 	            id: id
 	        }));
 
-	        keepAliveTimeoutId = setInterval(function() {
+	        keepAliveTimeoutId = setInterval(function () {
 	            websocket.send(JSON.stringify({
 	                type: "KEEPALIVE"
 	            }));
@@ -253,7 +317,7 @@ webpackJsonp([8],{
 	        encodeHtml: encodeHtml,
 	        set: Delegator.set,
 	        startIndex: currentIndex,
-	        formatMsg : formatMsg
+	        formatMsg: formatMsg
 	    };
 
 	    var $table = $('#log-table');
@@ -271,17 +335,17 @@ webpackJsonp([8],{
 	function init() {
 	    bindEvent();
 	    //读取用户偏好
-	    var items=$("#content .right-side .setting-show .item");
-	    window.classes={};
+	    var items = $("#content .right-side .setting-show .item");
+	    window.classes = {};
 	    //console.log(localStorage);
-	    for(var i=0;i<items.length;i++){
-	        var item=$(items[i]);
-	        if(localStorage.getItem(item.data("td"))==='true'){
+	    for (var i = 0; i < items.length; i++) {
+	        var item = $(items[i]);
+	        if (localStorage.getItem(item.data("td")) === 'true') {
 	            item.removeClass('active');
-	            $('.main-table .'+item.data('td')).removeClass('active');
-	            window.classes[item.data('td')]='';
-	        }else{
-	            window.classes[item.data('td')]='active';
+	            $('.main-table .' + item.data('td')).removeClass('active');
+	            window.classes[item.data('td')] = '';
+	        } else {
+	            window.classes[item.data('td')] = 'active';
 	        }
 	    }
 	    $('#content .mid-side .main-table thead tr').show();
@@ -290,73 +354,7 @@ webpackJsonp([8],{
 
 	exports.init = init;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
-
-/***/ },
-
-/***/ 13:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {exports.init = function() {
-		var not_show_source_page = false;
-		var hideform_class_name = 'main-table-hidefrom';
-
-		try {
-			not_show_source_page = !!localStorage.not_show_source_page;
-			$('.main-table')[not_show_source_page ? 'addClass' : 'removeClass'](hideform_class_name);
-		} catch (ex) {}
-
-		var update_source = function(show_source_page) {
-			if (show_source_page) {
-				$('.main-table').removeClass(hideform_class_name);
-				$('#log-table .source_page_link').each(function() {
-					var $this = $(this);
-					$this.text($this.data('viewlink'));
-				});
-			} else {
-				$('.main-table').addClass(hideform_class_name);
-				$('#log-table .source_page_link').each(function() {
-					var $this = $(this);
-					$this.text($this.data('viewtext'));
-				});
-			}
-		};
-
-		var $ssp = $('#show_source_page');
-		$ssp.prop('checked', !not_show_source_page).on('change', function() {
-			try {
-				var show_source_page = $ssp.prop('checked');
-				localStorage.not_show_source_page = show_source_page ? '' : '1';
-				update_source(show_source_page);
-			} catch (ex) {}
-		});
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
-
-/***/ },
-
-/***/ 14:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
-		var last_select = -1;
-		
-		try {
-
-		    last_select = localStorage.last_select >> 0; // jshint ignore:line
-			
-			var $sb = $('#select-business');
-			
-			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
-
-			$sb.on('change', function(){
-				localStorage.last_select = $sb.val();
-			});
-
-		} catch (ex) {}
-
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
@@ -536,7 +534,7 @@ webpackJsonp([8],{
 
 	module.exports = Delegator;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
@@ -591,11 +589,11 @@ webpackJsonp([8],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
-/***/ 25:
+/***/ 148:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(22);
@@ -643,11 +641,11 @@ webpackJsonp([8],{
 	    Dialog.hide = hide;
 
 	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
-/***/ 156:
+/***/ 155:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {module.exports = function (obj) {
@@ -832,11 +830,11 @@ webpackJsonp([8],{
 	}
 	return __p
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
-/***/ 157:
+/***/ 156:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -855,7 +853,7 @@ webpackJsonp([8],{
 
 /***/ },
 
-/***/ 158:
+/***/ 157:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
