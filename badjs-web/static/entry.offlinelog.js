@@ -233,7 +233,6 @@ webpackJsonp([9],{
 
 	                $(".setting-search").text("查询日志");
 	                var offlineLogs = JSON.parse(data.data);
-	                debugger
 	                var newLogs = [];
 	                if (offlineLogs.logs && offlineLogs.logs.length) {
 	                    offlineLogs.logs.forEach(function (item) {
