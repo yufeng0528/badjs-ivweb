@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  /**
  * Created by coverguo on 2015/1/12.
@@ -26,10 +24,9 @@ UserService.prototype = {
     queryUser: function(target, callback) {
         target = target || {}
         
-        const args = [];
-        let sql = `SELECT loginName,chineseName,role,email,verify_state,openid FROM b_user `;
-
-        const condition = Object.keys(target).map(key => {
+        var args = [];
+        var sql = `SELECT loginName,chineseName,role,email,verify_state,openid FROM b_user `;
+        var condition = Object.keys(target).map(key => {
             args.push(target[key]); 
             return `${key} = ?`; 
         }).join(' AND ');
