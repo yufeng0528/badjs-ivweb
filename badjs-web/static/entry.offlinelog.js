@@ -3,14 +3,14 @@ webpackJsonp([10],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var log = __webpack_require__(19);
+	var log = __webpack_require__(17);
 	log.init();
 
 	var source_trigger = __webpack_require__(13);
 	source_trigger.init();
 
-	//var last_select = require("../common/last.select");
-	//last_select.init();
+	var last_select = __webpack_require__(14);
+	last_select.init();
 
 
 /***/ },
@@ -52,19 +52,44 @@ webpackJsonp([10],{
 			} catch (ex) {}
 		});
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ },
 
-/***/ 19:
+/***/ 14:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
+		var last_select = -1;
+		
+		try {
+
+		    last_select = localStorage.last_select >> 0; // jshint ignore:line
+			
+			var $sb = $('#select-business');
+			
+			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
+
+			$sb.on('change', function(){
+				localStorage.last_select = $sb.val();
+			});
+
+		} catch (ex) {}
+
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ },
+
+/***/ 17:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {var dialog = __webpack_require__(25);
 	var Delegator = __webpack_require__(22);
 
-	var logTable = __webpack_require__(155);
-	var keyword = __webpack_require__(156);
-	var debar = __webpack_require__(157);
+	var logTable = __webpack_require__(156);
+	var keyword = __webpack_require__(157);
+	var debar = __webpack_require__(158);
 	var offlineDialog = __webpack_require__(151);
 	var logDetailDialog = __webpack_require__(23);
 
@@ -439,7 +464,7 @@ webpackJsonp([10],{
 
 	exports.init = init;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(7)))
 
 /***/ },
 
@@ -619,7 +644,7 @@ webpackJsonp([10],{
 
 	module.exports = Delegator;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ },
 
@@ -674,7 +699,7 @@ webpackJsonp([10],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ },
 
@@ -726,7 +751,7 @@ webpackJsonp([10],{
 	    Dialog.hide = hide;
 
 	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ },
 
@@ -844,11 +869,11 @@ webpackJsonp([10],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(7)))
 
 /***/ },
 
-/***/ 155:
+/***/ 156:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {module.exports = function (obj) {
@@ -1037,7 +1062,7 @@ webpackJsonp([10],{
 
 /***/ },
 
-/***/ 156:
+/***/ 157:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -1056,7 +1081,7 @@ webpackJsonp([10],{
 
 /***/ },
 
-/***/ 157:
+/***/ 158:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
