@@ -31,7 +31,7 @@ var LogAction = {
         logService.query(params,function(err, items){
             if(isError(res, err)){
                 return;
-            };
+            }
 
             res.json({ret:0, msg:"success-query", data:items });
         });

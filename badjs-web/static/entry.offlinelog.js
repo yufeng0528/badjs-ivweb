@@ -52,7 +52,7 @@ webpackJsonp([10],{
 			} catch (ex) {}
 		});
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
@@ -77,7 +77,7 @@ webpackJsonp([10],{
 		} catch (ex) {}
 
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
@@ -90,7 +90,7 @@ webpackJsonp([10],{
 	var logTable = __webpack_require__(155);
 	var keyword = __webpack_require__(156);
 	var debar = __webpack_require__(157);
-	var offlineDialog = __webpack_require__(151);
+	var offlineDialog = __webpack_require__(152);
 	var logDetailDialog = __webpack_require__(23);
 
 	var offlineLogCache = {};
@@ -185,9 +185,6 @@ webpackJsonp([10],{
 	        removeValue(value, logConfig.exclude);
 	    }).on('click', 'configOfflineMonitor', function (e, value) {
 	        if (logConfig.id <= 0) {
-	            logConfig.id = $('#select-business').val();
-	        }
-	        if (logConfig.id <= 0) {
 	            !loading && dialog({
 	                header: '警告',
 	                body: '请选择一个项目'
@@ -195,7 +192,7 @@ webpackJsonp([10],{
 	            return;
 	        }
 
-	        offlineDialog(logConfig)
+	        offlineDialog(logConfig);
 
 
 	    }).on('click', 'showLogs', function () {
@@ -215,10 +212,10 @@ webpackJsonp([10],{
 
 
 	        loading = true;
-	        $(".setting-search").text("正在加载...")
+	        $(".setting-search").text("正在加载...");
 
 	        if (offlineLogCache[fileId]) {
-	            showLogs(offlineLogCache[fileId], logConfig)
+	            showLogs(offlineLogCache[fileId], logConfig);
 	            $(".setting-search").text("查询日志");
 	            loading = false;
 	            return;
@@ -234,9 +231,9 @@ webpackJsonp([10],{
 	            success: function (data) {
 	                loading = false;
 
-	                $(".setting-search").text("查询日志")
+	                $(".setting-search").text("查询日志");
 	                var offlineLogs = JSON.parse(data.data);
-	                var newLogs = []
+	                var newLogs = [];
 	                if (offlineLogs.logs && offlineLogs.logs.length) {
 	                    offlineLogs.logs.forEach(function (item) {
 	                        var date = new Date(item.time);
@@ -251,42 +248,40 @@ webpackJsonp([10],{
 	                        }
 	                        item.date = date;
 	                        item.all = all;
-	                        newLogs.push(item)
-	                    })
+	                        newLogs.push(item);
+	                    });
 	                }
 
-	                offlineLogCache[fileId] = newLogs
+	                offlineLogCache[fileId] = newLogs;
 
-	                showLogs(offlineLogCache[fileId], logConfig)
+	                showLogs(offlineLogCache[fileId], logConfig);
 	            },
 	            error: function () {
 
 	            }
-	        })
+	        });
 
+	    }).on('click', 'alertModal', function (e, data) {
+	        var $target = $(e.currentTarget);
 
-	    })
-	        .on('click', 'alertModal', function (e, data) {
-	            var $target = $(e.currentTarget);
-
-	            logDetailDialog({
-	                id: $target.text(),
-	                time: $target.siblings('.td-2').text(),
-	                info: $target.siblings('.td-3').html(),
-	                uin: $target.siblings('.td-4').text(),
-	                ip: $target.siblings('.td-5').text(),
-	                agent: $target.siblings('.td-6').attr("title"),
-	                source: $target.siblings('.td-7').html(),
-	                version: $target.siblings('.td-8').text()
-	            })
-	        }).on('change', 'selectBusiness', function () {
+	        logDetailDialog({
+	            id: $target.text(),
+	            time: $target.siblings('.td-2').text(),
+	            info: $target.siblings('.td-3').html(),
+	            uin: $target.siblings('.td-4').text(),
+	            ip: $target.siblings('.td-5').text(),
+	            agent: $target.siblings('.td-6').attr("title"),
+	            source: $target.siblings('.td-7').html(),
+	            version: $target.siblings('.td-8').text()
+	        });
+	    }).on('change', 'selectBusiness', function () {
 	        var val = $(this).val() - 0;
 	        currentSelectId = val;
 	        $('#log-table').html('');
 	        currentIndex = 0;
 	        noData = false;
 	        logConfig.id = val;
-	        fetchOfflineFile(val)
+	        fetchOfflineFile(val);
 	    }).on('click', 'showTd', function (e) {
 	        var $target = $(e.currentTarget).toggleClass('active');
 	        $('.main-table .' + $target.data('td')).toggleClass('active');
@@ -347,7 +342,7 @@ webpackJsonp([10],{
 
 	function fetchOfflineFile(id) {
 	    if (id == -1 || !id) {
-	        $("#select-offline-logs").attr("disabled").html('<option value="-1">-- 选择离线日志 --</option>')
+	        $("#select-offline-logs").attr("disabled", "disabled").html('<option value="-1">-- 选择离线日志 --</option>');
 	        return;
 	    }
 	    var url = '/controller/logAction/showOfflineFiles.do';
@@ -358,9 +353,9 @@ webpackJsonp([10],{
 	        },
 	        success: function (data) {
 	            if (data.data.length <= 0) {
-	                $("#select-offline-logs").attr("disabled", "disabled").html('<option value="-1">-- 无离线日志 --</option>')
+	                $("#select-offline-logs").attr("disabled", "disabled").html('<option value="-1">-- 无离线日志 --</option>');
 	            } else {
-	                $("#select-offline-logs").removeAttr("disabled").html("")
+	                $("#select-offline-logs").removeAttr("disabled").html("");
 	                $.each(data.data, function (key, item) {
 	                    var arr = item.id.split("_");
 	                    var itemName = arr[0];
@@ -370,30 +365,27 @@ webpackJsonp([10],{
 	                    }
 
 
-	                    $("#select-offline-logs").append('<option value="' + item.id + '">' + itemName + '</option>')
-	                })
+	                    $("#select-offline-logs").append('<option value="' + item.id + '">' + itemName + '</option>');
+	                });
 	            }
 	        },
 	        error: function () {
 
 	        }
-	    })
+	    });
 	}
 
 	function showLogs(data, opt) {
-
 
 	    var includeJSON = [];
 	    opt.include.forEach(function (value, key) {
 	        includeJSON.push(value);
 	    });
 
-
 	    var excludeJSON = [];
 	    opt.exclude.forEach(function (value, key) {
 	        excludeJSON.push(value);
 	    });
-
 
 	    var newData = [];
 	    data.forEach(function (value) {
@@ -409,8 +401,8 @@ webpackJsonp([10],{
 	                }
 	            }
 
-	            for (var i = 0; i < excludeJSON.length; i++) {
-	                if (value.all.indexOf(excludeJSON[i]) > -1) {
+	            for (var j = 0; j < excludeJSON.length; j++) {
+	                if (value.all.indexOf(excludeJSON[j]) > -1) {
 	                    matched = false;
 	                } else {
 	                    matched = true;
@@ -421,7 +413,7 @@ webpackJsonp([10],{
 	        }
 
 	        if (matched) {
-	            newData.push(value)
+	            newData.push(value);
 	        }
 
 
@@ -450,7 +442,15 @@ webpackJsonp([10],{
 	function init() {
 	    bindEvent();
 	    //读取用户偏好
-
+	    $(document).ready(function () {
+	        var val = $('#select-business').val() - 0;
+	        currentSelectId = val;
+	        $('#log-table').html('');
+	        currentIndex = 0;
+	        noData = false;
+	        logConfig.id = val;
+	        fetchOfflineFile(val);
+	    });
 	    $('.main-table .td-4').removeClass('active');
 	    $('.main-table .td-5').removeClass('active');
 
@@ -461,7 +461,7 @@ webpackJsonp([10],{
 
 	exports.init = init;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)))
 
 /***/ },
 
@@ -641,7 +641,7 @@ webpackJsonp([10],{
 
 	module.exports = Delegator;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
@@ -696,7 +696,7 @@ webpackJsonp([10],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
@@ -748,11 +748,11 @@ webpackJsonp([10],{
 	    Dialog.hide = hide;
 
 	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 
-/***/ 151:
+/***/ 152:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {var Delegator = __webpack_require__(22);
@@ -866,7 +866,7 @@ webpackJsonp([10],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)))
 
 /***/ },
 
@@ -1055,7 +1055,7 @@ webpackJsonp([10],{
 	}
 	return __p
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
