@@ -9,7 +9,7 @@ module.exports = router;
 router.get('/users', function(req, res) {
     var userService = new UserService();
 
-    userService.queryUser({}, (err, data) => {
+    userService.queryUser({}, function(err, data) {
         if (err) {
             console.log('SQL Query Error', err); 
 
@@ -63,7 +63,7 @@ router.post('/trust_him', function(req, res) {
         } else {
             // 设为 2 表示已绑定
             user.verify_state = 2; 
-            user.save(err => {
+            user.save(function(ok) {
                 res.json({
                     code: 0, 
                     message: '审核成功'
