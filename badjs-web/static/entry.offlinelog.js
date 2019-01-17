@@ -1,4 +1,4 @@
-webpackJsonp([10],{
+webpackJsonp([9],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
@@ -52,7 +52,7 @@ webpackJsonp([10],{
 			} catch (ex) {}
 		});
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
@@ -61,13 +61,13 @@ webpackJsonp([10],{
 
 	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
 		var last_select = -1;
-		
+
 		try {
 
 		    last_select = localStorage.last_select >> 0; // jshint ignore:line
-			
+
 			var $sb = $('#select-business');
-			
+
 			last_select > 0 && $sb.find('[value=' + last_select + ']').length && $sb.val(last_select);
 
 			$sb.on('change', function(){
@@ -77,20 +77,20 @@ webpackJsonp([10],{
 		} catch (ex) {}
 
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
 /***/ 19:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($, _) {var dialog = __webpack_require__(148);
+	/* WEBPACK VAR INJECTION */(function($, _) {var dialog = __webpack_require__(24);
 	var Delegator = __webpack_require__(22);
 
-	var logTable = __webpack_require__(155);
-	var keyword = __webpack_require__(156);
-	var debar = __webpack_require__(157);
-	var offlineDialog = __webpack_require__(152);
+	var logTable = __webpack_require__(156);
+	var keyword = __webpack_require__(157);
+	var debar = __webpack_require__(158);
+	var offlineDialog = __webpack_require__(150);
 	var logDetailDialog = __webpack_require__(23);
 
 	var offlineLogCache = {};
@@ -233,6 +233,7 @@ webpackJsonp([10],{
 
 	                $(".setting-search").text("查询日志");
 	                var offlineLogs = JSON.parse(data.data);
+	                debugger
 	                var newLogs = [];
 	                if (offlineLogs.logs && offlineLogs.logs.length) {
 	                    offlineLogs.logs.forEach(function (item) {
@@ -435,6 +436,7 @@ webpackJsonp([10],{
 	            'td-3': 'active',
 	            'td-6': 'active',
 	            'td-7': 'active',
+                'td-8': 'active'
 	        }
 	    }));
 	}
@@ -461,7 +463,7 @@ webpackJsonp([10],{
 
 	exports.init = init;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(6)))
 
 /***/ },
 
@@ -641,7 +643,7 @@ webpackJsonp([10],{
 
 	module.exports = Delegator;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
@@ -696,11 +698,11 @@ webpackJsonp([10],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
-/***/ 148:
+/***/ 24:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(22);
@@ -748,11 +750,11 @@ webpackJsonp([10],{
 	    Dialog.hide = hide;
 
 	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
-/***/ 152:
+/***/ 150:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {var Delegator = __webpack_require__(22);
@@ -866,11 +868,11 @@ webpackJsonp([10],{
 
 	module.exports =  Dialog;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(6)))
 
 /***/ },
 
-/***/ 155:
+/***/ 156:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {module.exports = function (obj) {
@@ -1055,11 +1057,11 @@ webpackJsonp([10],{
 	}
 	return __p
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ },
 
-/***/ 156:
+/***/ 157:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {
@@ -1078,7 +1080,7 @@ webpackJsonp([10],{
 
 /***/ },
 
-/***/ 157:
+/***/ 158:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function (obj) {

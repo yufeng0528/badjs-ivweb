@@ -17,7 +17,7 @@ webpackJsonp([5],{
 	 * @author coverguo
 	 * */
 
-	var Dialog = __webpack_require__(148);
+	var Dialog = __webpack_require__(24);
 	var userTable = __webpack_require__(159);
 
 
@@ -163,7 +163,7 @@ webpackJsonp([5],{
 	        init: init
 	    }
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
@@ -343,11 +343,11 @@ webpackJsonp([5],{
 
 	module.exports = Delegator;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
-/***/ 148:
+/***/ 24:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(22);
@@ -395,7 +395,7 @@ webpackJsonp([5],{
 	    Dialog.hide = hide;
 
 	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 
