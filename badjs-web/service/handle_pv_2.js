@@ -204,7 +204,7 @@ function handleScorePic (Score, db, closeCallback) {
 }
 
 function sendErrorMail () {
-    mail('', pjConfig.scoreMailToOwner, '', 'IVWEB badjs质量评分日报错误', '请检查是否磁盘已满并且重新发送邮件', '', true);
+    mail('', pjConfig.errorMailTo, '', 'IVWEB badjs质量评分日报错误', '请检查是否磁盘已满并且重新发送邮件', '', true);
 }
 
 function sendMail (data) {

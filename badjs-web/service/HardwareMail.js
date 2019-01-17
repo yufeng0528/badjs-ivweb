@@ -70,7 +70,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
                 if (!err) {
                     var html = constructEmail(items);
                     if (pjConfig.scoreMailToOwner) {
-                        mail('', pjConfig.scoreMailToOwner, '', 'BadJS服务器磁盘占用情况', html, '', true);
+                        mail('', pjConfig.ownerMailTo, '', 'BadJS服务器磁盘占用情况', html, '', true);
                     } else {
                         console.log(html);
                     }
