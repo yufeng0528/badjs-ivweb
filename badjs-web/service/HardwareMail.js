@@ -69,7 +69,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
             hardware.find({}, ['id', 'Z'], 7, function (err, items) {
                 if (!err) {
                     var html = constructEmail(items);
-                    if (pjConfig.scoreMailToOwner) {
+                    if (pjConfig.ownerMailTo) {
                         mail('', pjConfig.ownerMailTo, '', 'BadJS服务器磁盘占用情况', html, '', true);
                     } else {
                         console.log(html);

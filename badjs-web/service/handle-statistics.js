@@ -4,7 +4,7 @@ GLOBAL.pjconfig = require('../project.json');
 
 var mysqlUrl = GLOBAL.pjconfig.mysql.url;
 
-orm.connect(mysqlUrl, function (err, db) {
+var mdb = orm.connect(mysqlUrl, function (err, db) {
     if (err) {
         throw err;
     }
@@ -44,7 +44,7 @@ orm.connect(mysqlUrl, function (err, db) {
     });
 
     setTimeout(() => {
-        process.exit();
+        mdb.close();
     }, 1000 * 60 * 10);
 });
 
