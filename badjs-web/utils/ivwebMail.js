@@ -1,10 +1,10 @@
 'use strict';
-const path = require('path')
+const path = require('path');
 const nodemailer = require('nodemailer');
-const Promise = require('bluebird')
+const Promise = require('bluebird');
 const log4js = require('log4js');
 const logger = log4js.getLogger();
-global.pjconfig = require(path.join(__dirname, '../project.json'))
+global.pjconfig = require(path.join(__dirname, '../project.json'));
 
 const emailConf = global.pjconfig.email;
 
@@ -48,7 +48,7 @@ module.exports = (from, to, cc, title, content, attachments) => {
     //sendMail(_mailOptions);
     // 先放到池子中，再每隔一段时间发送，避免触发频率限制，疑似垃圾邮件
     mailList.push(_mailOptions);
-}
+};
 
 
 function timeoutSendMail() {
@@ -56,7 +56,7 @@ function timeoutSendMail() {
     // 3 分钟后 处理mailList 中的数据 合并同一个的人的邮件，变成每个人只发一封邮件，避免发邮件失败的情况
     setTimeout(() => {
 
-        console.log(`mailList.length: ${mailList.length}`)
+        console.log(`mailList.length: ${mailList.length}`);
 
         let userList = {};
 
@@ -84,54 +84,54 @@ function timeoutSendMail() {
                     userList[to_item] = [];
                 }
                 userList[to_item].push(item);
-            })
-        })
+            });
+        });
 
         // 3分钟后清空mailList，保证第二天进来后可以倒计时
         mailList = [];
 
-        console.log('userList')
+        console.log('userList');
         for (var i in userList) {
             console.log('user: ' + i);
             console.log('mailLenth: ' + userList[i].length);
             userList[i].forEach(item => {
                 console.log(item.subject);
-            })
+            });
         }
 
         let newMailList = [];
-        for (var i in userList) {
+        for (var j in userList) {
             let concatMailObj = {
                 from: mailOptions.from,
-                to: [i],
+                to: [j],
                 cc: [],
                 subject: '【IVWEB BadJs】top error日报',
                 html: [],
                 attachments: []
             };
-            userList[i].forEach(item => {
+            userList[j].forEach(item => {
                 concatMailObj.html.push(item.html);
                 concatMailObj.attachments = concatMailObj.attachments.concat(item.attachments);
-            })
+            });
             concatMailObj.html = concatMailObj.html.join('<br/><br/>');
-            newMailList.push(concatMailObj)
+            newMailList.push(concatMailObj);
         }
 
         console.log('newMailList');
         newMailList.forEach(item => {
-            console.log('to: ' + item.to)
+            console.log('to: ' + item.to);
             console.log('attachments.length: ' + item.attachments.length);
-        })
+        });
 
         // 开始 每隔 180s 发一封邮件
         intervalMail(newMailList);
-    }, 180 * 1000)
+    }, 180 * 1000);
 
     function intervalMail(list) {
 
         let mailTimmer = setInterval(() => {
 
-            console.log(`mailList.length: ${list.length}`)
+            console.log(`mailList.length: ${list.length}`);
 
 
             if (list.length <= 0) {
@@ -142,27 +142,26 @@ function timeoutSendMail() {
             let mailItemOp = list.shift();
             sendMail(mailItemOp);
 
-        }, 180 * 1000)
+        }, 180 * 1000);
     }
 
 }
 
 function sendMail(maildata) {
-
-
-    console.log('send email ....')
+    console.log('send email ....');
+    console.log(maildata.to, maildata.title);
     return new Promise((resolve, reject) => {
         // send mail with defined transport object
         transporter.sendMail(maildata, function (error, info) {
             if (error) {
                 console.log(error);
-                reject(error)
+                reject(error);
             } else {
-                resolve(info)
+                resolve(info);
                 logger.info('Message sent: ' + info.response);
             }
         });
 
-    })
+    });
 
 }
