@@ -29,8 +29,9 @@ module.exports = function () {
 
 
         // 邮件报表
-        var EmailService = require("../service/EmailService");
-        logger.info('start email report ...');
-        new EmailService().start();
+        // 2019-1-18日注释 => 使用 Linux 中的 crontab 做为数据导入定时器，之前用setTimeout定时器问题太多。
+        // var EmailService = require("../service/EmailService");
+        // logger.info('start email report ...');
+        // new EmailService().start();
     }, 3000);
 }

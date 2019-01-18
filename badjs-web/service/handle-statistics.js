@@ -1,5 +1,13 @@
+/**
+ * Created by tickli on 2019/01/18.
+ */
+
+// 这个文件通过 linux 定时器执行，默认执行时间为每天凌晨 5 点
+
 var StatisticsService = require('../service/StatisticsService');
 var orm = require('orm');
+var Apply = require('../model/Apply');
+
 GLOBAL.pjconfig = require('../project.json');
 
 var mysqlUrl = GLOBAL.pjconfig.mysql.url;
@@ -19,9 +27,11 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
 
     var aa = new StatisticsService();
 
-    function fetch(id, startDate) {
+    function fetch(id, startDate, isEnd) {
         aa.fetchAndSave(id, startDate, function (err) {
-            console.log(err);
+            if (isEnd) {
+                mdb.close();
+            }
         });
     }
 
@@ -29,23 +39,15 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
     startDate.setDate(startDate.getDate() - 1);
     startDate.setHours(0, 0, 0, 0);
 
-    global.models.applyDao.find({
-        status: 1
-    }, function (err, items) {
+    global.models.applyDao.find({status: Apply.STATUS_PASS}, function (err, items) {
         if (!err && items.length) {
-            var count = 0;
-            items.forEach(t => {
+            items.forEach((t, index) => {
                 setTimeout(function () {
-                    fetch(t.id, startDate);
-                }, count * 500);
-                count++;
+                    fetch(t.id, startDate, index === items.length -1);
+                }, index * 500);
             });
         }
     });
-
-    setTimeout(() => {
-        mdb.close();
-    }, 1000 * 60 * 10);
 });
 
 

@@ -72,17 +72,30 @@ badjs-ivweb 默认使用 linux 中的 crontab 进行定时任务，完成每天�
 
 开启定时任务 统计 pv 发送评分日报邮件 编辑定时任务脚本 $crontab -e
 
-添加一下定时任务
+添加一下定时任务（请注意更换node路径和文件路径）
 
 ```sh
+# create b_statistics table
+30 2 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/handle-statistics.js
+
+# 统计 pv
 6 0 0 * * * bash /data/badjs-ivweb/badjs-web/service/nginx_log.sh
 0 3 * * * bash /data/badjs-ivweb/badjs-web/service/get_pv.sh
 
-# b_statistics b_quality
-0 2 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/handle-statistics.js
+# create b_quality table
 30 3 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/handle-quality.js
-# send mail
+
+# hardware check
+0 2 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/HardwareMail.js
+
+# send score mail
 0 4 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js
+
+# send top error mail
+0 5 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/TopErrorMail.js
 ```
+
+需要注意的是 `统计 pv` 需要在 `create b_quality table` 前面进行，`pv`，`b_statistics`、`b_quality` 需要在 sendEmail 前进行。
+
 
 保存后生效
