@@ -35,13 +35,11 @@ var StatisticsAction = {
         var businessService = new BusinessService();
 
         businessService.findBusinessByUser(user.loginName, function(err, item) {
-            res.render(param.tpl, {
-                layout: false,
-                user: user,
-                index: 'statistics',
-                statisticsTitle: param.statisticsTitle,
-                items: item
-            });
+            if (err) {
+                res.json({ code: 500, data: err });
+            } else {
+                res.json({ code: 200, data: item });
+            }
         });
     },
 
