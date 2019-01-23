@@ -29,22 +29,20 @@ var StatisticsAction = {
     },
 
     findBusinessByUser: function(param, req, res) {
-        var user = req.session.user;
+        var params = req.query,
+            user = req.session.user;
+
         var businessService = new BusinessService();
 
-        // businessService.findBusinessByUser(user.loginName, function(err, item) {
-        //     if (err) {
-        //         res.json({
-        //             code: 500,
-        //             data: err
-        //         });
-        //     } else {
-        //         res.json({
-        //             code: 200, 
-        //             data: item
-        //         });
-        //     }
-        // });
+        businessService.findBusinessByUser(user.loginName, function(err, item) {
+            res.render(param.tpl, {
+                layout: false,
+                user: user,
+                index: 'statistics',
+                statisticsTitle: param.statisticsTitle,
+                items: item
+            });
+        });
     },
 
     getRate: function(param, req, res) {
