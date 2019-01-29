@@ -3,7 +3,7 @@ var connect = require('connect'),
     log4js = require('log4js'),
     logger = log4js.getLogger();
 
-var url = require("url")
+var url = require("url");
 var http = require("http");
 var path = require("path");
 var querystring = require('querystring');
@@ -22,18 +22,18 @@ if (argv.indexOf('--debug') >= 0) {
 }
 
 if (argv.indexOf('--project') >= 0) {
-    global.pjconfig = require(path.join(__dirname , 'project.debug.json'));
+    global.pjconfig = require(path.join(__dirname, 'project.debug.json'));
 } else {
-    global.pjconfig = require(path.join(__dirname , 'project.json'));
+    global.pjconfig = require(path.join(__dirname, 'project.json'));
 }
 
-if(global.pjconfig.offline){
-    if(global.pjconfig.offline.offlineLogReport){
-        global.pjconfig.offline.olrUrl = url.parse(global.pjconfig.offline.offlineLogReport)
+if (global.pjconfig.offline) {
+    if (global.pjconfig.offline.offlineLogReport) {
+        global.pjconfig.offline.olrUrl = url.parse(global.pjconfig.offline.offlineLogReport);
     }
 
-    if(global.pjconfig.offline.offlineLogCheck){
-        global.pjconfig.offline.olcUrl  = url.parse(global.pjconfig.offline.offlineLogCheck)
+    if (global.pjconfig.offline.offlineLogCheck) {
+        global.pjconfig.offline.olcUrl = url.parse(global.pjconfig.offline.offlineLogCheck);
     }
 }
 
@@ -47,7 +47,7 @@ if (cluster.isMaster) {
         clusters.push(forkCluster);
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
         require('./service/ProjectService')(clusters);
     }, 3000);
 
@@ -57,7 +57,7 @@ if (cluster.isMaster) {
 var interceptor = require('c-interceptor')();
 var interceptors = global.pjconfig.interceptors;
 
-interceptors.forEach(function(value, key) {
+interceptors.forEach(function (value, key) {
     var one = require(value)();
     interceptor.add(one);
 });
@@ -68,24 +68,24 @@ var forbiddenData = '403 forbidden';
 global.projectsInfo = {};
 global.offlineAutoInfo = {};
 
-var get_domain = function(url){
+var get_domain = function (url) {
     return (url.toString().match(REG_DOMAIN) || ['', ''])[1].replace(/^\*\./, '');
 };
 
-var genBlacklistReg = function(data){
+var genBlacklistReg = function (data) {
     // ip黑名单正则
     var blacklistIPRegExpList = [];
-    (data.blacklist &&  data.blacklist.ip ? data.blacklist.ip : []).forEach(function (reg) {
-        blacklistIPRegExpList.push(new RegExp("^" + reg.replace(/\./g , "\\.")) );
+    (data.blacklist && data.blacklist.ip ? data.blacklist.ip : []).forEach(function (reg) {
+        blacklistIPRegExpList.push(new RegExp("^" + reg.replace(/\./g, "\\.")));
     });
-    data.blacklistIPRegExpList = blacklistIPRegExpList
+    data.blacklistIPRegExpList = blacklistIPRegExpList;
 
 // ua黑名单正则
     var blacklistUARegExpList = [];
-    ( data.blacklist &&   data.blacklist.ua ?  data.blacklist.ua : []).forEach(function (reg) {
-        blacklistUARegExpList.push(new RegExp(reg , "i"));
+    (data.blacklist && data.blacklist.ua ? data.blacklist.ua : []).forEach(function (reg) {
+        blacklistUARegExpList.push(new RegExp(reg, "i"));
     });
-    data.blacklistUARegExpList = blacklistUARegExpList
+    data.blacklistUARegExpList = blacklistUARegExpList;
 
 };
 
@@ -108,18 +108,18 @@ function getClientIp(req) {
     return "0.0.0.0";
 }
 
-process.on('message', function(data) {
-    var json = data ,  info ;
-    if(json.projectsInfo){
+process.on('message', function (data) {
+    var json = data, info;
+    if (json.projectsInfo) {
         info = JSON.parse(json.projectsInfo);
-    if (typeof info === "object") {
-        for (var k in info) {
-            var v = info[k] || {};
-            v.domain = get_domain(v.url);
-            genBlacklistReg(v  );
+        if (typeof info === "object") {
+            for (var k in info) {
+                var v = info[k] || {};
+                v.domain = get_domain(v.url);
+                genBlacklistReg(v);
+            }
+            global.projectsInfo = info;
         }
-        global.projectsInfo = info;
-    }
     }
 });
 
@@ -129,14 +129,14 @@ process.on('message', function(data) {
  * @param req
  * @returns {boolean}
  */
-var referer_match = function(id, req) {
+var referer_match = function (id, req) {
     var referer = (((req || {}).headers || {}).referer || "").toString();
 
-    var projectMatchDomain =  (global.projectsInfo[id.toString()] || {}).domain ;
+    var projectMatchDomain = (global.projectsInfo[id.toString()] || {}).domain;
     // no referer
     if (!referer) {
         // match match is * , no detect referer
-        if(!projectMatchDomain){
+        if (!projectMatchDomain) {
             return true;
         }
         logger.debug('no referer ,  forbidden :' + req.query.id);
@@ -147,35 +147,35 @@ var referer_match = function(id, req) {
         domain.indexOf(projectMatchDomain) !== -1;
 };
 
-var reponseReject = function (req , res , responseHeader){
+var reponseReject = function (req, res, responseHeader) {
     responseHeader['Content-length'] = forbiddenData.length;
     res.writeHead(403, responseHeader);
     res.write(forbiddenData);
     res.end();
-}
+};
 
 connect()
     .use('/badjs', connect.query())
     .use('/badjs', connect.bodyParser())
-    .use('/badjs/offlineLog', function(req, res) {
+    .use('/badjs/offlineLog', function (req, res) {
 
         // 大于 10ms , forbidden
-        if(parseInt(req.headers['content-length']) > 10485760){
+        if (parseInt(req.headers['content-length']) > 10485760) {
             res.end('too large');
-            return ;
+            return;
         }
 
         var log = req.body.offline_log;
 
-        if(!global.pjconfig.offline.olrUrl){
+        if (!global.pjconfig.offline.olrUrl) {
 
             res.end('error no orl url.');
-            return
+            return;
         }
 
         var postData = querystring.stringify({
             "offline_log": log
-        })
+        });
 
         console.log(global.pjconfig.offline.olrUrl);
 
@@ -191,19 +191,19 @@ connect()
         }
 
         const req2 = http.request(httpPost, (res2) => {
-              console.log(`STATUS: ${res2.statusCode}`);
-              console.log(`HEADERS: ${JSON.stringify(res2.headers)}`);
-              res2.setEncoding('utf8');
-              res2.on('data', (chunk) => {
+            console.log(`STATUS: ${res2.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(res2.headers)}`);
+            res2.setEncoding('utf8');
+            res2.on('data', (chunk) => {
                 console.log(`BODY: ${chunk}`);
-              });
-              res2.on('end', () => {
+            });
+            res2.on('end', () => {
                 console.log('No more data in response.');
-              });
+            });
         });
 
         req2.on('error', (e) => {
-              console.error(`problem with req2uest: ${e.message}`);
+            console.error(`problem with req2uest: ${e.message}`);
         });
 
         // write data to req2uest body
@@ -213,26 +213,50 @@ connect()
         res.end('ok');
 
     })
-    .use('/badjs/offlineAuto', function(req, res) {
+    .use('/badjs/offlineAuto', function (req, res) {
         var param = req.query;
-        http.get( global.pjconfig.offline.offlineLogCheck + "?id="+param.id +"&uin="+ param.uin , function (clientRes){
-            var result ="";
+        http.get(global.pjconfig.offline.offlineLogCheck + "?id=" + param.id + "&uin=" + param.uin, function (clientRes) {
+            var result = "";
             clientRes.setEncoding('utf8');
-            clientRes.on("data" , function (chunk){
-                result += chunk
-            })
+            clientRes.on("data", function (chunk) {
+                result += chunk;
+            });
 
-            clientRes.on("end" , function (){
+            clientRes.on("end", function () {
                 //res.write()
-                res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto("+(result ? result : false)+");")
-            })
-        }).on('error', function (e){
-            logger.warn("offlineLogCheck err , ", e)
-            res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto(false);")
+                res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto(" + (result ? result : false) + ");");
+            });
+        }).on('error', function (e) {
+            logger.warn("offlineLogCheck err , ", e);
+            res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto(false);");
         });
 
     })
-    .use('/badjs', function(req, res) {
+    .use('/badjs/mpOfflineAuto', function (req, res) {
+        var param = req.query;
+
+        http.get(global.pjconfig.offline.offlineLogCheck + "?id=" + param.id + "&uin=" + param.uin, function (clientRes) {
+            var result = "";
+            clientRes.setEncoding('utf8');
+            clientRes.on("data", function (chunk) {
+                result += chunk;
+            });
+
+            clientRes.on("end", function () {
+                return res.end(JSON.stringify({
+                    code: 200,
+                    msg: result ? result : false
+                }));
+            });
+        }).on('error', function (e) {
+            logger.warn("offlineLogCheck err , ", e);
+            return res.end(JSON.stringify({
+                coo: 500,
+                error: e
+            }));
+        });
+    })
+    .use('/badjs', function (req, res) {
 
         logger.debug('===== get a message =====');
 
@@ -256,7 +280,7 @@ connect()
             !global.projectsInfo[id + ""] ||
             !referer_match(id, req)) {
 
-            reponseReject(req , res , responseHeader);
+            reponseReject(req, res, responseHeader);
             logger.debug('forbidden :' + param.id);
 
             return;
@@ -270,14 +294,14 @@ connect()
                 data: param
             });
         } catch (err) {
-            reponseReject(req , res , responseHeader);
-            logger.debug('id ' +  param.id +' , interceptor error :' + err );
+            reponseReject(req, res, responseHeader);
+            logger.debug('id ' + param.id + ' , interceptor error :' + err);
             return;
         }
 
-        if(req.throwError){
-            reponseReject(req , res , responseHeader);
-            logger.debug('id ' +  param.id +' , interceptor reject :' + req.throwError);
+        if (req.throwError) {
+            reponseReject(req, res, responseHeader);
+            logger.debug('id ' + param.id + ' , interceptor reject :' + req.throwError);
             return;
         }
 

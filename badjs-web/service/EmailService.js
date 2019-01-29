@@ -257,7 +257,7 @@ EmailService.prototype = {
                                     }
                                 });
                             } else {
-                                logger.error('Send email data format error, no badjs msg, by ' + applyId);
+                                logger.log('Send email data format error, no badjs msg, by ' + applyId);
                             }
                         }); // jshint ignore:line
                     })(orderByApplyId[applyId], applyId); // jshint ignore:line
@@ -272,7 +272,7 @@ EmailService.prototype = {
         var pvParam = {
             badjsid: badjsid,
             date: dateFormat(this.date, "yyyyMMdd")
-        }
+        };
         this.statisticsService.getPvById(pvParam, function (err, pvdata) {
             data.pvData = pvdata;
             data.cid1 = '000' + parseInt(Math.random() * 1000);
@@ -282,7 +282,7 @@ EmailService.prototype = {
                 filename: data.cid1 + '01.png',
                 path: that.host + emails.imagePath,
                 cid: data.cid1
-            }]
+            }];
             sendEmail(this.from, emails.to, emails.cc, title, content, attachments);
         });
     },
