@@ -168,7 +168,6 @@ connect()
         var log = req.body.offline_log;
 
         if (!global.pjconfig.offline.olrUrl) {
-
             res.end('error no orl url.');
             return;
         }
@@ -177,12 +176,14 @@ connect()
             "offline_log": log
         });
 
-        console.log(global.pjconfig.offline.olrUrl);
+        var olrUrl = global.pjconfig.offline.olrUrl
+
+        console.log(olrUrl);
 
         var httpPost = {
-            hostname: global.pjconfig.offline.olrUrl.hostname,
-            port: global.pjconfig.offline.olrUrl.port,
-            path: global.pjconfig.offline.olrUrl.path,
+            hostname: olrUrl.hostname,
+            port: olrUrl.port,
+            path: olrUrl.path,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

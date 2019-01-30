@@ -50,12 +50,9 @@ var ProjectService = function(clusters) {
 
     var info = fs.readFileSync(dbPath, "utf-8");
 
-
     dispatchCluster({
         projectsInfo: info
     });
-
-    logger.info('load project.db :' + info);
 };
 
 
