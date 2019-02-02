@@ -18,7 +18,7 @@ var LIMIT = global.MONGODB.limit || 500;
 
 var mongoDB;
 // Use connect method to connect to the Server
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, function (err, db) {
     if (err) {
         logger.info("failed connect to server");
     } else {
@@ -27,7 +27,7 @@ MongoClient.connect(url, function(err, db) {
     mongoDB = db;
 });
 
-var dateFormat = function(date, fmt) {
+var dateFormat = function (date, fmt) {
     var o = {
         "M+": date.getMonth() + 1, //月份
         "d+": date.getDate(), //日
@@ -43,7 +43,7 @@ var dateFormat = function(date, fmt) {
     return fmt;
 };
 
-var validateDate = function(date) {
+var validateDate = function (date) {
     var startDate = new Date(date - 0) - 0;
     if (isNaN(startDate)) {
         return {
@@ -54,7 +54,7 @@ var validateDate = function(date) {
 
 };
 
-var validate = function(req, rep) {
+var validate = function (req, rep) {
     var json = req.query;
 
     var id;
@@ -106,7 +106,8 @@ var validate = function(req, rep) {
 
     try {
         if (json.level) {
-            if (Object.prototype.toString.apply(json.level) == "[object Array]") {} else {
+            if (Object.prototype.toString.apply(json.level) == "[object Array]") {
+            } else {
                 json.level = JSON.parse(json.level);
             }
         } else {
@@ -216,11 +217,11 @@ var validate = function(req, rep) {
 };*/
 
 
-var getErrorMsgFromCache = function(query, isJson, cb) {
+var getErrorMsgFromCache = function (query, isJson, cb) {
     var fileName = dateFormat(new Date(query.startDate), "yyyy-MM-dd") + "__" + query.id;
-    var filePath = path.join(__dirname , "..", "cache", "errorMsg", fileName);
+    var filePath = path.join(__dirname, "..", "cache", "errorMsg", fileName);
 
-    var returnValue = function(err, doc) {
+    var returnValue = function (err, doc) {
         if (query.noReturn) {
             cb(err);
         } else {
@@ -234,23 +235,23 @@ var getErrorMsgFromCache = function(query, isJson, cb) {
         } else {
             returnValue(null, fs.readFileSync(filePath));
         }
-    }else {
+    } else {
         logger.info("could not found cache  id=" + query.id);
-        returnValue(null , "" )
+        returnValue(null, '');
     }
-   /* errorMsgTop(query, function(err, doc) {
-        if (err) {
-            logger.info("cache errorMsgTop error fileName=" + fileName + " " + err.toString());
-        }
-        returnValue(err, isJson ? doc : JSON.stringify(doc));
-    });*/
+    /* errorMsgTop(query, function(err, doc) {
+         if (err) {
+             logger.info("cache errorMsgTop error fileName=" + fileName + " " + err.toString());
+         }
+         returnValue(err, isJson ? doc : JSON.stringify(doc));
+     });*/
 };
 
 
-module.exports = function() {
+module.exports = function () {
     connect()
         .use('/query', connect.query())
-        .use('/query', function(req, res) {
+        .use('/query', function (req, res) {
 
             var result = validate(req, res);
 
@@ -273,7 +274,7 @@ module.exports = function() {
             };
 
             var includeJSON = [];
-            json.include.forEach(function(value, key) {
+            json.include.forEach(function (value, key) {
                 includeJSON.push(new RegExp(value));
             });
 
@@ -282,7 +283,7 @@ module.exports = function() {
             }
 
             var excludeJSON = [];
-            json.exclude.forEach(function(value, key) {
+            json.exclude.forEach(function (value, key) {
                 excludeJSON.push(new RegExp(value));
             });
 
@@ -296,7 +297,7 @@ module.exports = function() {
                 delete queryJSON.all;
             }
 
-            json.level.forEach(function(value, key) {
+            json.level.forEach(function (value, key) {
                 json.level[key] = value - 0;
             });
 
@@ -322,17 +323,17 @@ module.exports = function() {
             }
             logger.info("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
 
-            mongoDB.collection('badjslog_' + id).find(queryJSON, function(error, cursor) {
+            mongoDB.collection('badjslog_' + id).find(queryJSON, function (error, cursor) {
                 res.writeHead(200, {
                     'Content-Type': 'text/json'
                 });
 
                 cursor.sort({
-                        'date': -1
-                    })
+                    'date': -1
+                })
                     .skip(json.index * LIMIT)
                     .limit(LIMIT)
-                    .toArray(function(err, item) {
+                    .toArray(function (err, item) {
                         res.write(JSON.stringify(item));
                         res.end();
 
@@ -344,7 +345,7 @@ module.exports = function() {
 
         })
         .use('/errorMsgTop', connect.query())
-        .use('/errorMsgTop', function(req, res) {
+        .use('/errorMsgTop', function (req, res) {
             var error = validateDate(req.query.startDate);
             if (error) {
                 res.end(JSON.stringify(error));
@@ -354,7 +355,7 @@ module.exports = function() {
 
             req.query.startDate = req.query.startDate - 0;
 
-            getErrorMsgFromCache(req.query, false, function(error, doc) {
+            getErrorMsgFromCache(req.query, false, function (error, doc) {
                 res.writeHead(200, {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Content-Length': doc.length
@@ -365,14 +366,14 @@ module.exports = function() {
 
         })
         .use('/errorMsgTopCache', connect.query())
-        .use('/errorMsgTopCache', function(req, res) {
+        .use('/errorMsgTopCache', function (req, res) {
             res.end();
-         /*   var error = validateDate(req.query.startDate);
-            if (error) {
-                res.end(JSON.stringify(error));
-            }else {
-                res.end();
-            }*/
+            /*   var error = validateDate(req.query.startDate);
+               if (error) {
+                   res.end(JSON.stringify(error));
+               }else {
+                   res.end();
+               }*/
 
             /*var error = validateDate(req.query.startDate);
             if (error) {
@@ -415,7 +416,7 @@ module.exports = function() {
 
 
         })
-        .listen( GLOBAL.pjconfig.port);
+        .listen(GLOBAL.pjconfig.port);
 
-    logger.info('query server start ok , listen '  + GLOBAL.pjconfig.port);
+    logger.info('query server start ok , listen ' + GLOBAL.pjconfig.port);
 };
