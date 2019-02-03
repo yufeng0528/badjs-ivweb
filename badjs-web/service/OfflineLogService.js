@@ -35,7 +35,16 @@ app.post('/offlineLogReport', function (req, res) {
     var param = req.body;
     if (param && param.offline_log) {
         try {
-            var offline_log = JSON.parse(pako.inflate(decodeURIComponent(param.offline_log), { to: 'string' }));
+            var offline_log;
+            try {
+                offline_log = pako.inflate(decodeURIComponent(param.offline_log), { to: 'string' });
+                if (typeof offline_log === 'string') {
+                    offline_log = JSON.parse(offline_log);
+                }
+            } catch (e) {
+                return logger.warn('invalid offlineLog error  ' + e);
+            }
+
             if (!/[\w]{1,7}/.test(offline_log.id)) {
                 throw new Error('invalid id ' + offline_log.id);
             }
@@ -44,7 +53,7 @@ app.post('/offlineLogReport', function (req, res) {
                 id: offline_log.id
             }, function (err, apply) {
                 if (!apply || err || apply.status != 1) {
-                    logger.info('invaild offlineLog  id: ' + offline_log.id);
+                    logger.info('invalid offlineLog  id: ' + offline_log.id);
                     return;
                 }
 
@@ -54,14 +63,22 @@ app.post('/offlineLogReport', function (req, res) {
                 if (!fs.existsSync(filePath)) {
                     fs.mkdirSync(filePath);
                 }
+
+                var logs = offline_log.logs;
+                var msgObj = offline_log.msgObj;
+                if (msgObj) {
+                    logs.map(function (log) {
+                        log.msg = msgObj[log.msg];
+                        return log;
+                    });
+                }
+
                 fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log));
 
                 logger.info('get offline log : ' + path.join(filePath, fileName));
             });
-
-
         } catch (e) {
-            logger.warn('invaild offlineLog error  ' + e);
+            logger.warn('invalid offlineLog error  ' + e);
         }
     }
 
