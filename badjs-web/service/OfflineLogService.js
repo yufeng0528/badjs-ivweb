@@ -35,7 +35,7 @@ app.post('/offlineLogReport', function (req, res) {
     var param = req.body;
     if (param && param.offline_log) {
         try {
-            var offline_log = JSON.parse(pako.inflate(param.offline_log, {to: 'string'}));
+            var offline_log = JSON.parse(pako.inflate(decodeURIComponent(param.offline_log), { to: 'string' }));
             if (!/[\w]{1,7}/.test(offline_log.id)) {
                 throw new Error('invalid id ' + offline_log.id);
             }
@@ -54,7 +54,7 @@ app.post('/offlineLogReport', function (req, res) {
                 if (!fs.existsSync(filePath)) {
                     fs.mkdirSync(filePath);
                 }
-                fs.writeFile(path.join(filePath, fileName), param.offline_log);
+                fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log));
 
                 logger.info('get offline log : ' + path.join(filePath, fileName));
             });
