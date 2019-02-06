@@ -174,9 +174,15 @@ connect()
 
         var logs = offline_log.logs;
         var msgObj = offline_log.msgObj;
-        if (msgObj) {
+        var urlObj = offline_log.urlObj;
+        if (msgObj || urlObj) {
             logs.map(function (log) {
-                log.msg = msgObj[log.msg];
+                if (msgObj) {
+                    log.msg = msgObj[log.msg];
+                }
+                if (urlObj) {
+                    log.from = urlObj[log.from];
+                }
                 return log;
             });
         }
