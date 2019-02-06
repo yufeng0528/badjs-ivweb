@@ -44,7 +44,7 @@ var autoClearStart = function () {
                         logger.info('clear success id=' + collection.s.name);
                     }
                 });
-            }, ++count * 1000);
+            }, ++count * 5000);
         });
     });
 };

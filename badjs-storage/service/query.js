@@ -252,7 +252,6 @@ module.exports = function () {
     connect()
         .use('/query', connect.query())
         .use('/query', function (req, res) {
-
             var result = validate(req, res);
 
             if (!result.ok) {
