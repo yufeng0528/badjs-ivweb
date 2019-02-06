@@ -155,7 +155,8 @@ connect()
 
         var offline_log = req.body.offline_log;
 
-        offline_log = pako.inflate(decodeURIComponent(offline_log), { to: 'string' });
+        // offline_log = pako.inflate(decodeURIComponent(offline_log), { to: 'string' });
+
         if (typeof offline_log === 'string') {
             offline_log = JSON.parse(offline_log);
         }
