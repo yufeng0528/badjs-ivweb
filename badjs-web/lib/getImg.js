@@ -4,6 +4,7 @@ var moment = require('moment');
 var logger = require('log4js').getLogger();
 var exporting = require('node-highcharts-exporting-v2');
 var fs = require('fs');
+var pjConfig = require('../project.json');
 
 
 var dateKey = [];
@@ -133,7 +134,7 @@ function getImg (xkey, data, extParam, index) {
                 console.log('create img file error: ')
                 console.error(err);
                 const mail = require("../utils/ivwebMail_for_single.js");
-                mail('', '380034641@qq.com', '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err, false);
+                mail('', pjConfig.errorMailTo, '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err, false);
             }
         });
     });

@@ -6,7 +6,8 @@ var connect = require('connect'),
 var url = require("url");
 var http = require("http");
 var path = require("path");
-var querystring = require('querystring');
+var pako = require('pako');
+var fs = require('fs');
 
 var cluster = require('cluster');
 var argv = process.argv.slice(2);
@@ -80,7 +81,7 @@ var genBlacklistReg = function (data) {
     });
     data.blacklistIPRegExpList = blacklistIPRegExpList;
 
-// ua黑名单正则
+    // ua黑名单正则
     var blacklistUARegExpList = [];
     (data.blacklist && data.blacklist.ua ? data.blacklist.ua : []).forEach(function (reg) {
         blacklistUARegExpList.push(new RegExp(reg, "i"));
@@ -89,7 +90,7 @@ var genBlacklistReg = function (data) {
 
 };
 
-function getClientIp(req) {
+function getClientIp (req) {
     try {
         var xff = (
             req.headers['X-Forwarded-For'] ||
@@ -165,51 +166,35 @@ connect()
             return;
         }
 
-        var log = req.body.offline_log;
+        var offline_log = req.body.offline_log;
 
-        if (!global.pjconfig.offline.olrUrl) {
-            res.end('error no orl url.');
-            return;
+        offline_log = pako.inflate(decodeURIComponent(offline_log), { to: 'string' });
+        if (typeof log === 'string') {
+            offline_log = JSON.parse(offline_log);
         }
 
-        var postData = querystring.stringify({
-            "offline_log": log
-        });
-
-        var olrUrl = global.pjconfig.offline.olrUrl
-
-        console.log(olrUrl);
-
-        var httpPost = {
-            hostname: olrUrl.hostname,
-            port: olrUrl.port,
-            path: olrUrl.path,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(postData)
-            }
+        if (!/[\w]{1,7}/.test(offline_log.id)) {
+            throw new Error('invalid id ' + offline_log.id);
         }
 
-        const req2 = http.request(httpPost, (res2) => {
-            console.log(`STATUS: ${res2.statusCode}`);
-            console.log(`HEADERS: ${JSON.stringify(res2.headers)}`);
-            res2.setEncoding('utf8');
-            res2.on('data', (chunk) => {
-                console.log(`BODY: ${chunk}`);
-            });
-            res2.on('end', () => {
-                console.log('No more data in response.');
-            });
-        });
+        var filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
 
-        req2.on('error', (e) => {
-            console.error(`problem with req2uest: ${e.message}`);
-        });
+        var fileName = offline_log.uin + '_' + offline_log.startDate + '_' + offline_log.endDate;
 
-        // write data to req2uest body
-        req2.write(postData);
-        req2.end();
+        if (!fs.existsSync(filePath)) {
+            fs.mkdirSync(filePath);
+        }
+
+        var logs = offline_log.logs;
+        var msgObj = offline_log.msgObj;
+        if (msgObj) {
+            logs.map(function (log) {
+                log.msg = msgObj[log.msg];
+                return log;
+            });
+        }
+
+        fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log));
 
         res.end('ok');
 

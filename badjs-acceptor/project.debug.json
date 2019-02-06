@@ -7,6 +7,7 @@
         "module": "./dispatcher/axon"
     },
     "offline": {
+        "path": "/data/offline_log",
         "offlineLogReport": "http://127.0.0.1:9010/offlineLogReport",
         "offlineLogCheck": "http://127.0.0.1:9010/offlineLogCheck"
     },

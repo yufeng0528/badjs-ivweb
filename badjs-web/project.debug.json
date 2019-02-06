@@ -14,6 +14,8 @@
     "openapi": {
         "pushProjectUrl" : "http://127.0.0.1:9002/getProjects"
     },
+    "sourcemap": "/data/sourcemap",
+    "offline_log": "/data/offline_log",
     "mq": {
         "url": "tcp://127.0.0.1:10000",
         "subscribe": "badjs",
