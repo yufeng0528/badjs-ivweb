@@ -14,6 +14,14 @@ var argv = process.argv.slice(2);
 var REG_REFERER = /^https?:\/\/[^\/]+\//i;
 var REG_DOMAIN = /^(?:https?:)?(?:\/\/)?([^\/]+\.[^\/]+)\/?/i;
 
+var deflateObj = {
+    f: 'from',
+    l: 'level',
+    m: 'msg',
+    t: 'time',
+    v: 'version'
+};
+
 if (argv.indexOf('--debug') >= 0) {
     logger.setLevel('DEBUG');
     global.debug = true;
@@ -176,17 +184,22 @@ connect()
         var logs = offline_log.logs;
         var msgObj = offline_log.msgObj;
         var urlObj = offline_log.urlObj;
-        if (msgObj || urlObj) {
-            logs.map(function (log) {
-                if (msgObj) {
-                    log.msg = msgObj[log.msg];
+        logs.map(function (log) {
+            if (msgObj) {
+                log.m = msgObj[log.m];
+            }
+            if (urlObj) {
+                log.f = urlObj[log.f];
+            }
+            for (var k in deflateObj) {
+                if (k in log) {
+                    var v = deflateObj[k];
+                    log[v] = log[k];
+                    delete log[k];
                 }
-                if (urlObj) {
-                    log.from = urlObj[log.from];
-                }
-                return log;
-            });
-        }
+            }
+            return log;
+        });
 
         fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log));
 
