@@ -42,7 +42,7 @@ app.post('/offlineLogReport', function (req, res) {
                     offline_log = JSON.parse(offline_log);
                 }
             } catch (e) {
-                return logger.warn('invalid offlineLog error  ' + e);
+                offline_log = JSON.parse(param.offline_log);
             }
 
             if (!/[\w]{1,7}/.test(offline_log.id)) {
