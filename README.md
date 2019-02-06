@@ -82,6 +82,9 @@ badjs-ivweb 默认使用 linux 中的 crontab 进行定时任务，完成每天�
 6 0 * * * bash /data/badjs-ivweb/badjs-web/service/nginx_log.sh
 0 3 * * * bash /data/badjs-ivweb/badjs-web/service/get_pv.sh
 
+# 清理离线日志
+30 2 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/CleanOffline.js
+
 # create b_quality table
 30 3 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/handle-quality.js
 
