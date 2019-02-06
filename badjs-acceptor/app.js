@@ -3,7 +3,6 @@ var connect = require('connect'),
     log4js = require('log4js'),
     logger = log4js.getLogger();
 
-var url = require("url");
 var http = require("http");
 var path = require("path");
 var pako = require('pako');
@@ -28,19 +27,7 @@ if (argv.indexOf('--project') >= 0) {
     global.pjconfig = require(path.join(__dirname, 'project.json'));
 }
 
-if (global.pjconfig.offline) {
-    if (global.pjconfig.offline.offlineLogReport) {
-        global.pjconfig.offline.olrUrl = url.parse(global.pjconfig.offline.offlineLogReport);
-    }
-
-    if (global.pjconfig.offline.offlineLogCheck) {
-        global.pjconfig.offline.olcUrl = url.parse(global.pjconfig.offline.offlineLogCheck);
-    }
-}
-
-
 if (cluster.isMaster) {
-
     var clusters = [];
     // Fork workers.
     for (var i = 0; i < 4; i++) {
@@ -169,7 +156,7 @@ connect()
         var offline_log = req.body.offline_log;
 
         offline_log = pako.inflate(decodeURIComponent(offline_log), { to: 'string' });
-        if (typeof log === 'string') {
+        if (typeof offline_log === 'string') {
             offline_log = JSON.parse(offline_log);
         }
 
