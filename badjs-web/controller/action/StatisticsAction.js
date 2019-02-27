@@ -11,13 +11,13 @@ var log4js = require('log4js'),
 var StatisticsAction = {
 
 
-    index: function(param, req, res) {
+    index: function (param, req, res) {
         var params = req.query,
             user = req.session.user;
 
         var businessService = new BusinessService();
 
-        businessService.findBusinessByUser(user.loginName, function(err, item) {
+        businessService.findBusinessByUser(user.loginName, function (err, item) {
             res.render(param.tpl, {
                 layout: false,
                 user: user,
@@ -28,13 +28,13 @@ var StatisticsAction = {
         });
     },
 
-    findBusinessByUser: function(param, req, res) {
+    findBusinessByUser: function (param, req, res) {
         var params = req.query,
             user = req.session.user;
 
         var businessService = new BusinessService();
 
-        businessService.findBusinessByUser(user.loginName, function(err, item) {
+        businessService.findBusinessByUser(user.loginName, function (err, item) {
             if (err) {
                 res.json({ code: 500, data: err });
             } else {
@@ -43,20 +43,21 @@ var StatisticsAction = {
         });
     },
 
-    getRate: function(param, req, res) {
-          var db = global.models.db,
-          date = param.date.replace(/\D/g, '');
-          db.driver.execQuery('select * from b_quality where date=' + date + ' and badjsid=' + param.badjsid + ';', (err, data) => {
-              res.json(data);
-          })
+    getRate: function (param, req, res) {
+        var db = global.models.db,
+            date = param.date.replace(/\D/g, '');
+        db.driver.execQuery('select * from b_quality where date=' + date + ' and badjsid=' + param.badjsid + ';',
+            (err, data) => {
+                res.json(data);
+            });
     },
-    projectTotal: function(param, req, res) {
+    projectTotal: function (param, req, res) {
         var params = req.query,
             user = req.session.user;
 
         var businessService = new BusinessService();
 
-        businessService.findBusiness(function(err, items) {
+        businessService.findBusiness(function (err, items) {
             res.render(param.tpl, {
                 layout: false,
                 user: user,
@@ -67,7 +68,7 @@ var StatisticsAction = {
         });
 
     },
-    queryByChart: function(param, req, res) {
+    queryByChart: function (param, req, res) {
         var statisticsService = new StatisticsService();
         if (!param.projectId || isNaN(param.projectId) || !param.timeScope) {
             res.json({
@@ -81,7 +82,7 @@ var StatisticsAction = {
             userName: param.user.loginName,
             projectId: param.projectId - 0,
             timeScope: param.timeScope - 0
-        }, function(err, data) {
+        }, function (err, data) {
             if (err) {
                 res.json({
                     ret: -1,
@@ -92,7 +93,7 @@ var StatisticsAction = {
             res.json(data);
         });
     },
-    queryByChartForAdmin: function(param, req, res) {
+    queryByChartForAdmin: function (param, req, res) {
         var statisticsService = new StatisticsService();
         if (!param.projectId || isNaN(param.projectId) || !param.timeScope || param.user.role != 1) {
             res.json({
@@ -106,7 +107,7 @@ var StatisticsAction = {
         statisticsService.queryByChart({
             projectId: param.projectId - 0,
             timeScope: param.timeScope - 0
-        }, function(err, data) {
+        }, function (err, data) {
             if (err) {
                 res.json({
                     ret: -1,
@@ -118,7 +119,7 @@ var StatisticsAction = {
             return;
         });
     },
-    queryById: function(param, req, res) {
+    queryById: function (param, req, res) {
         var statisticsService = new StatisticsService();
         if (!req.query.projectId || isNaN(req.query.projectId) || !req.query.startDate) {
             res.json({
@@ -133,7 +134,7 @@ var StatisticsAction = {
             userName: param.user.loginName,
             projectId: req.query.projectId - 0,
             startDate
-        }, function(err, data) {
+        }, function (err, data) {
             if (err) {
                 res.json({
                     ret: -1,
@@ -151,21 +152,21 @@ var StatisticsAction = {
         });
     },
 
-    getpvbyid: function(param, req, res) {
+    getpvbyid: function (param, req, res) {
         var statisticsService = new StatisticsService();
         statisticsService.getPvById({
             badjsid: req.query.badjsid,
             date: req.query.date
-        }, function(err, data) {
+        }, function (err, data) {
             if (err) {
                 res.json({
                     retcode: 2,
                     msg: err
                 });
-                    return;
+                return;
             }
-            res.json(data)
-        })
+            res.json(data);
+        });
     }
 };
 

@@ -50,7 +50,6 @@ var LogAction = {
             return;
         }
 
-
         var offlineFiles = fs.readdirSync(filePath);
         var offlineFilesList = [];
         offlineFiles.sort(function (a, b) {
@@ -82,12 +81,10 @@ var LogAction = {
 
         var filePath = path.join(pjConfig.offline_log, params.id + "", params.fileId);
 
-
         if (!fs.existsSync(filePath)) {
             res.json({ ret: 0, msg: "success-query", data: '' });
             return;
         }
-
 
         var offlineFiles = fs.readFileSync(filePath);
 

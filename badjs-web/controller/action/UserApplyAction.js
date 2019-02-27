@@ -6,9 +6,9 @@ var log4js = require('log4js'),
     logger = log4js.getLogger(),
     UserApplyService = require('../../service/UserApplyService'),
     EmailService = require('../../service/EmailService'),
-    isError = function (res , error){
-        if(error){
-            res.json({ret : 1 , msg : error});
+    isError = function (res, error) {
+        if (error) {
+            res.json({ ret: 1, msg: error });
             return true;
         }
         return false;
@@ -16,22 +16,22 @@ var log4js = require('log4js'),
 
 
 var userAction = {
-    addUserApply: function(userApply, req , res){
+    addUserApply: function (userApply, req, res) {
 
-        if(userApply.userName ==""){
-            res.json({ret: 1002, msg: "userName为空"});
+        if (userApply.userName == "") {
+            res.json({ ret: 1002, msg: "userName为空" });
             return;
         }
         userApply.createTime = new Date();
         var userApplyService = new UserApplyService();
         var emailService = new EmailService();
-        userApplyService.add(userApply,function(err, user, items) {
+        userApplyService.add(userApply, function (err, user, items) {
             if (isError(res, err)) {
                 return;
             }
             var loginUser = req.session.user;
             emailService.sendApplySuccessEmail(user, loginUser, items);
-            res.json({ret: 0, msg: "success-add"});
+            res.json({ ret: 0, msg: "success-add" });
         });
     },
 
@@ -39,32 +39,32 @@ var userAction = {
     //update:function(req, res){
     //
     //},
-    remove: function(remove, req, res){
-        if(remove.id ==""){
-            res.json({ret: 1002, msg: "id为空"});
+    remove: function (remove, req, res) {
+        if (remove.id == "") {
+            res.json({ ret: 1002, msg: "id为空" });
             return;
         }
         var userApplyService = new UserApplyService();
-        userApplyService.remove(remove,function(err, items) {
+        userApplyService.remove(remove, function (err, items) {
             if (isError(res, err)) {
                 return;
             }
-            res.json({ret: 0, msg: "success-remove"});
+            res.json({ ret: 0, msg: "success-remove" });
         });
 
     },
 
-    auth: function(auth, req, res){
-        if(auth.id ==""){
-            res.json({ret: 1002, msg: "id为空"});
+    auth: function (auth, req, res) {
+        if (auth.id == "") {
+            res.json({ ret: 1002, msg: "id为空" });
             return;
         }
         var userApplyService = new UserApplyService();
-        userApplyService.auth(auth,function(err, items) {
+        userApplyService.auth(auth, function (err, items) {
             if (isError(res, err)) {
                 return;
             }
-            res.json({ret: 0, msg: "success-update"});
+            res.json({ ret: 0, msg: "success-update" });
         });
 
     }

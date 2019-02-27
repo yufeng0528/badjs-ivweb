@@ -10,7 +10,7 @@ var log4js = require('log4js'),
     _ = require('underscore'),
     crypto = require('crypto'),
     ApplyService = require('../../service/ApplyService'),
-    isError = function(res, error) {
+    isError = function (res, error) {
         if (error) {
             res.json({
                 ret: 1,
@@ -24,8 +24,8 @@ var log4js = require('log4js'),
 var REG_DOMAIN_STAR = /^\*(\.[^\/]+)?$/;
 var REG_REFERER = /^https?:\/\/[^\/]+\//i;
 
-var processData = function(data) {
-    _.each(data, function(value, key) {
+var processData = function (data) {
+    _.each(data, function (value, key) {
         if (value.createTime) {
             value.createTime = (new Date(value.createTime) - 0);
         }
@@ -41,7 +41,7 @@ var processData = function(data) {
 
 var applyAction = {
 
-    addApply: function(params, req, res) {
+    addApply: function (params, req, res) {
         // 必要信息为空，则报错
         var url = params.url;
         var url_no_match = !REG_DOMAIN_STAR.test(url) && !REG_REFERER.test(url);
@@ -57,7 +57,7 @@ var applyAction = {
 
         var applyService = new ApplyService();
         if (apply.id) {
-            applyService.update(apply, function(err, items) {
+            applyService.update(apply, function (err, items) {
                 if (isError(res, err)) {
                     return;
                 }
@@ -75,7 +75,7 @@ var applyAction = {
             if (apply.limitpv == '') {
                 apply.limitpv = 0;
             }
-            applyService.add(apply, function(err, items) {
+            applyService.add(apply, function (err, items) {
                 if (isError(res, err)) {
                     return;
                 }
@@ -87,10 +87,10 @@ var applyAction = {
         }
 
     },
-    queryListByUser: function(params, req, res) {
+    queryListByUser: function (params, req, res) {
         var applyService = new ApplyService();
         if (params.user.role != 1) {
-            applyService.queryListByUser(params, function(err, items) {
+            applyService.queryListByUser(params, function (err, items) {
                 if (isError(res, err)) {
                     return;
                 }
@@ -104,7 +104,7 @@ var applyAction = {
                 });
             });
         } else {
-            applyService.queryListByAdmin(params, function(err, items) {
+            applyService.queryListByAdmin(params, function (err, items) {
                 if (isError(res, err)) {
                     return;
                 }
@@ -120,7 +120,7 @@ var applyAction = {
         }
 
     },
-    queryListByAdmin: function(params, req, res) {
+    queryListByAdmin: function (params, req, res) {
         var applyService = new ApplyService();
         //不是管理员的话直接返回错误提示
         if (params.user.role != 1) {
@@ -130,7 +130,7 @@ var applyAction = {
             });
             return;
         }
-        applyService.queryListByAdmin(params, function(err, items) {
+        applyService.queryListByAdmin(params, function (err, items) {
             if (isError(res, err)) {
                 return;
             }
@@ -141,7 +141,7 @@ var applyAction = {
             });
         });
     },
-    queryListBySearch: function(params, req, res) {
+    queryListBySearch: function (params, req, res) {
         var applyService = new ApplyService();
 
         var searchParam = {};
@@ -154,7 +154,7 @@ var applyAction = {
             searchParam.status = params.statusType;
         }
 
-        applyService.queryListBySearch(searchParam, function(err, items) {
+        applyService.queryListBySearch(searchParam, function (err, items) {
             if (isError(res, err)) {
                 return;
             }
@@ -168,23 +168,23 @@ var applyAction = {
             });
         });
     },
-    queryByApplyId: function(params, cb) {
+    queryByApplyId: function (params, cb) {
         var applyService = new ApplyService();
         applyService.queryById({
             id: params.applyId
-        }, function(err, apply) {
+        }, function (err, apply) {
             cb(err, apply);
         });
     },
-    update: function(params, req, res) {
+    update: function (params, req, res) {
         var as = new ApplyService();
-        as.update(params, function() {
+        as.update(params, function () {
 
         });
     },
-    remove: function(params, req, res) {
+    remove: function (params, req, res) {
         var applyService = new ApplyService();
-        applyService.remove(params, function(err) {
+        applyService.remove(params, function (err) {
             if (err) {
                 res.json({
                     ret: 3,
@@ -196,10 +196,8 @@ var applyAction = {
                     msg: "success remove"
                 });
             }
-
         });
     }
-
 };
 
 module.exports = applyAction;
