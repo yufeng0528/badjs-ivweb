@@ -173,6 +173,9 @@ App_Data/*.ldf
 Thumbs.db
 ehthumbs.db
 
+project.db
+
+
 # Folder config file
 Desktop.ini
 
