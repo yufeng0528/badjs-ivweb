@@ -13,7 +13,8 @@ var sourceMapAction = {
         var service = new SourceMapService();
         service.query({
             project: params.project,
-            name: params.name
+            name: params.name,
+            commit: params.commit
         }, function (err, res) {
             if (!err && !res.data.length) {
                 service.add(params, function (err, items) {
@@ -51,22 +52,23 @@ var sourceMapAction = {
                 if (items.data.length) {
                     var item = items.data[items.data.length - 1];
                     console.log(item.path);
-                    child_process.exec(`sm ${params.filename} ${params.row} ${params.column} ${item.path}`, function (err, stdout, stderr) {
-                        if (!err) {
-                            res.json({
-                                ret: 0,
-                                msg: 'success',
-                                data: stdout
-                            });
-                        } else {
-                            res.json({ret: 1, msg: err});
-                        }
-                    });
+                    child_process.exec(`sm ${params.filename} ${params.row} ${params.column} ${item.path}`,
+                        function (err, stdout, stderr) {
+                            if (!err) {
+                                res.json({
+                                    ret: 0,
+                                    msg: 'success',
+                                    data: stdout
+                                });
+                            } else {
+                                res.json({ ret: 1, msg: err });
+                            }
+                        });
                 } else {
-                    res.json({ret: 1, msg: 'no matched sourcemap file'});
+                    res.json({ ret: 1, msg: 'no matched sourcemap file' });
                 }
             } else {
-                res.json({ret: 1, msg: err});
+                res.json({ ret: 1, msg: err });
             }
         });
     }

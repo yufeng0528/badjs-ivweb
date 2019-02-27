@@ -5,6 +5,8 @@
     <form action="/upload-sourcemap" method="post" enctype="multipart/form-data" style="margin:0">
         <h2>SourceMap 上传</h2>
         <input type="file" name="sourcemap" multiple>
+        <input placeholder="请输入项目名" type="text" name="projectName" >
+        <input placeholder="请输入 commit id" type="text" name="commit">
         <input type="submit" value="提交">
     </form>
 </main>

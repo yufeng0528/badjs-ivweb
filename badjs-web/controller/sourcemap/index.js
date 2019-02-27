@@ -6,7 +6,7 @@ var mkdirp = require('mkdirp');
 var soucemap = GLOBAL.pjconfig.sourcemap;
 var SourceMapAction = require('../action/SourceMapAction');
 
-function removePromise(dir) {
+function removePromise (dir) {
     return new Promise(function (resolve, reject) {
         //先读文件夹
         fs.stat(dir, function (err, stat) {
@@ -25,12 +25,12 @@ function removePromise(dir) {
     });
 }
 
-function persistPath2DB (path, project, name) {
-    SourceMapAction.add({path, project, name});
+function persistPath2DB (path, project, name, commit) {
+    SourceMapAction.add({ path, project, name, commit });
 }
 
 // 保留最后三个版本的数据
-function removeFolder(fold) {
+function removeFolder (fold) {
     fs.stat(fold, function (err, stat) {
         if (!err) {
             fs.readdir(fold, function (err, stat) {
@@ -50,6 +50,7 @@ function removeFolder(fold) {
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         var projectName = req.body.projectName || 'no-project';
+        var commit = req.body.commit;
         var time = new Date().getTime() + '';
         var filepath = path.join(soucemap, projectName + '/', time);
         mkdirp(filepath, function (err) {
@@ -57,7 +58,7 @@ var storage = multer.diskStorage({
                 cb(null, filepath);
             }
         });
-        persistPath2DB(filepath, projectName, file.originalname);
+        persistPath2DB(filepath, projectName, file.originalname, commit);
         // 异步删除文件夹
         removeFolder(path.join(soucemap, projectName));
     },
