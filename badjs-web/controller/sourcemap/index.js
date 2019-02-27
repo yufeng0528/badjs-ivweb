@@ -51,8 +51,7 @@ var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         var projectName = req.body.projectName || 'no-project';
         var commit = req.body.commit;
-        var time = new Date().getTime() + '';
-        var filepath = path.join(soucemap, projectName + '/', time);
+        var filepath = path.join(soucemap, projectName);
         mkdirp(filepath, function (err) {
             if (!err) {
                 cb(null, filepath);
@@ -60,7 +59,7 @@ var storage = multer.diskStorage({
         });
         persistPath2DB(filepath, projectName, file.originalname, commit);
         // 异步删除文件夹
-        removeFolder(path.join(soucemap, projectName));
+        // removeFolder(path.join(soucemap, projectName));
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
@@ -68,11 +67,7 @@ var storage = multer.diskStorage({
 });
 
 var fileFilter = function (req, file, cb) {
-    if (file.originalname.endsWith('.map')) {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
+    cb(null, file.originalname.endsWith('.map'));
 };
 
 var upload = multer({
