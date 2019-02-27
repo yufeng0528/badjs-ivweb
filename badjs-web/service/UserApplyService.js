@@ -7,36 +7,32 @@ var http = require('http'),
     logger = log4js.getLogger();
 
 
-
-var userApplyService = function (){
+var userApplyService = function () {
     this.userApplyDao = global.models.userApplyDao;
     this.userDao = global.models.userDao;
 };
 
-
-
 userApplyService.prototype = {
-    query : function (target , callback){
-
+    query: function (target, callback) {
 
     },
-    add: function(target, callback){
+    add: function (target, callback) {
         var self = this;
-        var userApply ={
-            applyId : target.applyId,
-            role : 0,
-            createTime : new Date()
+        var userApply = {
+            applyId: target.applyId,
+            role: 0,
+            createTime: new Date()
         };
-        this.userDao.one({loginName:target.userName}, function(err, item){
-            if(err){
+        this.userDao.one({loginName: target.userName}, function (err, item) {
+            if (err) {
                 callback(err);
                 return;
             }
-            if(item){
+            if (item) {
                 userApply.userId = item.id;
 
-                self.userApplyDao.create(userApply , function (err , items){
-                    if(err){
+                self.userApplyDao.create(userApply, function (err, items) {
+                    if (err) {
                         callback(err);
                         return;
                     }
@@ -44,44 +40,39 @@ userApplyService.prototype = {
                     callback(null, item, items);
                     return;
                 });
-            }else {
-               var newUser = {
-                   loginName : target.userName,
-                   role : 0,
-                   createTime : new Date()
-               };
-               self.userDao.create(newUser,function(err){
-                   if(err){
-                       callback(err);
-                       return;
-                   }
-                   logger.info("Insert into b_user success! ");
-                   self.add(target, callback);
-               })
+            } else {
+                var newUser = {
+                    loginName: target.userName,
+                    role: 0,
+                    createTime: new Date()
+                };
+                self.userDao.create(newUser, function (err) {
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+                    logger.info("Insert into b_user success! ");
+                    self.add(target, callback);
+                });
             }
-
-
-        })
-
-
+        });
     },
-    removeByApplyId : function(target, callback){
-        this.userApplyDao.find({applyId: target.applyId}).remove( function (err) {
-            if(err ){
+    removeByApplyId: function (target, callback) {
+        this.userApplyDao.find({applyId: target.applyId}).remove(function (err) {
+            if (err) {
                 callback(err);
-            }else {
+            } else {
                 callback(null);
             }
-
-        })
+        });
     },
-    remove : function(target, callback){
+    remove: function (target, callback) {
         this.userApplyDao.one({id: target.id}, function (err, item) {
-            if(err){
+            if (err) {
                 callback(err);
                 return;
             }
-            item.remove(function(err) {
+            item.remove(function (err) {
                 if (err) {
                     callback(err);
                     return;
@@ -91,20 +82,20 @@ userApplyService.prototype = {
                 }
                 callback(null);
             });
-        })
+        });
     },
-    auth : function(target, callback){
+    auth: function (target, callback) {
         this.userApplyDao.one({id: target.id}, function (err, item) {
-            if(err){
+            if (err) {
                 callback(err);
                 return;
             }
-            if(item.role == 1){
+            if (item.role == 1) {
                 callback("had authed");
-                return ;
+                return;
             }
             item.role = 1;
-            item.save(function(err) {
+            item.save(function (err) {
                 if (err) {
                     callback(err);
                     return;
@@ -114,10 +105,10 @@ userApplyService.prototype = {
                 }
                 callback(null);
             });
-        })
+        });
     }
-}
+};
 
 
-module.exports =  userApplyService;
+module.exports = userApplyService;
 

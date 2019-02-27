@@ -10,7 +10,7 @@ const pjConfig = require('../project.json');
 
 const mail = require("../utils/ivwebMail_for_single.js");
 
-function getScoreParam (Score) {
+function getScoreParam(Score) {
     var param = {
         dao: Score
     };
@@ -20,7 +20,7 @@ function getScoreParam (Score) {
     return param;
 }
 
-function getScoreData (param, db) {
+function getScoreData(param, db) {
 
     return new Promise((resolve, reject) => {
         var sql = "select s.*, a.name from b_quality as s, b_apply as a where s.badjsid=a.id and a.status=1 and s.pv>0 and s.date>" + param.date + " order by s.date;";
@@ -36,20 +36,20 @@ function getScoreData (param, db) {
             resolve(items);
         })
         */
-    })
+    });
 }
 
-function getApplyList (db) {
+function getApplyList(db) {
     return new Promise((resolve, reject) => {
         var sql = "select * from b_apply where status=1;";
         db.driver.execQuery(sql, (err, data) => {
-            resolve(data)
-        })
-    })
+            resolve(data);
+        });
+    });
 }
 
 
-function handleScorePic (Score, db, closeCallback) {
+function handleScorePic(Score, db, closeCallback) {
 
     // 创建参数 日期
     var param = getScoreParam(Score),
@@ -72,7 +72,7 @@ function handleScorePic (Score, db, closeCallback) {
         var applyMap = {};
         applyList.forEach(item => {
             applyMap[item.id] = item.name + ' ' + item.userName;
-        })
+        });
 
         closeCallback();
 
@@ -107,7 +107,7 @@ function handleScorePic (Score, db, closeCallback) {
                 return false;
             }
 
-        })
+        });
         if (!scoreData.length) {
             return '';
         }
@@ -121,12 +121,12 @@ function handleScorePic (Score, db, closeCallback) {
                     item.badjscount = item2.badjscount;
                     item.date = item2.date;
                 }
-            })
+            });
 
             if (item.pv > 0 && item.badjscount >= 0) {
                 item.score = getScore.handleScore(item.pv, item.badjscount) - 0;
             }
-        })
+        });
 
         // sort by pv
         applyList = applyList.map(item => {
@@ -148,7 +148,7 @@ function handleScorePic (Score, db, closeCallback) {
                     return 0;
                 }
             }
-        })
+        });
 
         var applyList_offline = [];
         applyList = applyList.filter(item => {
@@ -157,13 +157,13 @@ function handleScorePic (Score, db, closeCallback) {
             } else {
                 applyList_offline.push(item);
             }
-        })
+        });
 
         applyList = applyList.concat(applyList_offline);
 
 
         var html = [];
-        html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>')
+        html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>');
         html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>业务名称</th><th>负责人</th><th>评分</th><th>错误率</th><th>pv</th><th>badjs错误量</th><td>上线</th><th>最低PV阈值</td><th>日期</th></tr>');
         applyList.forEach(item => {
 
@@ -177,10 +177,10 @@ function handleScorePic (Score, db, closeCallback) {
 
             ['rate', 'pv', 'badjscount', 'online', 'limitpv', 'date'].forEach(item2 => {
                 html.push(`<td>${item[item2] !== undefined ? item[item2] : '-'}</td>`);
-            })
+            });
 
             html.push('</tr>');
-        })
+        });
 
         html.push('</table>');
 
@@ -203,11 +203,11 @@ function handleScorePic (Score, db, closeCallback) {
     });
 }
 
-function sendErrorMail () {
+function sendErrorMail() {
     mail('', pjConfig.errorMailTo, '', 'IVWEB badjs质量评分日报错误', '请检查是否磁盘已满并且重新发送邮件', '', true);
 }
 
-function sendMail (data) {
+function sendMail(data) {
     var html = data[0], picNum = data[1];
     console.log('start send mail');
 
@@ -245,5 +245,5 @@ function sendMail (data) {
 
 module.exports = {
     getImg: handleScorePic
-}
+};
 

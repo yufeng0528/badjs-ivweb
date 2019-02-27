@@ -43,7 +43,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
         if (!err && items.length) {
             items.forEach((t, index) => {
                 setTimeout(function () {
-                    fetch(t.id, startDate, index === items.length -1);
+                    fetch(t.id, startDate, index === items.length - 1);
                 }, index * 500);
             });
         }

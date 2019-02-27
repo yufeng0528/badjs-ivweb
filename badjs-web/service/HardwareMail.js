@@ -10,7 +10,7 @@ var mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
 function constructEmail(items) {
 
     var html = ['<html>'];
-    html.push('<head><style>tbody {text-align: center} td,th {padding: 4px; border-bottom: 1px solid #b7a2a2; border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} .red {color: red}</style></head>')
+    html.push('<head><style>tbody {text-align: center} td,th {padding: 4px; border-bottom: 1px solid #b7a2a2; border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} .red {color: red}</style></head>');
     html.push('<body><h2>BadJS服务器磁盘占用情况</h2>');
     html.push(`<h3>目前使用磁盘 <span class="red">${items[0].usedPercent}</span></h3>`);
     html.push('<h3>最近7天占用情况统计：</h3>');
@@ -34,7 +34,7 @@ function constructEmail(items) {
                     <td>${usedSize}</td>
                     <td class="red">${usedPercent}</td>
                    </tr>`);
-    })
+    });
 
     html.push('</table><p>请注意及时清理BadJS磁盘</p></body></html>');
     return html.join('');

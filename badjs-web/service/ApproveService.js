@@ -7,23 +7,18 @@ var http = require('http');
 var log4js = require('log4js'),
     logger = log4js.getLogger();
 
-
-
-var ApproveService = function() {
+var ApproveService = function () {
     this.approveDao = global.models.approveDao;
     this.applyDao = global.models.applyDao;
-
 };
 
-
-
 ApproveService.prototype = {
-    query: function(target, callback) {
+    query: function (target, callback) {
 
 
         //管理员
         if (target.user.role == 1) {
-            this.approveDao.all({}, function(err, items) {
+            this.approveDao.all({}, function (err, items) {
                 if (err) {
                     callback(err);
                     return;
@@ -37,7 +32,7 @@ ApproveService.prototype = {
         } else {
             this.approveDao.find({
                 userName: target.user.loginName
-            }, function(err, items) {
+            }, function (err, items) {
                 if (err) {
                     callback(err);
                     return;
@@ -52,9 +47,9 @@ ApproveService.prototype = {
 
 
     },
-    add: function(target, callback) {
+    add: function (target, callback) {
         var self = this;
-        this.approveDao.create(target, function(err, items) {
+        this.approveDao.create(target, function (err, items) {
             if (err) {
                 callback(err);
                 return;
@@ -68,7 +63,7 @@ ApproveService.prototype = {
             if (target.applyStatus == 1) {
                 apply.passTime = target.createTime;
             }
-            self.update(apply, function(err, data) {
+            self.update(apply, function (err, data) {
                 if (err) {
                     callback(err);
                     return;
@@ -78,23 +73,21 @@ ApproveService.prototype = {
                     ret: 0,
                     msg: "success add"
                 });
-            })
-
+            });
         });
+    },
+    remove: function (target, callback) {
 
     },
-    remove: function(target, callback) {
-
-    },
-    update: function(target, callback) {
+    update: function (target, callback) {
         this.applyDao.one({
             id: target.id
-        }, function(err, apply) {
+        }, function (err, apply) {
             // SQL: "SELECT * FROM b_apply WHERE name = 'xxxx'"
-            for (key in target) {
+            for (let key in target) {
                 apply[key] = target[key];
             }
-            apply.save(function(err) {
+            apply.save(function (err) {
                 if (err) {
                     callback(err);
                     return;
@@ -103,7 +96,7 @@ ApproveService.prototype = {
             });
         });
     }
-}
+};
 
 
 module.exports = ApproveService;

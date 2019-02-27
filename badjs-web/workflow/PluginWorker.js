@@ -91,7 +91,7 @@ function registerRoute(app) {
 
 module.exports = {
    getList,
-   login, // 注释表示暂时不使用 oa 验证
+   // login, // 注释表示暂时不使用 oa 验证
    registerRoute
 }
 

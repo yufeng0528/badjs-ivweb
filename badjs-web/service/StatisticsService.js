@@ -116,7 +116,7 @@ StatisticsService.prototype = {
     queryScoreById: function (param, callback) {
         var id = param.id;
 
-        this.scoreDao.find({ badjsid: id })
+        this.scoreDao.find({badjsid: id})
             .limit(30).order('-date')
             .all((err, items) => {
                 callback(items);

@@ -35,7 +35,7 @@ setInterval(function () {
     fs.writeFileSync(offlineLogMonitorPath, JSON.stringify(global.offlineLogMonitorInfo));
 }, 3600000);
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 
 
 app.post('/offlineLogReport', function (req, res) {
@@ -44,7 +44,7 @@ app.post('/offlineLogReport', function (req, res) {
         try {
             var offline_log;
             try {
-                offline_log = pako.inflate(decodeURIComponent(param.offline_log), { to: 'string' });
+                offline_log = pako.inflate(decodeURIComponent(param.offline_log), {to: 'string'});
                 if (typeof offline_log === 'string') {
                     offline_log = JSON.parse(offline_log);
                 }

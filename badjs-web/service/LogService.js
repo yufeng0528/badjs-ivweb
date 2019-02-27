@@ -13,17 +13,7 @@ var log4js = require('log4js'),
 var request = require("request");
 
 
-
-var LogService = function() {
-
-    /*
-        if(global.DEBUG){
-            this.queryUrl = 'http://localhost:9000/query';
-        }else {
-            this.queryUrl = 'http://10.143.132.205:9000/query';
-            this.pushProjectUrl = 'http://10.143.132.205:9001/getProjects';
-        }
-    */
+var LogService = function () {
 
     this.queryUrl = global.pjconfig.storage.queryUrl;
     this.pushProjectUrl = global.pjconfig.acceptor.pushProjectUrl;
@@ -34,9 +24,8 @@ var LogService = function() {
 };
 
 
-
 LogService.prototype = {
-    query: function(params, callback) {
+    query: function (params, callback) {
         var startDate = new Date;
         var strParams = '';
         for (var key in params) {
@@ -48,11 +37,11 @@ LogService.prototype = {
         }
         strParams += '_=1';
         logger.info('query param : ' + strParams);
-        http.get(this.queryUrl + '?' + strParams, function(res) {
+        http.get(this.queryUrl + '?' + strParams, function (res) {
             var buffer = '';
-            res.on('data', function(chunk) {
+            res.on('data', function (chunk) {
                 buffer += chunk.toString();
-            }).on('end', function() {
+            }).on('end', function () {
                 try {
                     callback(null, JSON.parse(buffer));
                 } catch (e) {
@@ -61,38 +50,44 @@ LogService.prototype = {
                 logger.info('query log spend : ' + (new Date - startDate) + "ms by " + params.id);
             });
 
-        }).on('error', function(err) {
+        }).on('error', function (err) {
             logger.warn('error :' + err);
             callback(err);
         });
     },
-    pushProject: function(callback) {
+    pushProject: function (callback) {
         var self = this;
 
-        callback || (callback = function() {});
+        callback || (callback = function () {
+        });
 
         var businessService = new BusinessService();
 
-        var push = function() {
+        var push = function () {
 
-            businessService.findBusiness(function(err, item) {
+            businessService.findBusiness(function (err, item) {
 
                 var projectsInfo = {};
 
-                _.each(item, function(value) {
+                _.each(item, function (value) {
 
-                    try{
-                        value.blacklist =  JSON.parse(value.blacklist || {})
-                    }catch(e){
-                        value.blacklist = {}
+                    try {
+                        value.blacklist = JSON.parse(value.blacklist || {});
+                    } catch (e) {
+                        value.blacklist = {};
                     }
 
-                    projectsInfo[value.id] = {id : value.id , url : value.url , blacklist : value.blacklist , appkey : value.appkey};
+                    projectsInfo[value.id] = {
+                        id: value.id,
+                        url: value.url,
+                        blacklist: value.blacklist,
+                        appkey: value.appkey
+                    };
                 });
 
                 var result = [0, 0];
 
-                var resultCall = function() {
+                var resultCall = function () {
                     if (result[0] < 0 && result[1] < 0) {
                         callback(new Error("error"));
                     } else if (result[0] > 0 && result[1] > 0) {
@@ -105,7 +100,7 @@ LogService.prototype = {
                         projectsInfo: JSON.stringify(projectsInfo),
                         auth: "badjsAccepter"
                     }
-                }, function(err) {
+                }, function (err) {
                     if (err) {
                         logger.warn('push projectIds to acceptor  error :' + err);
                         result[0] = -1;
@@ -121,7 +116,7 @@ LogService.prototype = {
                         projectsInfo: JSON.stringify(projectsInfo),
                         auth: "badjsOpen"
                     }
-                }, function(err) {
+                }, function (err) {
                     if (err) {
                         logger.warn('push projectIds to open  error :' + err);
                         result[1] = -1;

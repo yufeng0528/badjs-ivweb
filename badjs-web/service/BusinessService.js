@@ -6,7 +6,7 @@
 var Apply = require('../model/Apply');
 var _ = require('underscore');
 
-var BusinessService = function() {
+var BusinessService = function () {
 
     this.db = global.models.db;
 };
@@ -14,7 +14,7 @@ var BusinessService = function() {
 
 BusinessService.prototype = {
 
-    findBusinessByUser: function(userName, callback) {
+    findBusinessByUser: function (userName, callback) {
 
         var string = "select a.id, u.loginName, u.chineseName, ua.role, a.name " +
             "from  b_user as u join b_user_apply as ua on(ua.userId = u.id) " +
@@ -25,7 +25,7 @@ BusinessService.prototype = {
         condition.push(userName);
 
         // console.log(string);
-        this.db.driver.execQuery(string, condition, function(err, data) {
+        this.db.driver.execQuery(string, condition, function (err, data) {
             if (err) {
                 callback(err);
                 return;
@@ -34,7 +34,7 @@ BusinessService.prototype = {
         });
 
     },
-    findBusinessByProjectOwner: function(userName, callback) {
+    findBusinessByProjectOwner: function (userName, callback) {
 
         var string = "select a.id, u.loginName, u.chineseName, ua.role, a.name " +
             "from  b_user as u join b_user_apply as ua on(ua.userId = u.id) " +
@@ -45,7 +45,7 @@ BusinessService.prototype = {
         condition.push(userName);
 
         // console.log(string);
-        this.db.driver.execQuery(string, condition, function(err, data) {
+        this.db.driver.execQuery(string, condition, function (err, data) {
             if (err) {
                 callback(err);
                 return;
@@ -55,7 +55,7 @@ BusinessService.prototype = {
 
     },
 
-    findBusiness: function(callback) {
+    findBusiness: function (callback) {
 
         var string = "select a.id, a.url, a.blacklist , a.appkey, u.loginName, u.chineseName, a.name " +
             "from b_apply a join b_user u on (a.userName=u.loginName) " +
@@ -63,12 +63,12 @@ BusinessService.prototype = {
         var condition = [Apply.STATUS_PASS];
 
         // console.log(string);
-        this.db.driver.execQuery(string, condition, function(err, data) {
+        this.db.driver.execQuery(string, condition, function (err, data) {
             if (err) {
                 return callback(err);
             }
 
-            _.each(data, function(value, ke) {
+            _.each(data, function (value, ke) {
                 value.role = 1;
             });
             callback(null, data);

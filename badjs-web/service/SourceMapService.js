@@ -39,7 +39,6 @@ SourceMapService.prototype = {
     },
     update: function (target, callback) {
     }
-}
-
+};
 
 module.exports = SourceMapService;

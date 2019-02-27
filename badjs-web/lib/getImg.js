@@ -52,7 +52,7 @@ module.exports = function (data, extParam) {
         } else {
             return 0;
         }
-    })
+    });
     // 每8个分割数组
     var result = [];
     for (var j = 0, len = chartData.length; j < len; j += extParam.perCount) {
@@ -62,15 +62,15 @@ module.exports = function (data, extParam) {
     // 循环数组生成合并图片
     result.forEach((item, index) => {
         getImg(dateKey, item, extParam, index);
-    })
+    });
 
     return result;
-}
+};
 
 var chartData = [];
 
 // items 是一个项目
-function handleImgData (items, busId, extParam) {
+function handleImgData(items, busId, extParam) {
 
     var xdata = [], _key, _score;
 
@@ -78,7 +78,7 @@ function handleImgData (items, busId, extParam) {
     var _index;
     dateKey.forEach(item => {
         xdata.push(null);
-    })
+    });
 
     items.forEach((item, index) => {
 
@@ -89,7 +89,7 @@ function handleImgData (items, busId, extParam) {
 
         _score = item[extParam.value] - 0;
         xdata[_index] = (_score > 10 ? 10 : _score);
-    })
+    });
 
     var avg = xdata.reduce((pre, cur) => cur += pre ? pre : 0) / items.length;
 
@@ -100,7 +100,7 @@ function handleImgData (items, busId, extParam) {
     });
 }
 
-function getImg (xkey, data, extParam, index) {
+function getImg(xkey, data, extParam, index) {
     var _d = {
         data: {
             width: 800,
@@ -131,7 +131,6 @@ function getImg (xkey, data, extParam, index) {
         var _path = path.join(__dirname, "..", imgFullPath);
         fs.writeFile(_path, new Buffer(image, 'base64'), function (err) {
             if (err) {
-                console.log('create img file error: ')
                 console.error(err);
                 const mail = require("../utils/ivwebMail_for_single.js");
                 mail('', pjConfig.errorMailTo, '', '【告警】IVWEB badjs质量评分日报', 'badjs评分质量日报发送失败了。原因是曲线图生成失败: ' + err, false);

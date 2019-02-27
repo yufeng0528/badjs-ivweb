@@ -11,33 +11,28 @@ var UserApplyService = require('./UserApplyService');
 
 var LogService = require('./LogService');
 
-
-
-var ApplyService = function() {
+var ApplyService = function () {
     this.applyDao = global.models.applyDao;
     this.userApplyDao = global.models.userApplyDao;
 };
 
-
-
 var logService = new LogService();
-var pushProject = function(from) {
-    logService.pushProject(function(err) {
+var pushProject = function (from) {
+    logService.pushProject(function (err) {
         if (err) {
             logger.warn('push project  error ' + err);
         } else {
             logger.info('push project success from ' + from + ' .');
         }
     });
-}
-
+};
 
 
 ApplyService.prototype = {
 
-    queryListByAdmin: function(target, callback) {
+    queryListByAdmin: function (target, callback) {
 
-        this.applyDao.find(["createTime", "Z"], function(err, items) {
+        this.applyDao.find(["createTime", "Z"], function (err, items) {
             if (err) {
                 callback(err);
                 return;
@@ -45,10 +40,10 @@ ApplyService.prototype = {
             callback(null, items);
         });
     },
-    queryListByUser: function(target, callback) {
+    queryListByUser: function (target, callback) {
         this.applyDao.find({
             userName: target.user.loginName
-        }, ["createTime", "Z"], function(err, items) {
+        }, ["createTime", "Z"], function (err, items) {
             if (err) {
                 callback(err);
                 return;
@@ -56,10 +51,10 @@ ApplyService.prototype = {
             callback(null, items);
         });
     },
-    queryListBySearch: function(searchParam, callback) {
+    queryListBySearch: function (searchParam, callback) {
 
 
-        this.applyDao.find(searchParam, ["createTime", "Z"], function(err, items) {
+        this.applyDao.find(searchParam, ["createTime", "Z"], function (err, items) {
             if (err) {
                 callback(err);
                 return;
@@ -67,10 +62,10 @@ ApplyService.prototype = {
             callback(null, items);
         });
     },
-    add: function(target, callback) {
+    add: function (target, callback) {
         var self = this;
         var userId = target.user.id;
-        this.applyDao.create(target, function(err, newApply) {
+        this.applyDao.create(target, function (err, newApply) {
             if (err) {
                 callback(err);
                 return;
@@ -83,20 +78,20 @@ ApplyService.prototype = {
                 role: 1,
                 createTime: new Date()
             };
-            self.userApplyDao.create(userApply, function(err, items) {
+            self.userApplyDao.create(userApply, function (err, items) {
                 if (err) {
                     callback(err);
                     return;
                 }
                 callback(null, items);
-            })
+            });
 
         });
     },
-    remove: function(target, callback) {
+    remove: function (target, callback) {
         this.applyDao.one({
             id: target.id
-        }, function(err, apply) {
+        }, function (err, apply) {
             // SQL: "SELECT * FROM b_apply WHERE name = 'xxxx'"
             if (err || !apply) {
                 callback(new Error("can not found apply , id" + target.id));
@@ -104,11 +99,10 @@ ApplyService.prototype = {
             }
             for (var key in target) {
                 apply[key] = target[key];
-            };
-            apply.remove(function(err) {
+            }
+            apply.remove(function (err) {
 
                 if (err) {
-                    console.error("remove error : " + err.toString())
                     throw err;
                 }
 
@@ -116,7 +110,7 @@ ApplyService.prototype = {
 
                 userApplyService.removeByApplyId({
                     applyId: apply.id
-                }, function(err) {
+                }, function (err) {
                     if (err) {
                         callback(null);
                     } else {
@@ -127,20 +121,20 @@ ApplyService.prototype = {
 
                 pushProject('remove');
 
-                });
+            });
 
         });
     },
-    update: function(target, callback) {
+    update: function (target, callback) {
         this.applyDao.one({
             id: target.id
-        }, function(err, apply) {
+        }, function (err, apply) {
             // SQL: "SELECT * FROM b_apply WHERE name = 'xxxx'"
             for (var key in target) {
                 apply[key] = target[key];
-            };
-            
-            apply.save(function(err) {
+            }
+
+            apply.save(function (err) {
                 // err.msg = "under-age";
                 callback(null, {
                     ret: 0,
@@ -151,15 +145,15 @@ ApplyService.prototype = {
             });
         });
     },
-    queryById: function(target, callback) {
+    queryById: function (target, callback) {
         this.applyDao.one({
             id: target.id
-        }, function(err, apply) {
+        }, function (err, apply) {
 
             callback(err, apply);
         });
     }
-}
+};
 
 
 module.exports = ApplyService;

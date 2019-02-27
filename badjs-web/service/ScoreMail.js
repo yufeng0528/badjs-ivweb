@@ -12,10 +12,9 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
         score: String,
         date: Number
     });
-    console.log(pv.getImg)
     pv.getImg(Score, db, function () {
         mdb.close();
     });
-})
+});
 
 
