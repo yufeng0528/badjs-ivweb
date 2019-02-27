@@ -222,7 +222,6 @@ coverage.html
 web-debug.bat
 badjs-storage/cache/
 badjs-web/static/scoreimg/
-*.db
 **project.json
 
 
