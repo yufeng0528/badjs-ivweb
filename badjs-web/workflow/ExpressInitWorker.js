@@ -23,14 +23,13 @@ app.use(session({secret: 'keyboard cat', cookie: {maxAge: 120 * 60 * 1000}}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json({}));
 app.use(cookieParser());
-app.use('/static', serveStatic(path.join(__dirname, '..', 'static')));
 
+app.use('/static', serveStatic(path.join(__dirname, '..', 'static')));
+app.use('/sm', serveStatic(global.pjconfig.sourcemap));
 
 var msqlUrl = global.pjconfig.mysql.url;
 
-
 logger.info('connect mysql: ' + msqlUrl);
-
 
 app.use(orm.express(msqlUrl, {
     define: function (db, models, next) {
@@ -59,7 +58,6 @@ app.use(function (err, req, res, next) {
 if (global.pjconfig.oos && global.pjconfig.oos.module) {
     app.use('/user', require('../oos/' + global.pjconfig.oos.module));
 }
-
 
 app.use('/user', function (req, res, next) {
     if (pluginHandler.login) {

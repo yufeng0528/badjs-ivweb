@@ -17,11 +17,7 @@ SourceMapService.prototype = {
                 callback(err);
                 return;
             }
-            callback(null, {
-                ret: 0,
-                msg: "success",
-                data: items
-            });
+            callback(null, items.length ? items[0] : '');
         });
     },
     add: function (sourcemap, callback) {

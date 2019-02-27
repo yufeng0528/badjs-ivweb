@@ -1,30 +1,38 @@
-#badjs-storage
+## badjs-storage
 
 > badjs manage system .
 
-# 运行
-```javascript
+## 运行
+
+```sh
 node app.js
 ```
 
-# 启动参数
---debug  log 采用debug 级别, 默认使用info
+## 启动参数
+
+--debug log 采用debug 级别, 默认使用info
 
 --project 使用测试环境（ project.debug.json ）配置 ， 默认使用 project.json
 
-# 构建
+## 构建
+
 静态页面使用webpack ，开发阶段使用
-```javascript
-webpack -w
-```
-上线阶段需要打包打包命令
-```javascript
-webpack
+
+```sh
+$ npm run dev
 ```
 
-# 数据库初始化
+上线阶段需要打包打包命令
+
+```sh
+$ npm run build
+```
+
+### 数据库初始化
+
 db/create.sql 是需要初始化到 mysql 的中。其中默认的超级管理员帐号是 admin ， 密码是 admin
-# 配置说明
+
+### 配置说明
 ```
 {
     "host" : "http://badjs.server.com/",   //配额管理服务器地址，用于邮件中的图片展示
@@ -63,7 +71,10 @@ db/create.sql 是需要初始化到 mysql 的中。其中默认的超级管理�
 ```
 
 ### 新增用户
+
+```sql
 INSERT INTO `b_user` VALUES (null,'xxx','xxx',0,'xxx@xxx.com','bbe4b161b9dab597e82f5fab7c9bed0d');
+```
 
 ### sourcemap 文件上传规则
 
@@ -80,6 +91,7 @@ var fs = require('fs')
 request.post({
     url: 'http://127.0.0.1:8081/upload-sourcemap',
     formData: {
+        commit: 'aaaa4444',
     	projectName: 'test', 
         sourcemap: fs.createReadStream('./jquery.min.map')
     }
@@ -89,4 +101,5 @@ request.post({
 
 ```
 
-其中 projectName 和 sourcemap 两个参数为必传项，projectName 表示当前项目名，sourcemap 为文件流。
+其中 commit, projectName 和 sourcemap 两个参数为必传项，projectName 表示当前项目名，sourcemap 为文件流。
+

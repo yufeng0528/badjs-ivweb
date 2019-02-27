@@ -1,5 +1,5 @@
 'use strict';
-
+var path = require('path');
 
 function getDao(daoName) {
 
@@ -7,7 +7,7 @@ function getDao(daoName) {
 
 exports.module = {
     getDao
-}
+};
 
 var logger = require('log4js').getLogger();
 var exporting = require('node-highcharts-exporting');
@@ -42,4 +42,4 @@ orm.connect(msqlUrl, function (err, db) {
 
     global.models = models;
     logger.info('mysql connected');
-};
+});

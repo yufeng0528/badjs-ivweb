@@ -165,7 +165,6 @@ module.exports = function (app) {
 
         params.user = req.session.user;
 
-
         if (!params.user) {
             res.json({ret: -2, msg: "should login"});
             return;

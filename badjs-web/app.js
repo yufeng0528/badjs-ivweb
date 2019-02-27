@@ -6,18 +6,15 @@ var workflowPath = workflow.path;
 
 global.apiPath = __dirname + '/service/apis/ApiService.js';
 
-if(!workflowPath){
-    workflowPath = "./"
+if (!workflowPath) {
+    workflowPath = './';
 }
 
-if(!workflow.workflow){
-    return ;
+if (!workflow.workflow) {
+    return;
 }
 
-_.each(workflow.workflow , function (value , key){
-    require(workflowPath +"/"+ value)();
+_.each(workflow.workflow, function (value, key) {
+    require(workflowPath + "/" + value)();
 
-})
-
-
-
+});

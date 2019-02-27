@@ -13,23 +13,41 @@ var sourceMapAction = {
         var service = new SourceMapService();
         service.query({
             project: params.project,
-            name: params.name,
-            commit: params.commit
+            name: params.name
         }, function (err, res) {
-            if (!err && !res.data.length) {
+            if (!err && !res) {
                 service.add(params, function (err, items) {
                     console.log(items);
                 });
             }
         });
     },
-    query: function (params, cb) {
+    query: function (params, req, res) {
         var service = new SourceMapService();
+        var name = params.name.replace(/(\.js)$/ig, '.map');
         service.query({
             project: params.project,
-            name: params.name
+            name: name
         }, function (err, sourcemap) {
-            cb(err, sourcemap);
+            if (err || !sourcemap) {
+                return res.json({
+                    ret: 1,
+                    error: err || 'sourcemap file not exist'
+                });
+            }
+            var project = sourcemap.project;
+            var name = sourcemap.name;
+            var commit = sourcemap.commit;
+            res.json({
+                ret: 0,
+                msg: "success-query",
+                data: {
+                    project: project,
+                    name: name,
+                    path: 'http://badjs2.ivweb.io/sm/' + project + '/' + name,
+                    commit: commit
+                }
+            });
         });
     },
     update: function (params, req, res) {
@@ -61,14 +79,14 @@ var sourceMapAction = {
                                     data: stdout
                                 });
                             } else {
-                                res.json({ ret: 1, msg: err });
+                                res.json({ret: 1, msg: err});
                             }
                         });
                 } else {
-                    res.json({ ret: 1, msg: 'no matched sourcemap file' });
+                    res.json({ret: 1, msg: 'no matched sourcemap file'});
                 }
             } else {
-                res.json({ ret: 1, msg: err });
+                res.json({ret: 1, msg: err});
             }
         });
     }

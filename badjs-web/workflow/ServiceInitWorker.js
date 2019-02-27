@@ -18,15 +18,12 @@ module.exports = function () {
                 } else {
                     logger.info('push project on system start');
                 }
-
             });
         };
 
         pushProject();
 
-
         require("../service/OfflineLogService")();
-
 
         // 邮件报表
         // 2019-1-18日注释 => 使用 Linux 中的 crontab 做为数据导入定时器，之前用setTimeout定时器问题太多。
@@ -34,4 +31,4 @@ module.exports = function () {
         // logger.info('start email report ...');
         // new EmailService().start();
     }, 3000);
-}
+};

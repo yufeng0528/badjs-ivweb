@@ -49,6 +49,7 @@ function removeFolder (fold) {
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        console.log(req.body)
         var projectName = req.body.projectName || 'no-project';
         var commit = req.body.commit;
         var filepath = path.join(soucemap, projectName);
