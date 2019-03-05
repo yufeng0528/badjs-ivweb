@@ -84,7 +84,7 @@ ApproveService.prototype = {
             id: target.id
         }, function (err, apply) {
             // SQL: "SELECT * FROM b_apply WHERE name = 'xxxx'"
-            for (let key in target) {
+            for (var key in target) {
                 apply[key] = target[key];
             }
             apply.save(function (err) {
