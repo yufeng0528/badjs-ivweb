@@ -26,7 +26,6 @@ var sourceMapAction = {
         var service = new SourceMapService();
         var name = params.name.replace(/(\.js)$/ig, '.map');
         service.query({
-            project: params.project,
             name: name
         }, function (err, sourcemap) {
             if (err || !sourcemap) {

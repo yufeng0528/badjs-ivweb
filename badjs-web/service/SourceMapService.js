@@ -10,8 +10,7 @@ var SourceMapService = function () {
 SourceMapService.prototype = {
     query: function (param, callback) {
         this.sourcemapDao.find({
-            name: param.name,
-            project: param.project
+            name: param.name
         }, function (err, items) {
             if (err) {
                 callback(err);
