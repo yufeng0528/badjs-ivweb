@@ -115,7 +115,7 @@ UserService.prototype = {
         this.userDao.one({id: target.id}, function (err, user) {
             // SQL: "SELECT * FROM b_apply WHERE name = 'xxxx'"
 
-            for (let key in target) {
+            for (var key in target) {
                 user[key] = target[key];
             }
             user.save(function (err) {
