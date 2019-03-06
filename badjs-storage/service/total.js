@@ -9,13 +9,13 @@ const HOUR = 60 * 60 * 1000;
 const limit = 20;
 const url = config.mongodb.url;
 
-var unicode = function(str) {
-    return str.toString().replace(/./g, function(char) {
+var unicode = function (str) {
+    return str.toString().replace(/./g, function (char) {
         return '\\u' + ('0000' + char.charCodeAt(0).toString(16)).substr(-4);
     });
 };
 
-var start = function(db, params) {
+var start = function (db, params) {
     var now = +new Date();
     var id = params.id;
     var start = params.start || (now - HOUR);
@@ -46,20 +46,20 @@ var start = function(db, params) {
 
     console.info('query id: ', filter);
 
-    db.collection('badjslog_' + id).find(filter, function(error, cursor) {
+    db.collection('badjslog_' + id).find(filter, function (error, cursor) {
         cursor.sort({
-                'date': -1
-            })
-            // .skip(limit * count)
+            'date': -1
+        })
+        // .skip(limit * count)
             .limit(limit)
-            .toArray(function(err, item) {
+            .toArray(function (err, item) {
                 console.log('counts:', item.length);
                 process.exit();
             });
     });
 };
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, function (err, db) {
     start(db, {
         id: 25,
         include: [new RegExp(unicode('加载次数'))]

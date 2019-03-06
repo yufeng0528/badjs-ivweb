@@ -3,7 +3,7 @@
  */
 
 var fs = require("fs");
-var path=require("path");
+var path = require("path");
 
 var crypto = require('crypto');
 
@@ -18,14 +18,14 @@ if (isDebug) {
 }
 
 
-var getYesterday = function() {
+var getYesterday = function () {
     var date = new Date();
     date.setDate(date.getDate() - 1);
     date.setHours(0, 0, 0, 0);
     return date;
 };
 
-var dateFormat  = function (date , fmt){
+var dateFormat = function (date, fmt) {
     var o = {
         "M+": date.getMonth() + 1, //月份
         "d+": date.getDate(), //日
@@ -39,100 +39,104 @@ var dateFormat  = function (date , fmt){
     for (var k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
-}
+};
 
-var saveData = {}, currentCacheName = dateFormat(new Date  , "yyyy-MM-dd") ;
+var saveData = {}, currentCacheName = dateFormat(new Date, "yyyy-MM-dd");
 
 
-(function (){
-    logger.info("["+process.pid + "] worker of  realTotal ready ");
+(function () {
+    logger.info("[" + process.pid + "] worker of  realTotal ready ");
 
-    var filePath = path.join(__dirname , "..", "cache", "total", currentCacheName + "_" + indexId )
-    if(fs.existsSync(filePath)){
-        logger.info("["+process.pid + "]: cache is exists , load it , path: " + filePath)
-        saveData = JSON.parse(fs.readFileSync(filePath))
+    var filePath = path.join(__dirname, "..", "cache", "total", currentCacheName + "_" + indexId);
+    if (fs.existsSync(filePath)) {
+        logger.info("[" + process.pid + "]: cache is exists , load it , path: " + filePath);
+        saveData = JSON.parse(fs.readFileSync(filePath));
     }
-}())
+}());
 
 
+var generateErrorMsgTop = function (totalData, startDate, endDate) {
 
-var generateErrorMsgTop = function (totalData , startDate , endDate){
-
-    Object.keys(totalData).forEach(function (key , index){
-        if(key != "total"){
+    Object.keys(totalData).forEach(function (key, index) {
+        if (key != "total") {
             var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") + "__" + key;
-            var filePath = path.join(__dirname , "..", "cache", "errorMsg", fileName)
-            var targetData =  totalData[key];
+            var filePath = path.join(__dirname, "..", "cache", "errorMsg", fileName);
+            var targetData = totalData[key];
             var errorMap = targetData.errorMap;
             var errorList = [];
-            Object.keys(errorMap).forEach( function (errorMapKey){
-                errorList.push({ "_id" :  errorMap[errorMapKey].msg , "total" : errorMap[errorMapKey].total})
-            })
-            errorList.sort(function (a , b){
+            Object.keys(errorMap).forEach(function (errorMapKey) {
+                errorList.push({ "_id": errorMap[errorMapKey].msg, "total": errorMap[errorMapKey].total });
+            });
+            errorList.sort(function (a, b) {
                 return a.total < b.total ? 1 : -1;
-            })
+            });
 
             fs.writeFile(
-                filePath ,
-                JSON.stringify({"startDate":startDate,"endDate":endDate,"item" :  errorList.slice(0,50) , "pv" : targetData.total }),
-                function (err){
+                filePath,
+                JSON.stringify({
+                    "startDate": startDate,
+                    "endDate": endDate,
+                    "item": errorList.slice(0, 50),
+                    "pv": targetData.total
+                }),
+                function (err) {
                     if (err) {
-                        logger.error('['+process.pid + ']: generated total cache error : ' + filePath);
-                    }else {
-                        logger.info('['+process.pid + ']:generated total cache succes : ' + filePath);
+                        logger.error('[' + process.pid + ']: generated total cache error : ' + filePath);
+                    } else {
+                        logger.info('[' + process.pid + ']:generated total cache succes : ' + filePath);
                     }
                 }
-            )
+            );
         }
-    })
-}
+    });
+};
 
-var flushCacheToDisk = function (resetCache , fileName){
-    var filePath = path.join(__dirname , "..", "cache", "total", fileName + "_" + indexId)
+var flushCacheToDisk = function (resetCache, fileName) {
+    var filePath = path.join(__dirname, "..", "cache", "total", fileName + "_" + indexId);
     var tickDate = Date.now();
     var content = JSON.stringify(saveData);
-    logger.info( "["+process.pid + "]:stringify spend time : " +  (Date.now() - tickDate))
+    logger.info("[" + process.pid + "]:stringify spend time : " + (Date.now() - tickDate));
 
-    if(resetCache){
+    if (resetCache) {
         var yesterday = getYesterday();
-        generateErrorMsgTop(saveData ,  +yesterday , +yesterday + 86400000 -1)
+        generateErrorMsgTop(saveData, +yesterday, +yesterday + 86400000 - 1);
         saveData = {};
     }
 
-    logger.info("["+process.pid + "]flush cache to disk , path : " + filePath );
+    logger.info("[" + process.pid + "]flush cache to disk , path : " + filePath);
 
-    fs.writeFile(  filePath  , content )
-}
+    fs.writeFile(filePath, content);
+};
 
 
 var tick = 0;
-setInterval(function() {
+setInterval(function () {
 
-    tick ++;
+    tick++;
 
-    var newCacheName = dateFormat(new Date  , "yyyy-MM-dd")
+    var newCacheName = dateFormat(new Date, "yyyy-MM-dd");
     // not today , flush
-    if(currentCacheName != newCacheName){
-        flushCacheToDisk(true , currentCacheName);
-        logger.info("["+process.pid + "]reset cache  , currentName " + currentCacheName + ", newCacheName " + newCacheName  );
+    if (currentCacheName != newCacheName) {
+        flushCacheToDisk(true, currentCacheName);
+        logger.info("[" + process.pid + "]reset cache  , currentName " + currentCacheName + ", newCacheName " + newCacheName);
         currentCacheName = newCacheName;
 
         tick = 0;
-    }else if(tick >= 30) { // 每30 分钟才生成一次
-        flushCacheToDisk(false , currentCacheName);
+    } else if (tick >= 30) { // 每30 分钟才生成一次
+        flushCacheToDisk(false, currentCacheName);
         tick = 0;
     }
 
-},  1 * 60 *  1000 );
+}, 1 * 60 * 1000);
 
 
-function increase(id, data) {
+function increase (id, data) {
 
     var md5 = "";
     try {
         md5 = crypto.createHash("md5").update(data.msg).digest('hex');
     } catch (e) {
-        logger.error("md5 error : " + e)
+        logger.error("md5 error : " + e);
         return;
     }
 
@@ -145,20 +149,20 @@ function increase(id, data) {
     if (saveData[id]) {
         saveData[id].total++;
     } else {
-        saveData[id] = {total: 1, errorMap: {}};
+        saveData[id] = { total: 1, errorMap: {} };
     }
 
     var errorMap = saveData[id].errorMap;
     if (errorMap[md5]) {
         errorMap[md5].total++;
     } else {
-        errorMap[md5] = {total: 1, msg: data.msg + ""}
+        errorMap[md5] = { total: 1, msg: data.msg + "" };
     }
 
 }
 
-process.on("message" , function (data){
-        if(data.type == "write"){
-            increase(data.id , data.data);
-        }
-})
+process.on("message", function (data) {
+    if (data.type == "write") {
+        increase(data.id, data.data);
+    }
+});

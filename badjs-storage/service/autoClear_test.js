@@ -51,7 +51,7 @@ var autoClearStart = function () {
             });
         });
     });
-}
+};
 
 
 

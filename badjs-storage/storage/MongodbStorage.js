@@ -1,6 +1,3 @@
-/**
- * Created by chriscai on 2014/10/14.
- */
 
 var MongoClient = require('mongodb').MongoClient,
     http = require('http'),
@@ -26,7 +23,7 @@ var tryInit = function (db, collectionName, cb) {
         return true;
     }
 
-    hadCreatedCollection[collectionName] = "ping";
+    hadCreatedCollection[collectionName] = 'ping';
     db.createCollection(collectionName, function (err, collection) {
         collection.indexExists('date_-1_level_1', function (errForIE, result) {
             if (errForIE) {
@@ -39,13 +36,13 @@ var tryInit = function (db, collectionName, cb) {
                     }
                     if (global.MONGODB.isShard) {
                         adminMongoDB.command({
-                            shardcollection: "badjs." + collectionName,
-                            key: { _id: "hashed" }
+                            shardcollection: 'badjs.' + collectionName,
+                            key: { _id: 'hashed' }
                         }, function (errForShard, info) {
                             if (errForShard) {
                                 throw errForShard;
                             } else {
-                                logger.info(collectionName + " shard correctly");
+                                logger.info(collectionName + ' shard correctly');
                                 cb(null, collection);
                                 hadCreatedCollection[collectionName] = true;
 
@@ -65,34 +62,67 @@ var tryInit = function (db, collectionName, cb) {
     });
 };
 
+var hadCreatedUINCollection = {};
+
+var createUinIndex = function (collection, collectionName, cb) {
+    if (hadCreatedUINCollection[collectionName] === 'ping') {
+        return;
+    }
+    if (hadCreatedUINCollection[collectionName] === true) {
+        cb(null, collection);
+        return true;
+    }
+
+    hadCreatedUINCollection[collectionName] = 'ping';
+    collection.indexExists('uin_1', function (errForIE, result) {
+        if (errForIE) {
+            throw errForIE;
+        }
+        if (!result) {
+            collection.createIndex({ uin: 1 }, function (errForCI) {
+                if (errForCI) {
+                    throw errForCI;
+                }
+                hadCreatedUINCollection[collectionName] = true;
+                cb(null, collection);
+
+            });
+        } else {
+            hadCreatedUINCollection[collectionName] = true;
+            cb(null, collection);
+        }
+    });
+}
+
 
 var insertDocuments = function (db, model) {
     var collectionName = 'badjslog_' + model.id;
 
     tryInit(db, collectionName, function (err, collection) {
-        collection.insert([
-            model.model
-        ], function (err, result) {
-            if (global.debug) {
-                logger.debug("save one log : " + JSON.stringify(model.model));
-            }
+        createUinIndex(collection, collectionName, function (error, coll) {
+            coll.insert([
+                model.model
+            ], function (err, result) {
+                if (global.debug) {
+                    logger.debug('save one log : ' + JSON.stringify(model.model));
+                }
 
-            if (err) {
-                errorNum++;
-            } else {
-                count++;
-            }
+                if (err) {
+                    errorNum++;
+                } else {
+                    count++;
+                }
+            });
         });
     });
 };
 
 
-// Use connect method to connect to the Server
 MongoClient.connect(global.MONGODB.url, function (err, db) {
     if (err) {
-        logger.error("failed connect to mongodb");
+        logger.error('failed connect to mongodb');
     } else {
-        logger.info("Connected correctly to mongodb");
+        logger.info('Connected correctly to mongodb');
     }
     mongoDB = db;
 });
@@ -101,9 +131,9 @@ MongoClient.connect(global.MONGODB.url, function (err, db) {
 if (global.MONGODB.isShard) {
     MongoClient.connect(global.MONGODB.adminUrl, function (err, db) {
         if (err) {
-            logger.error("failed connect to mongodb use admin admin");
+            logger.error('failed connect to mongodb use admin admin');
         } else {
-            logger.info("Connected  correctly to mongodb use admin");
+            logger.info('Connected  correctly to mongodb use admin');
         }
         adminMongoDB = db;
     });
@@ -120,7 +150,6 @@ module.exports = function () {
             return;
         }
 
-        //  1-debug 2-info 4-error  ,
         if (data.level != 4 && data.level != 2) {
             return;
         }
@@ -143,8 +172,6 @@ module.exports = function () {
             all += ';' + key + '=' + data[key];
         }
         data.all = all;
-        data.date = data.date;
-
 
         insertDocuments(mongoDB, {
             id: id,
