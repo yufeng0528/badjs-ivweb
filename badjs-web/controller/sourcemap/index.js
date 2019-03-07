@@ -25,8 +25,8 @@ function removePromise (dir) {
     });
 }
 
-function persistPath2DB (path, project, name, commit) {
-    SourceMapAction.add({ path, project, name, commit });
+function persistPath2DB (path, project, name) {
+    SourceMapAction.add({ path, project, name });
 }
 
 // 保留最后三个版本的数据
@@ -51,14 +51,13 @@ var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         console.log(req.body)
         var projectName = req.body.projectName || 'no-project';
-        var commit = req.body.commit;
         var filepath = path.join(soucemap, projectName);
         mkdirp(filepath, function (err) {
             if (!err) {
                 cb(null, filepath);
             }
         });
-        persistPath2DB(filepath, projectName, file.originalname, commit);
+        persistPath2DB(filepath, projectName, file.originalname);
         // 异步删除文件夹
         // removeFolder(path.join(soucemap, projectName));
     },

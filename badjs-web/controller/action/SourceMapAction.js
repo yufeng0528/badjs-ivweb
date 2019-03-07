@@ -36,15 +36,13 @@ var sourceMapAction = {
             }
             var project = sourcemap.project;
             var name = sourcemap.name;
-            var commit = sourcemap.commit;
             res.json({
                 ret: 0,
                 msg: "success-query",
                 data: {
                     project: project,
                     name: name,
-                    path: 'http://badjs2.ivweb.io/sm/' + project + '/' + name,
-                    commit: commit
+                    path: 'http://badjs2.ivweb.io/sm/' + project + '/' + name
                 }
             });
         });

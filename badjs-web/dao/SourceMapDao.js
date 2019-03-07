@@ -10,7 +10,6 @@ module.exports = function (db) {
         project: String,
         name: String,
         path: String,
-        commit: String,
         createTime: Date
     });
 };

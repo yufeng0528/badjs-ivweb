@@ -155,7 +155,6 @@ CREATE TABLE `b_sourcemap` (
   `project` varchar(100) NOT NULL,
   `name` varchar(100) NOT NULL,
   `path` varchar(200) NOT NULL,
-  `commit` varchar(200) NOT NULL,
   `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `name_idx` (`name`)

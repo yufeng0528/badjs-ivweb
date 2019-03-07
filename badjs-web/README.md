@@ -91,7 +91,6 @@ var fs = require('fs')
 request.post({
     url: 'http://127.0.0.1:8081/upload-sourcemap',
     formData: {
-        commit: 'aaaa4444',
     	projectName: 'test', 
         sourcemap: fs.createReadStream('./jquery.min.map')
     }
@@ -101,5 +100,5 @@ request.post({
 
 ```
 
-其中 commit, projectName 和 sourcemap 两个参数为必传项，projectName 表示当前项目名，sourcemap 为文件流。
+其中 projectName 和 sourcemap 两个参数为必传项，projectName 表示当前项目名，sourcemap 为文件流。
 
