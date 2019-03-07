@@ -24,7 +24,8 @@ var sourceMapAction = {
     },
     query: function (params, req, res) {
         var service = new SourceMapService();
-        var name = params.name.replace(/(\.js)$/ig, '.map');
+        // var name = params.name.replace(/(\.js)$/ig, '.map');
+        var name = params.name;
         service.query({
             name: name
         }, function (err, sourcemap) {

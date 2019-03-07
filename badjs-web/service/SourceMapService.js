@@ -20,7 +20,6 @@ SourceMapService.prototype = {
         });
     },
     add: function (sourcemap, callback) {
-        console.log('add sourcemap:', sourcemap)
         sourcemap.createTime = new Date();
         this.sourcemapDao.create(sourcemap, function (err, items) {
             callback(null, {
