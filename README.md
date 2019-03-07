@@ -96,6 +96,9 @@ badjs-ivweb 默认使用 linux 中的 crontab 进行定时任务，完成每天�
 
 # send top error mail
 0 5 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/TopErrorMail.js
+
+# wechat bot
+0 9 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/WechatService.js
 ```
 
 需要注意的是 `统计 pv` 需要在 `create b_quality table` 前面进行，`pv`，`b_statistics`、`b_quality` 需要在 sendEmail 前进行。

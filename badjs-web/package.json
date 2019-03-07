@@ -35,7 +35,7 @@
     "orm-transaction": "0.0.2",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
-    "request": "^2.63.0",
+    "request": "^2.88.0",
     "rimraf": "^2.6.3",
     "serve-static": "^1.7.1",
     "underscore": "1.5.2",
