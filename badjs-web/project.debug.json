@@ -21,6 +21,7 @@
         "subscribe": "badjs",
         "module": "axon"
     },
+    "wechat": "",
     "email": {
         "homepage": "http://badjs.server.com/user/index.html",
         "from": "noreply-badjs@demo.com",
