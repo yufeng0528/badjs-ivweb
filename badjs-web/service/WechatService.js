@@ -10,6 +10,7 @@ const mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
 var mdb = orm.connect(mysqlUrl, function (err, db) {
 
     const yesterday = moment().subtract(2, 'day').format('YYYYMMDD') - 0;
+    const url = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${pjConfig.wechat}`;
 
     const sql = 'select s.*, a.userName, a.name from b_quality as s, b_apply as a where s.badjsid=a.id and a.status=1 and a.online=2 and s.pv>a.limitpv and s.rate > 0.5 and s.date>' + yesterday + ' order by s.rate desc;';
     db.driver.execQuery(sql, (err, data) => {
@@ -29,7 +30,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
             `\n \n #### 查看 [Badjs](http://badjs2.ivweb.io) 定位问题。`;
 
         const options = {
-            url: `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${pjConfig.wechat}`,
+            url,
             method: 'POST',
             json: {
                 'msgtype': 'markdown',
@@ -40,7 +41,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
         };
 
         const options2 = {
-            url: 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=b5865478-7828-497f-9b4e-f1f4b406188c',
+            url,
             method: 'POST',
             json: {
                 'msgtype': 'text',
