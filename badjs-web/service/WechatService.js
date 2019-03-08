@@ -20,7 +20,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
 
         const mentioned_list = [];
 
-        const base = `#### Badjs昨日统计扣分项目共<font color=\"warning\"> ${data.length} </font>例，请相关同事注意。\n \n`;
+        const base = `#### Badjs昨日统计扣分项目共<font color=\"warning\"> ${data.length} </font>例。\n \n`;
 
         const msg = base + data.map(d => {
                 mentioned_list.push(d.userName);
@@ -54,9 +54,9 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
 
         request(options, function (err, res, body) {
             if (!err) {
-                // request(options2, function (err, res, body) {
-                //     console.log(body);
-                // });
+                request(options2, function (err, res, body) {
+                    console.log(body);
+                });
             }
         });
     });
