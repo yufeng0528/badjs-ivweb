@@ -28,7 +28,12 @@ module.exports = function (app) {
     realtimeService(app);
 
     app.get('/', function (req, res) {
-        res.redirect(req.protocol + "://" + req.get('host') + '/index.html');
+        res.setHeader('Content-Type', 'text/html');
+        res.sendFile(`${GLOBAL.pjconfig.http_public}/index.html`);
+    });
+
+    app.get('/index.html', function (req, res, next) {
+        res.redirect(req.protocol + "://" + req.get('host'));
     });
     //html页面请求
 
@@ -119,12 +124,7 @@ module.exports = function (app) {
     // GLOBAL.pjconfig.QQConnect
     app.use('/api', ApiRouter);
 
-    app.get('/aegis', StaticServe);
-
-    app.get('/index.html', function (req, res, next) {
-        res.setHeader('Content-Type', 'text/html');
-        res.sendFile(`${GLOBAL.pjconfig.http_public}/index.html`);
-    });
+    app.use('/aegis', StaticServe);
     
     /**
      * 登出
