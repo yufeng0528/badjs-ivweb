@@ -25,33 +25,40 @@ var log4js = require('log4js'),
     logger = log4js.getLogger();
 
 module.exports = function (app) {
-
-
     realtimeService(app);
 
-    //html页面请求
-    app.get('/help.html', function (req, res) {
-        res.render('index', {});
-    });
-    app.get('/', function (req, res) {
-        res.redirect(req.protocol + "://" + req.get('host') + '/user/index.html');
+    app.get('/', function(req, res) {
+        res.setHeader('Content-Type', 'text/html');
+        res.sendfile(`${GLOBAL.pjconfig.http_public}/index.html`);
     });
 
     app.get('/index.html', function (req, res) {
-        res.redirect(req.protocol + "://" + req.get('host') + '/user/index.html');
+        res.setHeader('Content-Type', 'text/html');
+        res.sendfile(`${GLOBAL.pjconfig.http_public}/index.html`);
     });
 
-    app.get('/user/index.html', function (req, res) {
-        IndexAction.index({}, req, res);
-    });
+    app.get('/aegis', StaticServe);
+    //html页面请求
 
-    app.use('/login.html', function (req, res, next) {
-        if (pluginHandler.login) {
-            res.redirect('/user/index.html');
-        } else {
-            UserAction.login({}, req, res);
-        }
-    });
+    // app.get('/', function (req, res) {
+    //     res.redirect(req.protocol + "://" + req.get('host') + '/user/index.html');
+    // });
+
+    // app.get('/index.html', function (req, res) {
+    //     res.redirect(req.protocol + "://" + req.get('host') + '/user/index.html');
+    // });
+
+    // app.get('/user/index.html', function (req, res) {
+    //     IndexAction.index({}, req, res);
+    // });
+
+    // app.use('/login.html', function (req, res, next) {
+    //     if (pluginHandler.login) {
+    //         res.redirect('/user/index.html');
+    //     } else {
+    //         UserAction.login({}, req, res);
+    //     }
+    // });
 
     app.use('/upload.html', function (req, res, next) {
         var user = req.session.user;
