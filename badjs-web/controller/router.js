@@ -120,9 +120,6 @@ module.exports = function (app) {
     // GLOBAL.pjconfig.QQConnect
     app.use('/api', ApiRouter);
 
-    // GLOBAL.pjconfig.http_public
-    app.use('/badjs3', StaticServe);
-
     /**
      * 登出
      * */
@@ -203,5 +200,8 @@ module.exports = function (app) {
         }
         return;
     });
+
+    // GLOBAL.pjconfig.http_public
+    app.use('/', StaticServe);
 };
 

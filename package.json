@@ -4,12 +4,6 @@
   "description": "badjs 快捷安装模块",
   "main": "start.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "node-highcharts-exporting": "~0.0.3"
-  },
-  "scripts": {
     "clone": "npm run clone-acceptor && npm run clone-mq && npm run clone-storage && npm run clone-web",
     "clone-acceptor": "git clone https://github.com/BetterJS/badjs-acceptor.git",
     "clone-mq": "git clone https://github.com/BetterJS/badjs-mq.git",
@@ -21,6 +15,10 @@
     "install-storage": "cd badjs-storage && npm install",
     "install-web": "cd badjs-web && npm install",
     "start": "node ./start.js"
+  },
+  "dependencies": {
+    "antd": "^3.11.2",
+    "node-highcharts-exporting": "~0.0.3"
   },
   "repository": {
     "type": "git",
