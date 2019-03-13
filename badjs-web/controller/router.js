@@ -27,7 +27,9 @@ var log4js = require('log4js'),
 module.exports = function (app) {
     realtimeService(app);
 
-
+    app.get('/', function (req, res) {
+        res.redirect(req.protocol + "://" + req.get('host') + '/index.html');
+    });
     //html页面请求
 
     // app.get('/', function (req, res) {
@@ -118,6 +120,12 @@ module.exports = function (app) {
     app.use('/api', ApiRouter);
 
     app.get('/aegis', StaticServe);
+
+    app.get('/index.html', function (req, res, next) {
+        res.setHeader('Content-Type', 'text/html');
+        res.sendFile(`${GLOBAL.pjconfig.http_public}/index.html`);
+    });
+    
     /**
      * 登出
      * */
@@ -197,16 +205,6 @@ module.exports = function (app) {
             res.send(404, 'Sorry! can not found action.');
         }
         return;
-    });
-
-    
-    app.get('/index.html', function (req, res, next) {
-        next();
-    });
-
-    app.get('/', function(req, res) {
-        res.setHeader('Content-Type', 'text/html');
-        res.sendFile(`${GLOBAL.pjconfig.http_public}/index.html`);
     });
 };
 
