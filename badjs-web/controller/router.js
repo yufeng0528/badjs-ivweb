@@ -27,17 +27,7 @@ var log4js = require('log4js'),
 module.exports = function (app) {
     realtimeService(app);
 
-    app.get('/', function(req, res) {
-        res.setHeader('Content-Type', 'text/html');
-        res.sendfile(`${GLOBAL.pjconfig.http_public}/index.html`);
-    });
 
-    app.get('/index.html', function (req, res) {
-        res.setHeader('Content-Type', 'text/html');
-        res.sendfile(`${GLOBAL.pjconfig.http_public}/index.html`);
-    });
-
-    app.get('/aegis', StaticServe);
     //html页面请求
 
     // app.get('/', function (req, res) {
@@ -127,6 +117,7 @@ module.exports = function (app) {
     // GLOBAL.pjconfig.QQConnect
     app.use('/api', ApiRouter);
 
+
     /**
      * 登出
      * */
@@ -208,7 +199,15 @@ module.exports = function (app) {
         return;
     });
 
-    // GLOBAL.pjconfig.http_public
-    app.use('/', StaticServe);
+    app.get('/aegis', StaticServe);
+
+    app.get('/index.html', function (req, res, next) {
+        next();
+    });
+
+    app.get('/', function(req, res) {
+        res.setHeader('Content-Type', 'text/html');
+        res.sendfile(`${GLOBAL.pjconfig.http_public}/index.html`);
+    });
 };
 
