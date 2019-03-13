@@ -117,7 +117,7 @@ module.exports = function (app) {
     // GLOBAL.pjconfig.QQConnect
     app.use('/api', ApiRouter);
 
-
+    app.get('/aegis', StaticServe);
     /**
      * 登出
      * */
@@ -199,15 +199,14 @@ module.exports = function (app) {
         return;
     });
 
-    app.get('/aegis', StaticServe);
-
+    
     app.get('/index.html', function (req, res, next) {
         next();
     });
 
     app.get('/', function(req, res) {
         res.setHeader('Content-Type', 'text/html');
-        res.sendfile(`${GLOBAL.pjconfig.http_public}/index.html`);
+        res.sendFile(`${GLOBAL.pjconfig.http_public}/index.html`);
     });
 };
 
