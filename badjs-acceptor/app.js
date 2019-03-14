@@ -152,7 +152,7 @@ var reponseReject = function (req, res, responseHeader) {
 
 connect()
     .use('/badjs', connect.query())
-    .use('/badjs', connect.bodyParser())
+    .use('/badjs', connect.bodyParser({limit: '10MB'}))
     .use('/badjs/offlineLog', function (req, res) {
 
         // 大于 10ms , forbidden
