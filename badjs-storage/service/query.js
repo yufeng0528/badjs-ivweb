@@ -415,7 +415,7 @@ module.exports = function () {
 
 
         })
-        .listen(GLOBAL.pjconfig.port);
+        .listen(global.pjconfig.port);
 
-    logger.info('query server start ok , listen ' + GLOBAL.pjconfig.port);
+    logger.info('query server start ok , listen ' + global.pjconfig.port);
 };

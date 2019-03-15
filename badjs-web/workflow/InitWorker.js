@@ -6,7 +6,7 @@ var path = require("path");
 var argv = process.argv.slice();
 if (argv.indexOf('--debug') >= 0) {
     logger.setLevel('DEBUG');
-    GLOBAL.DEBUG = true;
+    global.DEBUG = true;
     logger.info('running in debug');
 
 } else {
@@ -14,9 +14,9 @@ if (argv.indexOf('--debug') >= 0) {
 }
 
 if (argv.indexOf('--project') >= 0) {
-    GLOBAL.pjconfig = require(path.join(__dirname, "..", '/project.debug.json'));
+    global.pjconfig = require(path.join(__dirname, "..", '/project.debug.json'));
 } else {
-    GLOBAL.pjconfig = require(path.join(__dirname, "..", 'project.json'));
+    global.pjconfig = require(path.join(__dirname, "..", 'project.json'));
 }
 
 

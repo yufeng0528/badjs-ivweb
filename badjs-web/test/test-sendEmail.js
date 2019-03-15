@@ -1,9 +1,9 @@
-GLOBAL.pjconfig = require('../project.json');
+global.pjconfig = require('../project.json');
 var EmailService = require('../service/EmailService');
 
 var orm = require('orm');
 
-orm.connect(GLOBAL.pjconfig.mysql.url, function(err, db) {
+orm.connect(global.pjconfig.mysql.url, function(err, db) {
     if (err) {
         throw err;
     }

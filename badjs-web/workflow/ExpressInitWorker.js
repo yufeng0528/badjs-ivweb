@@ -77,8 +77,8 @@ router(app);
 // 注册插件路由事件
 pluginHandler.registerRoute(app);
 
-logger.info('Listen At Port: ' + GLOBAL.pjconfig.port);
-var port = parseInt(GLOBAL.pjconfig.port, 10) || 80;
+logger.info('Listen At Port: ' + global.pjconfig.port);
+var port = parseInt(global.pjconfig.port, 10) || 80;
 module.exports = function () {
     app.listen(port);
 

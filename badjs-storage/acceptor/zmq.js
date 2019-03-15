@@ -1,9 +1,9 @@
 var map = require('map-stream');
 var zmq = require('zmq');
 var client = zmq.socket('sub');
-var port = GLOBAL.pjconfig.acceptor.port;
-var address = GLOBAL.pjconfig.acceptor.address;
-var service = GLOBAL.pjconfig.acceptor.subscribe;
+var port = global.pjconfig.acceptor.port;
+var address = global.pjconfig.acceptor.address;
+var service = global.pjconfig.acceptor.subscribe;
 
 /**
  * dispatcher

@@ -11,38 +11,38 @@ var path = require("path");
 
 
 var argv = process.argv.slice();
-if(argv.indexOf('--debug') >= 0){
+if (argv.indexOf('--debug') >= 0) {
     logger.setLevel('DEBUG');
     logger.info('running in debug');
 
-}else {
+} else {
     logger.setLevel('INFO');
 }
 
-var dbPath = path.join(__dirname , "project.db");
+var dbPath = path.join(__dirname, "project.db");
 
 
-if(argv.indexOf('--project') >= 0){
-    GLOBAL.pjconfig =  require(path.join(__dirname , 'project.debug.json'));
-}else {
-    GLOBAL.pjconfig = require(path.join(__dirname , 'project.json') );
+if (argv.indexOf('--project') >= 0) {
+    global.pjconfig = require(path.join(__dirname, 'project.debug.json'));
+} else {
+    global.pjconfig = require(path.join(__dirname, 'project.json'));
 }
 
 
-var zmq = require(GLOBAL.pjconfig.mq.module);
+var zmq = require(global.pjconfig.mq.module);
 
 var readyClient = [];
 var clientMapping = {};
 var appKeyList = {
-    appkey : {},
-    idMappingKey : {}
+    appkey: {},
+    idMappingKey: {}
 };
 
 //var MAX_TIMEOUT = 60*60*1000 * 15;
 var MAX_TIMEOUT = 1000 * 60 * 15;
 
-mq = zmq.socket('sub');
-mq.connect("tcp://" + GLOBAL.pjconfig.dispatcher.address +":"+GLOBAL.pjconfig.dispatcher.port);
+var mq = zmq.socket('sub');
+mq.connect("tcp://" + global.pjconfig.dispatcher.address + ":" + global.pjconfig.dispatcher.port);
 mq.subscribe("badjs");
 
 setInterval(function () {
@@ -65,16 +65,16 @@ setInterval(function () {
 }, MAX_TIMEOUT);
 
 
-var processProjectId = function (str){
-    var map = {appkey:{} , idMappingKey : {}};
+var processProjectId = function (str) {
+    var map = { appkey: {}, idMappingKey: {} };
 
     var json = JSON.parse(str || '{}');
 
-    _.each(json , function (value , id){
-        if(value){
+    _.each(json, function (value, id) {
+        if (value) {
             var appkey = value.appkey;
             map.appkey[appkey] = true;
-            map.idMappingKey[id ] = appkey;
+            map.idMappingKey[id] = appkey;
         }
     });
     return map;
@@ -84,7 +84,7 @@ var startService = function () {
 
     appKeyList = processProjectId(fs.readFileSync(dbPath, "utf-8"));
 
-    process.once("disconnect" , function (){
+    process.once("disconnect", function () {
         logger.info("master is exited , exiting... ")
         process.exit(0);
     })
@@ -105,9 +105,9 @@ var startService = function () {
 
             } else {
 
-                appKeyList = processProjectId(param.projectsInfo );
+                appKeyList = processProjectId(param.projectsInfo);
 
-                fs.writeFile(dbPath, param.projectsInfo , function () {
+                fs.writeFile(dbPath, param.projectsInfo, function () {
                     logger.info('update project.db :' + param.projectsInfo);
                 });
             }
@@ -115,7 +115,7 @@ var startService = function () {
             res.end();
 
         })
-        .listen(GLOBAL.pjconfig.openapi.syncProjects.port);
+        .listen(global.pjconfig.openapi.syncProjects.port);
 }
 
 
@@ -125,24 +125,24 @@ var processClientMessage = function (msg, client) {
         case "auth" :
             if (appKeyList.appkey[msg.appkey]) {
                 client.ext.appkey = msg.appkey;
-                if(!clientMapping[msg.appkey]){
+                if (!clientMapping[msg.appkey]) {
                     clientMapping[msg.appkey] = {};
                 }
                 clientMapping[msg.appkey][client.ext.id] = client;
-                client.write(JSON.stringify({"err" : 0 , msg: "auth success" , type: "auth"}));
+                client.write(JSON.stringify({ "err": 0, msg: "auth success", type: "auth" }));
                 logger.info("one client auth succ , appkey is " + msg.appkey);
-            }else {
-                client.write(JSON.stringify({"err" : -1 , msg: "auth fail" , type: "auth"}));
+            } else {
+                client.write(JSON.stringify({ "err": -1, msg: "auth fail", type: "auth" }));
                 logger.info("one client auth fail , appkey is " + msg.appkey);
                 client.destroy();
             }
             break;
         case "keepalive" :
             client.ext.timeout = new Date - 0;
-            client.write(JSON.stringify({"err" : 0 , msg: "keepalive" , type: "keepalive"}));
+            client.write(JSON.stringify({ "err": 0, msg: "keepalive", type: "keepalive" }));
             break;
         default :
-            client.write(JSON.stringify({"err" : -2 , msg: "should auth " , type: "auth"}));
+            client.write(JSON.stringify({ "err": -2, msg: "should auth ", type: "auth" }));
             client.destroy();
             break;
     }
@@ -174,31 +174,31 @@ var removeClient = function (client) {
 
 mq.on("message", function (data) {
 
-    if(!readyClient.length){
-        return ;
+    if (!readyClient.length) {
+        return;
     }
 
-    try{
+    try {
         var dataStr = data.toString();
         data = JSON.parse(dataStr.substring(dataStr.indexOf(' ')));
-    }catch (e){
+    } catch (e) {
         logger.error('parse error');
-        return ;
+        return;
     }
 
-    var appkey = appKeyList.idMappingKey[data.id +""];
+    var appkey = appKeyList.idMappingKey[data.id + ""];
 
     var message = data;
     var sendingClients = clientMapping[appkey];
     if (sendingClients) {
         _.each(sendingClients, function (value) {
-            value.write(JSON.stringify({type: "message", msg: message , err : 0}));
+            value.write(JSON.stringify({ type: "message", msg: message, err: 0 }));
         })
     }
 })
 
 
-var server  = net.createServer(function (c) { //'connection' listener
+var server = net.createServer(function (c) { //'connection' listener
     c.ext = {
         id: crypto.createHash("md5").update(new Date - 0 + c.address().address).digest('hex'),
         timeout: new Date - 0,
@@ -210,13 +210,13 @@ var server  = net.createServer(function (c) { //'connection' listener
     logger.info('client connected , id=' + c.ext.id);
 
     c.on('data', function (data) {
-        try{
-          var data = JSON.parse(data.toString());
-          processClientMessage(data, this);
-        }catch(e){
-          this.destroy();
-          removeClient(this);
-          logger.info("client parse error , and close :" + e)
+        try {
+            data = JSON.parse(data.toString());
+            processClientMessage(data, this);
+        } catch (e) {
+            this.destroy();
+            removeClient(this);
+            logger.info("client parse error , and close :" + e)
         }
     });
 
@@ -230,6 +230,6 @@ var server  = net.createServer(function (c) { //'connection' listener
 
 startService();
 
-server.listen( GLOBAL.pjconfig.openapi.port, function () { //'listening' listener
-    logger.info("start openapi service , port:" +  GLOBAL.pjconfig.openapi.port )
+server.listen(global.pjconfig.openapi.port, function () { //'listening' listener
+    logger.info("start openapi service , port:" + global.pjconfig.openapi.port)
 });

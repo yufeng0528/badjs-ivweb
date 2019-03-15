@@ -22,9 +22,9 @@ module.exports = function(from, to, cc, title, content) {
     (function send(message, times) {
         if (!EmailServer) {
             EmailServer = emailjs.server.connect({
-                host: GLOBAL.pjconfig.email.smtp,
-                user:   GLOBAL.pjconfig.email.smtpUser, 
-                password: GLOBAL.pjconfig.email.smtpPassword ,  
+                host: global.pjconfig.email.smtp,
+                user:   global.pjconfig.email.smtpUser,
+                password: global.pjconfig.email.smtpPassword ,
                 ssl: false
             });
         }

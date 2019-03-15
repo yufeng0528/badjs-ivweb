@@ -1,8 +1,8 @@
 var net = require("net"),
-    port = GLOBAL.pjconfig.acceptor.port,
-    address = GLOBAL.pjconfig.acceptor.address,
+    port = global.pjconfig.acceptor.port,
+    address = global.pjconfig.acceptor.address,
     map = require('map-stream'),
-    service = GLOBAL.pjconfig.acceptor.subscribe;
+    service = global.pjconfig.acceptor.subscribe;
 
 
 /**

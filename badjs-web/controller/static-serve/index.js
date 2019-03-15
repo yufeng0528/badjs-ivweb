@@ -1,10 +1,10 @@
-const express = require('express'); 
-const router = express.Router(); 
+const express = require('express');
+const router = express.Router();
 
-module.exports = router; 
+module.exports = router;
 
-// GLOBAL.pjconfig.QQConnect
+// global.pjconfig.QQConnect
 router.use(express.static(
-    GLOBAL.pjconfig.http_public || __dirname
-)); 
+    global.pjconfig.http_public || __dirname
+));
 

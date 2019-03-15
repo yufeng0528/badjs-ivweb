@@ -8,9 +8,9 @@ var StatisticsService = require('../service/StatisticsService');
 var orm = require('orm');
 var Apply = require('../model/Apply');
 
-GLOBAL.pjconfig = require('../project.json');
+global.pjconfig = require('../project.json');
 
-var mysqlUrl = GLOBAL.pjconfig.mysql.url;
+var mysqlUrl = global.pjconfig.mysql.url;
 
 var mdb = orm.connect(mysqlUrl, function (err, db) {
     if (err) {

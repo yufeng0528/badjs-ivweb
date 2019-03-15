@@ -3,9 +3,9 @@ var mysql = require('mysql'),
     StatisticsService = require('../service/StatisticsService'),
     orm = require('orm');
 
-GLOBAL.pjconfig = require('../project.json');
-//GLOBAL.DEBUG = true;
-var mysqlUrl = GLOBAL.pjconfig.mysql.url
+global.pjconfig = require('../project.json');
+//global.DEBUG = true;
+var mysqlUrl = global.pjconfig.mysql.url
 
 orm.connect( mysqlUrl, function(err , db) {
     if(err){
