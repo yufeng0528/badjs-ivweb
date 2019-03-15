@@ -83,7 +83,7 @@ var generateErrorMsgTop = function (totalData, startDate, endDate) {
                     if (err) {
                         logger.error('[' + process.pid + ']: generated total cache error : ' + filePath);
                     } else {
-                        logger.info('[' + process.pid + ']:generated total cache succes : ' + filePath);
+                        logger.info('[' + process.pid + ']:generated total cache success : ' + filePath);
                     }
                 }
             );
@@ -105,7 +105,13 @@ var flushCacheToDisk = function (resetCache, fileName) {
 
     logger.info("[" + process.pid + "]flush cache to disk , path : " + filePath);
 
-    fs.writeFile(filePath, content);
+    fs.writeFile(filePath, content, err => {
+        if (err) {
+            logger.error('[' + process.pid + ']: flush cache to disk error : ' + filePath);
+        } else {
+            logger.info('[' + process.pid + ']: flush cache to disk success : ' + filePath);
+        }
+    });
 };
 
 

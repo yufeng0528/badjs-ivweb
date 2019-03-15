@@ -1,17 +1,17 @@
 var fs = require("fs");
-var path=require("path");
+var path = require("path");
 var nowDate = Date.now();
 var saveData = JSON.parse(fs.readFileSync("E:/szlog/2016-5-27.db"))
-console.log("load span " + ( Date.now() - nowDate  ))
+console.log("load span " + (Date.now() - nowDate))
 
-var getYesterday = function() {
+var getYesterday = function () {
     var date = new Date();
     date.setDate(date.getDate() - 1);
     date.setHours(0, 0, 0, 0);
     return date;
 };
 
-var dateFormat  = function (date , fmt){
+var dateFormat = function (date, fmt) {
     var o = {
         "M+": date.getMonth() + 1, //月份
         "d+": date.getDate(), //日
@@ -27,30 +27,38 @@ var dateFormat  = function (date , fmt){
     return fmt;
 }
 
-var  currentCacheName = dateFormat(new Date  , "yyyy-MM-dd") ;
+var currentCacheName = dateFormat(new Date, "yyyy-MM-dd");
 
 console.log(currentCacheName)
 
-var generateErrorMsgTop = function (totalData , startDate , endDate){
+var generateErrorMsgTop = function (totalData, startDate, endDate) {
 
-    Object.keys(totalData).forEach(function (key , index){
+    Object.keys(totalData).forEach(function (key, index) {
 
-        if(key != "total"){
+        if (key != "total") {
             var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") + "__" + key;
-            var filePath = path.join("E:/szlog/test" , fileName)
-            var targetData =  totalData[key];
+            var filePath = path.join("E:/szlog/test", fileName)
+            var targetData = totalData[key];
             var errorMap = targetData.errorMap;
             var errorList = [];
-            Object.keys(errorMap).forEach( function (errorMapKey){
-                errorList.push({ "_id" :  errorMap[errorMapKey].msg , "total" : errorMap[errorMapKey].total})
+            Object.keys(errorMap).forEach(function (errorMapKey) {
+                errorList.push({ "_id": errorMap[errorMapKey].msg, "total": errorMap[errorMapKey].total })
             })
-            errorList.sort(function (a , b){
+            errorList.sort(function (a, b) {
                 return a.total < b.total ? 1 : -1;
             })
 
             fs.writeFile(
-                filePath ,
-                JSON.stringify({"startDate":startDate,"endDate":endDate,"item" :  errorList.slice(0,50) , "pv" : targetData.total })
+                filePath,
+                JSON.stringify({
+                    "startDate": startDate,
+                    "endDate": endDate,
+                    "item": errorList.slice(0, 50),
+                    "pv": targetData.total
+                }),
+                function (err) {
+                    console.log(err)
+                }
             )
         }
     })
@@ -58,4 +66,4 @@ var generateErrorMsgTop = function (totalData , startDate , endDate){
 var yesterday = getYesterday();
 //console.log(yesterday + 86400000 -1)
 //return ;
-generateErrorMsgTop(saveData ,  +yesterday  , +yesterday + 86400000 -1)
+generateErrorMsgTop(saveData, +yesterday, +yesterday + 86400000 - 1)
