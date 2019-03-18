@@ -24,17 +24,22 @@ var log4js = require('log4js'),
 var REG_DOMAIN_STAR = /^\*(\.[^\/]+)?$/;
 var REG_REFERER = /^https?:\/\/[^\/]+\//i;
 
+var _process = function(value, key) {
+    if (value.createTime) {
+        value.createTime = (new Date(value.createTime) - 0);
+    }
+
+    if (value.passTime) {
+        value.passTime = (new Date(value.passTime) - 0);
+    }
+}
+
 var processData = function (data) {
-    _.each(data, function (value, key) {
-        if (value.createTime) {
-            value.createTime = (new Date(value.createTime) - 0);
-        }
-
-        if (value.passTime) {
-            value.passTime = (new Date(value.passTime) - 0);
-        }
-    });
-
+    if(data.length) {
+        _.each(data, _process);
+    } else {
+        _process(data);
+    }    
     return data;
 };
 
@@ -181,7 +186,7 @@ var applyAction = {
             } else {
                 res.json({
                     ret: 0,
-                    data: apply
+                    data: processData(apply)
                 });
             }
         });
