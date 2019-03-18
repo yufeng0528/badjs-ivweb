@@ -35,6 +35,7 @@ module.exports = function (app) {
     app.get('/index.html', function (req, res, next) {
         res.redirect(req.protocol + "://" + req.get('host'));
     });
+
     //html页面请求
 
     // app.get('/', function (req, res) {

@@ -176,6 +176,25 @@ var applyAction = {
             cb(err, apply);
         });
     },
+    
+    get: function(params, cb) {
+        var applyService = new ApplyService();
+        applyService.queryById({
+            id: params.applyId
+        }, function (err, apply) {
+            if (err) {
+                res.json({
+                    ret: 3,
+                    msg: err
+                });
+            } else {
+                res.json({
+                    ret: 0,
+                    data: apply
+                });
+            }
+        });
+    },
     update: function (params, req, res) {
         var as = new ApplyService();
         as.update(params, function () {
