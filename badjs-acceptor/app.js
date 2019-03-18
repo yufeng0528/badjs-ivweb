@@ -152,7 +152,7 @@ var reponseReject = function (req, res, responseHeader) {
 
 connect()
     .use('/badjs', connect.query())
-    .use('/badjs', connect.bodyParser())
+    .use('/badjs', connect.bodyParser({ limit: '10MB' }))
     .use('/badjs/offlineLog', function (req, res) {
 
         // 大于 10ms , forbidden
@@ -201,7 +201,11 @@ connect()
             return log;
         });
 
-        fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log));
+        fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log), function (err) {
+            if (!err) {
+                console.log('write offline log success');
+            }
+        });
 
         res.end('ok');
 

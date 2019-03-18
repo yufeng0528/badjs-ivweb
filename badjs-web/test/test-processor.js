@@ -3,7 +3,7 @@ var EventEmitter = require("events");
 
 var eventEmitter = new EventEmitter;
 
-GLOBAL= {
+global= {
     pjconfig : {
         zmq : {
             "url" : "tcp://127.0.0.1:10000",

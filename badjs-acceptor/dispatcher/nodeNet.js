@@ -2,9 +2,9 @@
  * Created by chriscai on 2015/6/4.
  */
 var net  = require("net"),
-    port =  GLOBAL.pjconfig.dispatcher.port,
-    address =  GLOBAL.pjconfig.dispatcher.address,
-    service =  GLOBAL.pjconfig.dispatcher.subscribe;
+    port =  global.pjconfig.dispatcher.port,
+    address =  global.pjconfig.dispatcher.address,
+    service =  global.pjconfig.dispatcher.subscribe;
 
 
 var log4js = require('log4js'),

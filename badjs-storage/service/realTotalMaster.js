@@ -15,7 +15,7 @@ cluster.setupMaster({
 
 var clusterPool = [];
 
-for (var i = 0; i < GLOBAL.pjconfig.realTotal; i++) {
+for (var i = 0; i < global.pjconfig.realTotal; i++) {
     clusterPool.push(cluster.fork({ index: i, debug: !!global.debug }));
 }
 

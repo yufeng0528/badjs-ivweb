@@ -3,7 +3,7 @@ var fs = require('fs');
 var multer = require('multer');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
-var soucemap = GLOBAL.pjconfig.sourcemap;
+var soucemap = global.pjconfig.sourcemap;
 var SourceMapAction = require('../action/SourceMapAction');
 
 function removePromise (dir) {

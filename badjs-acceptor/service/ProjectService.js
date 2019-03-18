@@ -10,12 +10,12 @@ var connect = require('connect'),
 
 var path = require("path");
 
-var dbPath = path.join(__dirname  , ".." , "project.db");
+var dbPath = path.join(__dirname, "..", "project.db");
 
 
-var ProjectService = function(clusters) {
+var ProjectService = function (clusters) {
 
-    var dispatchCluster = function(data) {
+    var dispatchCluster = function (data) {
         for (var i = 0; i < clusters.length; i++) {
             clusters[i].send(data);
         }
@@ -24,7 +24,7 @@ var ProjectService = function(clusters) {
     connect()
         .use('/getProjects', connect.query())
         .use('/getProjects', connect.bodyParser())
-        .use('/getProjects', function(req, res) {
+        .use('/getProjects', function (req, res) {
             var param = req.query;
             if (req.method === "POST") {
                 param = req.body;
@@ -37,8 +37,8 @@ var ProjectService = function(clusters) {
                     projectsInfo: param.projectsInfo
                 });
 
-                fs.writeFile(dbPath, param.projectsInfo || "", function() {
-                    logger.info('update project.db :' + param.projectsInfo);
+                fs.writeFile(dbPath, param.projectsInfo || "", function () {
+                    logger.info('update project.db');
                 });
             }
 

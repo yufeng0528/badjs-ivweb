@@ -20,8 +20,8 @@ const httpGet = url => new Promise((res, rej) => {
 QQConnect.code2accessToken = function (code, redirect_uri) {
     const urlQuery = qs.stringify({
         grant_type: 'authorization_code',
-        client_id: GLOBAL.pjconfig.QQConnect.APPID,
-        client_secret: GLOBAL.pjconfig.QQConnect.APPKey,
+        client_id: global.pjconfig.QQConnect.APPID,
+        client_secret: global.pjconfig.QQConnect.APPKey,
         code: code || '',
         redirect_uri: redirect_uri || ''
     });

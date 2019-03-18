@@ -21,7 +21,7 @@ MongoClient.connect(url, function (err, db) {
     mongoDB = db;
 });
 
-var maxAge = GLOBAL.pjconfig.maxAge;
+var maxAge = global.pjconfig.maxAge;
 
 // n 天前的数据
 var beforeDate = 1000 * 60 * 60 * 24 * maxAge;

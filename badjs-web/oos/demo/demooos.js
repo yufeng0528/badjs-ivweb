@@ -50,7 +50,7 @@ module.exports = function(req, res, next) {
 
                     // 用户没有登录 badjs， 进行创建用户信息
                     if (!dbUser) {
-                        req.session.user.email = user.loginName + GLOBAL.pjconfig.email.emailSuffix;
+                        req.session.user.email = user.loginName + global.pjconfig.email.emailSuffix;
                         req.session.user.password = crypto.createHash("md5").update(user.loginName).digest('hex');
 
                         userDao.create(req.session.user, function(err, result) {

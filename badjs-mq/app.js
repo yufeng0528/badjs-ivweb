@@ -17,18 +17,18 @@ if (argv.indexOf('--debug') >= 0) {
 }
 
 if (argv.indexOf('--project') >= 0) {
-    GLOBAL.pjconfig = require(path.join(__dirname, 'project.debug.json'));
+    global.pjconfig = require(path.join(__dirname, 'project.debug.json'));
 } else {
-    GLOBAL.pjconfig = require(path.join(__dirname, 'project.json'));
+    global.pjconfig = require(path.join(__dirname, 'project.json'));
 }
 
-var mq = require(GLOBAL.pjconfig.mq.module);
+var mq = require(global.pjconfig.mq.module);
 var dispatcher = mq.socket('pub');
 var acceptor = mq.socket('pull');
-var dispatcherPort = GLOBAL.pjconfig.dispatcher.port;
-var dispatcherAddress = GLOBAL.pjconfig.dispatcher.address;
-var acceptorPort = GLOBAL.pjconfig.acceptor.port;
-var acceptorAddress = GLOBAL.pjconfig.acceptor.address;
+var dispatcherPort = global.pjconfig.dispatcher.port;
+var dispatcherAddress = global.pjconfig.dispatcher.address;
+var acceptorPort = global.pjconfig.acceptor.port;
+var acceptorAddress = global.pjconfig.acceptor.address;
 
 
 acceptor[acceptor.bindSync ? 'bindSync' : 'bind']('tcp://' + acceptorAddress + ':' + acceptorPort);

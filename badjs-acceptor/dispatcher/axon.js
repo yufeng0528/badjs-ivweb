@@ -1,8 +1,8 @@
 var zmq = require('axon')
     , client = zmq.socket('push')
-    , port =  GLOBAL.pjconfig.dispatcher.port
-    , address =  GLOBAL.pjconfig.dispatcher.address
-    , service =  GLOBAL.pjconfig.dispatcher.subscribe;
+    , port =  global.pjconfig.dispatcher.port
+    , address =  global.pjconfig.dispatcher.address
+    , service =  global.pjconfig.dispatcher.subscribe;
 
 var log4js = require('log4js'),
     logger = log4js.getLogger();

@@ -29,7 +29,7 @@ module.exports = function (app) {
 
     app.get('/', function (req, res) {
         res.setHeader('Content-Type', 'text/html');
-        res.sendFile(`${GLOBAL.pjconfig.http_public}/index.html`);
+        res.sendFile(`${global.pjconfig.http_public}/index.html`);
     });
 
     app.get('/index.html', function (req, res, next) {
@@ -122,11 +122,11 @@ module.exports = function (app) {
         res.render('monitor', {layout: false, user: req.session.user, index: 'guide', guideTitle: '实时监控'});
     });
 
-    // GLOBAL.pjconfig.QQConnect
+    // global.pjconfig.QQConnect
     app.use('/api', ApiRouter);
 
     app.use('/aegis', StaticServe);
-    
+
     /**
      * 登出
      * */
