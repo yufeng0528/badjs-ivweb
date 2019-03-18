@@ -85,8 +85,8 @@ var applyAction = {
                 });
             });
         }
-
     },
+
     queryListByUser: function (params, req, res) {
         var applyService = new ApplyService();
         if (params.user.role != 1) {
@@ -168,16 +168,7 @@ var applyAction = {
             });
         });
     },
-    queryByApplyId: function (params, cb) {
-        var applyService = new ApplyService();
-        applyService.queryById({
-            id: params.applyId
-        }, function (err, apply) {
-            cb(err, apply);
-        });
-    },
-    
-    get: function(params, cb) {
+    queryByApplyId: function(params, req, res) {
         var applyService = new ApplyService();
         applyService.queryById({
             id: params.applyId
@@ -193,6 +184,14 @@ var applyAction = {
                     data: apply
                 });
             }
+        });
+    },
+    get: function (params, cb) {
+        var applyService = new ApplyService();
+        applyService.queryById({
+            id: params.applyId
+        }, function (err, apply) {
+            cb(err, apply);
         });
     },
     update: function (params, req, res) {
