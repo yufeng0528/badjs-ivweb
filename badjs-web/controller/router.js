@@ -74,7 +74,7 @@ module.exports = function (app) {
     app.get('/user/apply.html', function (req, res) {
         var user = req.session.user;
         if (req.query && req.query.applyId) {
-            ApplyAction.queryByApplyId({applyId: req.query.applyId}, function (err, apply) {
+            ApplyAction.get({applyId: req.query.applyId}, function (err, apply) {
                 res.render('apply', {layout: false, user: user, index: 'apply', apply: apply});
             });
         } else {
