@@ -166,11 +166,19 @@ connect()
         // offline_log = pako.inflate(decodeURIComponent(offline_log), { to: 'string' });
 
         if (typeof offline_log === 'string') {
-            offline_log = JSON.parse(offline_log);
+            try {
+                offline_log = JSON.parse(offline_log);
+            } catch (e) {
+                throw new Error(e);
+            }
         }
 
         if (!/[\w]{1,7}/.test(offline_log.id)) {
             throw new Error('invalid id ' + offline_log.id);
+        }
+
+        if (!/[\w]{1,11}/.test(offline_log.uin)) {
+            throw new Error('invalid uin ' + offline_log.uin);
         }
 
         var filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
@@ -220,7 +228,6 @@ connect()
             });
 
             clientRes.on("end", function () {
-                //res.write()
                 res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto(" + (result ? result : false) + ");");
             });
         }).on('error', function (e) {
