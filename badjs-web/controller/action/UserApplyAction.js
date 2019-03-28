@@ -66,7 +66,20 @@ var userAction = {
             }
             res.json({ ret: 0, msg: "success-update" });
         });
-
+    },
+    
+    setRole: function (param, req, res) {
+        if (auth.id == "") {
+            res.json({ ret: 1002, msg: "id为空" });
+            return;
+        }
+        var userApplyService = new UserApplyService();
+        userApplyService.setRole(param, function (err, items) {
+            if (isError(res, err)) {
+                return;
+            }
+            res.json({ ret: 0, msg: "success-update" });
+        });
     }
 
 };
