@@ -106,6 +106,27 @@ userApplyService.prototype = {
                 callback(null);
             });
         });
+    },
+
+    setRole: function (target, callback) {
+        this.userApplyDao.one({id: target.id}, function (err, item) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            item.role = target.role;
+            item.save(function (err) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                if (global.DEBUG) {
+                    logger.info("setrole success item: " + item);
+                }
+                callback(null);
+            });
+        });
     }
 };
 
