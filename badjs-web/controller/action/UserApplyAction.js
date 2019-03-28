@@ -69,7 +69,7 @@ var userAction = {
     },
     
     setRole: function (param, req, res) {
-        if (auth.id == "") {
+        if (param.id == "") {
             res.json({ ret: 1002, msg: "id为空" });
             return;
         }
