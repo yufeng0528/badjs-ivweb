@@ -184,18 +184,21 @@ router.post('/login-by-code', function (req, res) {
                     message: '请使用此值进行 openid 绑定'
                 });
             } else {
-                req.session.user = {
-                    role: user.role,
-                    id: user.id,
-                    email: user.email,
-                    loginName: user.loginName,
-                    chineseName: user.chineseName,
-                    verify_state: parseInt(user.verify_state, 10),
-                    openid: user.openid
-                };
+                QQConnect.getUserInfoByOpenid().then((user_info) => {
+                    req.session.user = {
+                        role: user.role,
+                        id: user.id,
+                        email: user.email,
+                        loginName: user.loginName,
+                        chineseName: user.chineseName,
+                        user_info: user_info,
+                        verify_state: parseInt(user.verify_state, 10),
+                        openid: user.openid
+                    };
 
-                // 说明有了，获取登陆态
-                meAction(req, res);
+                    // 说明有了，获取登陆态
+                    meAction(req, res);
+                });
             }
         });
     }).catch(error => {

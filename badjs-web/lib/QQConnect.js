@@ -5,6 +5,9 @@ module.exports = QQConnect;
 const request = require('request');
 const qs = require('querystring');
 
+let g_access_token = ''
+let g_openid = ''
+
 const httpGet = url => new Promise((res, rej) => {
     console.log('load', url);
     request(url, (err, response, body) => {
@@ -18,6 +21,7 @@ const httpGet = url => new Promise((res, rej) => {
 });
 
 QQConnect.code2accessToken = function (code, redirect_uri) {
+    console.info(global.pjconfig.QQConnect);
     const urlQuery = qs.stringify({
         grant_type: 'authorization_code',
         client_id: global.pjconfig.QQConnect.APPID,
@@ -47,7 +51,10 @@ QQConnect.accessToken2openid = function (accessToken) {
         const json = jsonp.substring(l, r + 1);
 
         try {
-            return JSON.parse(json).openid || null;
+            const openid = JSON.parse(json).openid || null;
+            g_access_token = accessToken;
+            g_openid = openid;
+            return openid;
         } catch (err) {
             return null;
         }
@@ -66,3 +73,32 @@ QQConnect.code2openid = function (code, redirect_uri) {
     });
 };
 
+QQConnect.getUserInfoByOpenid = function () {
+    console.info(`g_access_token`);
+    console.info(g_access_token);
+    console.info(g_openid);
+    if (!g_access_token || !g_openid) {
+        return null;
+    }
+    const urlQuery = qs.stringify({
+        access_token: g_access_token,
+        oauth_consumer_key: global.pjconfig.QQConnect.APPID,
+        openid: g_openid
+    });
+
+    const fullUrl = `https://graph.qq.com/user/get_user_info?${ urlQuery }`;
+
+    return httpGet(fullUrl).then(res => {
+        console.info(`=============================`);
+        console.info(res);
+        return res.split('&').reduce((acc, e) => {
+            const t = e.split('=');
+            const k = t[0];
+            const v = t[1];
+            acc[k] = decodeURIComponent(v);
+            return acc;
+        }, {}).user_info || null;
+    }).catch((err) => {
+        console.info(err);
+    });
+};
