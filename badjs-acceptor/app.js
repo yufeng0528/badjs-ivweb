@@ -148,76 +148,87 @@ const referer_match = function (id, req) {
         domain.indexOf(projectMatchDomain) !== -1;
 };
 
-var reponseReject = function (req, res, responseHeader) {
+const reponseReject = function (req, res, responseHeader) {
     responseHeader['Content-length'] = forbiddenData.length;
     res.writeHead(403, responseHeader);
     res.write(forbiddenData);
     res.end();
 };
 
+const responseHeader = {
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'image/jpeg',
+    'Connection': 'close'
+};
+
 app.use('/badjs/offlineLog', function (req, res) {
 
-        // 大于 10ms , forbidden
-        if (parseInt(req.headers['content-length']) > 10485760) {
-            res.end('too large');
-            return;
+    // 大于 10ms , forbidden
+    if (parseInt(req.headers['content-length']) > 10485760) {
+        res.end('logs too large');
+        return;
+    }
+
+    let offline_log = req.body.offline_log;
+
+    if (typeof offline_log === 'string') {
+        try {
+            offline_log = JSON.parse(offline_log);
+        } catch (e) {
+            throw new Error(e);
         }
+    }
 
-        let offline_log = req.body.offline_log;
+    if (!/^[0-9]{1,5}$/.test(offline_log.id)) {
+        throw new Error('invalid id ' + offline_log.id);
+    }
 
-        if (typeof offline_log === 'string') {
-            try {
-                offline_log = JSON.parse(offline_log);
-            } catch (e) {
-                throw new Error(e);
+    if (!/^[0-9]{5,11}$/.test(offline_log.uin)) {
+        throw new Error('invalid uin ' + offline_log.uin);
+    }
+
+    const logs = offline_log.logs;
+    const msgObj = offline_log.msgObj;
+    const urlObj = offline_log.urlObj;
+
+    if (!logs || !logs.length) {
+        throw new Error('wrong logs');
+    }
+
+    const filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
+
+    const fileName = offline_log.uin + '_' + offline_log.startDate + '_' + offline_log.endDate;
+
+    if (!fs.existsSync(filePath)) {
+        fs.mkdirSync(filePath);
+    }
+
+    logs.map(function (log) {
+        if (msgObj) {
+            log.m = msgObj[log.m];
+        }
+        if (urlObj) {
+            log.f = urlObj[log.f];
+        }
+        for (const k in deflateObj) {
+            if (k in log) {
+                const v = deflateObj[k];
+                log[v] = log[k];
+                delete log[k];
             }
         }
+        return log;
+    });
 
-        if (!/[\w]{1,7}/.test(offline_log.id)) {
-            throw new Error('invalid id ' + offline_log.id);
+    fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log), function (err) {
+        if (!err) {
+            console.log('write offline log success');
         }
+    });
 
-        if (!/[\w]{1,11}/.test(offline_log.uin)) {
-            throw new Error('invalid uin ' + offline_log.uin);
-        }
+    res.end('ok');
 
-        const filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
-
-        const fileName = offline_log.uin + '_' + offline_log.startDate + '_' + offline_log.endDate;
-
-        if (!fs.existsSync(filePath)) {
-            fs.mkdirSync(filePath);
-        }
-
-        var logs = offline_log.logs;
-        var msgObj = offline_log.msgObj;
-        var urlObj = offline_log.urlObj;
-        logs.map(function (log) {
-            if (msgObj) {
-                log.m = msgObj[log.m];
-            }
-            if (urlObj) {
-                log.f = urlObj[log.f];
-            }
-            for (const k in deflateObj) {
-                if (k in log) {
-                    const v = deflateObj[k];
-                    log[v] = log[k];
-                    delete log[k];
-                }
-            }
-            return log;
-        });
-
-        fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log), function (err) {
-            if (!err) {
-                console.log('write offline log success');
-            }
-        });
-
-        res.end('ok');
-
-    })
+})
     .use('/badjs/offlineAuto', function (req, res) {
         const param = req.query;
         http.get(global.pjconfig.offline.offlineLogCheck + "?id=" + param.id + "&uin=" + param.uin, function (clientRes) {
@@ -261,18 +272,9 @@ app.use('/badjs/offlineLog', function (req, res) {
         });
     })
     .use('/badjs', function (req, res) {
-        console.log('sfsdfsdfsdfsdfsdf');
-        logger.debug('===== get a message =====');
-
-        var responseHeader = {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'image/jpeg',
-            'Connection': 'close'
-        };
-
 
         var param = req.query;
-        if (req.method === "POST" && !!req.body.id) {
+        if (req.method === "POST" && req.body && !!req.body.id) {
             param = req.body;
         }
 
