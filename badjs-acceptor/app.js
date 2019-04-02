@@ -13,6 +13,11 @@ const cluster = require('cluster');
 
 const app = express();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 const argv = process.argv.slice(2);
 
 const REG_REFERER = /^https?:\/\/[^\/]+\//i;
@@ -148,9 +153,9 @@ const referer_match = function (id, req) {
         domain.indexOf(projectMatchDomain) !== -1;
 };
 
-const reponseReject = function (req, res, responseHeader) {
+const reponseReject = function (res, responseHeader, code = 204) {
     responseHeader['Content-length'] = forbiddenData.length;
-    res.writeHead(403, responseHeader);
+    res.writeHead(code, responseHeader);
     res.write(forbiddenData);
     res.end();
 };
@@ -273,22 +278,21 @@ app.use('/badjs/offlineLog', function (req, res) {
     })
     .use('/badjs', function (req, res) {
 
-        var param = req.query;
+        let param = req.query;
         if (req.method === "POST" && req.body && !!req.body.id) {
             param = req.body;
         }
 
+        const id = param.id - 0;
 
-        var id = param.id - 0;
-        if (isNaN(id) ||
-            id <= 0 ||
-            id >= 9999 ||
-            !global.projectsInfo[id + ""] ||
-            !referer_match(id, req)) {
+        if (isNaN(id)) {
+            reponseReject(res, responseHeader, 204);
+            return;
+        }
 
-            reponseReject(req, res, responseHeader);
+        if (id <= 0 || id >= 9999 || !global.projectsInfo[id + ""] || !referer_match(id, req)) {
+            reponseReject(res, responseHeader);
             logger.debug('forbidden :' + param.id);
-
             return;
         }
 
@@ -300,13 +304,13 @@ app.use('/badjs/offlineLog', function (req, res) {
                 data: param
             });
         } catch (err) {
-            reponseReject(req, res, responseHeader);
+            reponseReject(res, responseHeader);
             logger.debug('id ' + param.id + ' , interceptor error :' + err);
             return;
         }
 
         if (req.throwError) {
-            reponseReject(req, res, responseHeader);
+            reponseReject(res, responseHeader);
             logger.debug('id ' + param.id + ' , interceptor reject :' + req.throwError);
             return;
         }
@@ -320,7 +324,6 @@ app.use('/badjs/offlineLog', function (req, res) {
 
 
     })
-    //.use('/offlineLog', connect.bodyParser())
     .listen(global.pjconfig.port);
 
 logger.info('start badjs-accepter , listen ' + global.pjconfig.port + ' ...');

@@ -15,10 +15,12 @@ const dbPath = path.join(__dirname, "..", "project.db");
 
 const app = express();
 
-app.use(bodyParser);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 const ProjectService = function (clusters) {
-
     const dispatchCluster = function (data) {
         for (var i = 0; i < clusters.length; i++) {
             clusters[i].send(data);

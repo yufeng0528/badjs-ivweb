@@ -4,12 +4,12 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "axon": "^2.0.0",
-    "c-interceptor": "~1.0.2",
+    "axon": "^2.0.3",
+    "body-parser": "^1.18.3",
+    "c-interceptor": "^1.0.2",
     "express": "^4.16.4",
-    "log4js": "^0.6.2",
-    "pako": "^1.0.8",
-    "underscore": "^1.8.3"
+    "log4js": "^0.6.38",
+    "underscore": "^1.9.1"
   },
   "scripts": {
     "test": ""
