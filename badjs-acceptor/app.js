@@ -1,20 +1,24 @@
 /* global process, global, GLOBAL */
-var connect = require('connect'),
-    log4js = require('log4js'),
-    logger = log4js.getLogger();
+'use strict';
+const express = require('express');
+const bodyParser = require('body-parser');
+const log4js = require('log4js');
+const logger = log4js.getLogger();
 
-var http = require("http");
-var path = require("path");
-var pako = require('pako');
-var fs = require('fs');
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
 
-var cluster = require('cluster');
-var argv = process.argv.slice(2);
+const cluster = require('cluster');
 
-var REG_REFERER = /^https?:\/\/[^\/]+\//i;
-var REG_DOMAIN = /^(?:https?:)?(?:\/\/)?([^\/]+\.[^\/]+)\/?/i;
+const app = express();
 
-var deflateObj = {
+const argv = process.argv.slice(2);
+
+const REG_REFERER = /^https?:\/\/[^\/]+\//i;
+const REG_DOMAIN = /^(?:https?:)?(?:\/\/)?([^\/]+\.[^\/]+)\/?/i;
+
+const deflateObj = {
     f: 'from',
     l: 'level',
     m: 'msg',
@@ -36,10 +40,10 @@ if (argv.indexOf('--project') >= 0) {
 }
 
 if (cluster.isMaster) {
-    var clusters = [];
+    const clusters = [];
     // Fork workers.
-    for (var i = 0; i < 4; i++) {
-        var forkCluster = cluster.fork();
+    for (let i = 0; i < 4; i++) {
+        const forkCluster = cluster.fork();
         clusters.push(forkCluster);
     }
 
@@ -50,8 +54,8 @@ if (cluster.isMaster) {
     return;
 }
 
-var interceptor = require('c-interceptor')();
-var interceptors = global.pjconfig.interceptors;
+const interceptor = require('c-interceptor')();
+const interceptors = global.pjconfig.interceptors;
 
 interceptors.forEach(function (value, key) {
     var one = require(value)();
@@ -59,25 +63,25 @@ interceptors.forEach(function (value, key) {
 });
 interceptor.add(require(global.pjconfig.dispatcher.module)());
 
-var forbiddenData = '403 forbidden';
+const forbiddenData = '403 forbidden';
 
 global.projectsInfo = {};
 global.offlineAutoInfo = {};
 
-var get_domain = function (url) {
+const get_domain = function (url) {
     return (url.toString().match(REG_DOMAIN) || ['', ''])[1].replace(/^\*\./, '');
 };
 
 var genBlacklistReg = function (data) {
     // ip黑名单正则
-    var blacklistIPRegExpList = [];
+    const blacklistIPRegExpList = [];
     (data.blacklist && data.blacklist.ip ? data.blacklist.ip : []).forEach(function (reg) {
         blacklistIPRegExpList.push(new RegExp("^" + reg.replace(/\./g, "\\.")));
     });
     data.blacklistIPRegExpList = blacklistIPRegExpList;
 
     // ua黑名单正则
-    var blacklistUARegExpList = [];
+    const blacklistUARegExpList = [];
     (data.blacklist && data.blacklist.ua ? data.blacklist.ua : []).forEach(function (reg) {
         blacklistUARegExpList.push(new RegExp(reg, "i"));
     });
@@ -85,9 +89,9 @@ var genBlacklistReg = function (data) {
 
 };
 
-function getClientIp (req) {
+function getClientIp(req) {
     try {
-        var xff = (
+        const xff = (
             req.headers['X-Forwarded-For'] ||
             req.headers['x-forwarded-for'] ||
             ''
@@ -105,12 +109,13 @@ function getClientIp (req) {
 }
 
 process.on('message', function (data) {
-    var json = data, info;
+    const json = data;
+    let info;
     if (json.projectsInfo) {
         info = JSON.parse(json.projectsInfo);
         if (typeof info === "object") {
-            for (var k in info) {
-                var v = info[k] || {};
+            for (const k in info) {
+                const v = info[k] || {};
                 v.domain = get_domain(v.url);
                 genBlacklistReg(v);
             }
@@ -125,10 +130,10 @@ process.on('message', function (data) {
  * @param req
  * @returns {boolean}
  */
-var referer_match = function (id, req) {
-    var referer = (((req || {}).headers || {}).referer || "").toString();
+const referer_match = function (id, req) {
+    const referer = (((req || {}).headers || {}).referer || "").toString();
 
-    var projectMatchDomain = (global.projectsInfo[id.toString()] || {}).domain;
+    const projectMatchDomain = (global.projectsInfo[id.toString()] || {}).domain;
     // no referer
     if (!referer) {
         // match match is * , no detect referer
@@ -138,7 +143,7 @@ var referer_match = function (id, req) {
         logger.debug('no referer ,  forbidden :' + req.query.id);
         return false;
     }
-    var domain = (referer.match(REG_REFERER) || [""])[0] || "";
+    const domain = (referer.match(REG_REFERER) || [""])[0] || "";
     return typeof global.projectsInfo === "object" &&
         domain.indexOf(projectMatchDomain) !== -1;
 };
@@ -150,10 +155,7 @@ var reponseReject = function (req, res, responseHeader) {
     res.end();
 };
 
-connect()
-    .use('/badjs', connect.query())
-    .use('/badjs', connect.bodyParser({ limit: '10MB' }))
-    .use('/badjs/offlineLog', function (req, res) {
+app.use('/badjs/offlineLog', function (req, res) {
 
         // 大于 10ms , forbidden
         if (parseInt(req.headers['content-length']) > 10485760) {
@@ -161,9 +163,7 @@ connect()
             return;
         }
 
-        var offline_log = req.body.offline_log;
-
-        // offline_log = pako.inflate(decodeURIComponent(offline_log), { to: 'string' });
+        let offline_log = req.body.offline_log;
 
         if (typeof offline_log === 'string') {
             try {
@@ -181,9 +181,9 @@ connect()
             throw new Error('invalid uin ' + offline_log.uin);
         }
 
-        var filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
+        const filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
 
-        var fileName = offline_log.uin + '_' + offline_log.startDate + '_' + offline_log.endDate;
+        const fileName = offline_log.uin + '_' + offline_log.startDate + '_' + offline_log.endDate;
 
         if (!fs.existsSync(filePath)) {
             fs.mkdirSync(filePath);
@@ -199,9 +199,9 @@ connect()
             if (urlObj) {
                 log.f = urlObj[log.f];
             }
-            for (var k in deflateObj) {
+            for (const k in deflateObj) {
                 if (k in log) {
-                    var v = deflateObj[k];
+                    const v = deflateObj[k];
                     log[v] = log[k];
                     delete log[k];
                 }
@@ -219,7 +219,7 @@ connect()
 
     })
     .use('/badjs/offlineAuto', function (req, res) {
-        var param = req.query;
+        const param = req.query;
         http.get(global.pjconfig.offline.offlineLogCheck + "?id=" + param.id + "&uin=" + param.uin, function (clientRes) {
             var result = "";
             clientRes.setEncoding('utf8');
@@ -237,10 +237,10 @@ connect()
 
     })
     .use('/badjs/mpOfflineAuto', function (req, res) {
-        var param = req.query;
+        const param = req.query;
 
         http.get(global.pjconfig.offline.offlineLogCheck + "?id=" + param.id + "&uin=" + param.uin, function (clientRes) {
-            var result = "";
+            let result = "";
             clientRes.setEncoding('utf8');
             clientRes.on("data", function (chunk) {
                 result += chunk;
@@ -261,7 +261,7 @@ connect()
         });
     })
     .use('/badjs', function (req, res) {
-
+        console.log('sfsdfsdfsdfsdfsdf');
         logger.debug('===== get a message =====');
 
         var responseHeader = {

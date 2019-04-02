@@ -5,8 +5,9 @@
   "main": "app.js",
   "dependencies": {
     "axon": "^2.0.0",
+    "body-parser": "^1.18.3",
     "c-interceptor": "~1.0.2",
-    "connect": "^2.25.7",
+    "express": "^4.16.4",
     "log4js": "^0.6.2",
     "pako": "^1.0.8",
     "underscore": "^1.8.3"
