@@ -171,8 +171,7 @@ app.use('/badjs/offlineLog', function (req, res) {
 
     // 大于 10ms , forbidden
     if (parseInt(req.headers['content-length']) > 10485760) {
-        res.end('logs too large');
-        return;
+        return res.end('logs too large');
     }
 
     let offline_log = req.body.offline_log;
@@ -181,16 +180,16 @@ app.use('/badjs/offlineLog', function (req, res) {
         try {
             offline_log = JSON.parse(offline_log);
         } catch (e) {
-            throw new Error(e);
+            return res.end('offline log error');
         }
     }
 
     if (!/^[0-9]{1,5}$/.test(offline_log.id)) {
-        throw new Error('invalid id ' + offline_log.id);
+        return res.end('invalid id ' + offline_log.id);
     }
 
     if (!/^[0-9]{5,11}$/.test(offline_log.uin)) {
-        throw new Error('invalid uin ' + offline_log.uin);
+        return res.end('invalid uin ' + offline_log.uin);
     }
 
     const logs = offline_log.logs;
@@ -198,7 +197,7 @@ app.use('/badjs/offlineLog', function (req, res) {
     const urlObj = offline_log.urlObj;
 
     if (!logs || !logs.length) {
-        throw new Error('wrong logs');
+        return res.end('wrong logs');
     }
 
     const filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
