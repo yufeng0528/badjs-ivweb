@@ -1,3 +1,4 @@
+'use strict';
 /**
  * @info : LOG ACION
  * @author : coverguo
@@ -7,6 +8,7 @@
 var LogService = require('../../service/LogService');
 var http = require('http');
 var pjConfig = require('../../project.json');
+var IP2Region = require('ip2region');
 var fs = require("fs");
 var path = require("path");
 
@@ -20,10 +22,38 @@ var isError = function (res, error) {
 
 
 var LogAction = {
-    queryLogList: function (params, req, res) {
+    queryLogList2: function (params, req, res) {
 
         var logService = new LogService();
+        const ipquery = new IP2Region();
+        params['endDate'] -= 0;
+        params['startDate'] -= 0;
+        params['id'] -= 0;
+        delete params.user;
+        logService.query(params, function (err, items) {
+            if (isError(res, err)) {
+                return;
+            }
 
+            items.forEach((item) => {
+                if(item.ip) {
+                    const res = ipquery.query(item.ip);
+                    
+                    item.country = res.country;
+                    item.region = res.region;
+                    item.province = res.province;
+                    item.city = res.city;
+                    item.isp = res.isp;
+                }
+            });
+
+            res.json({ ret: 0, msg: "success-query", data: items });
+        });
+    },
+
+    queryLogList: function (params, req, res) {
+        var logService = new LogService();
+        
         params['endDate'] -= 0;
         params['startDate'] -= 0;
         params['id'] -= 0;
@@ -36,6 +66,7 @@ var LogAction = {
             res.json({ ret: 0, msg: "success-query", data: items });
         });
     },
+
     showOfflineFiles: function (params, req, res) {
         if (!params.id) {
             res.json({ ret: 0, msg: "success-query", data: [] });
