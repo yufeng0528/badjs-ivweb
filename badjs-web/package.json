@@ -41,7 +41,7 @@
     "underscore": "1.5.2",
     "url-join": "0.0.1",
     "url-valid": "^0.3.0",
-    "ws": "~1.0.0",
+    "ws": "^6.2.1",
     "xss-filters": "^1.2.7"
   },
   "devDependencies": {

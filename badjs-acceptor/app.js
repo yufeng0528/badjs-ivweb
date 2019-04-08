@@ -13,7 +13,7 @@ const cluster = require('cluster');
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10m'}));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
