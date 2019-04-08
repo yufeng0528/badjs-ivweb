@@ -13,9 +13,10 @@ const cluster = require('cluster');
 
 const app = express();
 
-app.use(bodyParser.json({limit: '10m'}));
+app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: true,
+    limit: 10 * 1024 * 1024
 }));
 
 const argv = process.argv.slice(2);
