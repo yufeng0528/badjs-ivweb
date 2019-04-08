@@ -28,7 +28,6 @@
     "moment": "^2.10.2",
     "multer": "^1.4.1",
     "mysql": "^2.11.1",
-    "node-highcharts-exporting": "0.0.9",
     "node-highcharts-exporting-v2": "^1.0.2",
     "nodemailer": "^2.6.4",
     "orm": "^3.1.0",

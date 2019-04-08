@@ -17,8 +17,7 @@
     "start": "node ./start.js"
   },
   "dependencies": {
-    "antd": "^3.11.2",
-    "node-highcharts-exporting": "~0.0.3"
+    "antd": "^3.11.2"
   },
   "repository": {
     "type": "git",
