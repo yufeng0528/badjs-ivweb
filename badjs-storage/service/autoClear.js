@@ -3,14 +3,10 @@
  */
 
 var MongoClient = require('mongodb').MongoClient;
-var path = require('path');
 
 var log4js = require('log4js'),
     logger = log4js.getLogger();
 
-if (!global.pjconfig) {
-    global.pjconfig = require(path.join(__dirname, 'project.json'));
-}
 
 var url = global.pjconfig.mongodb.url;
 
