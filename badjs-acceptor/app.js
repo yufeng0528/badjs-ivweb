@@ -319,6 +319,7 @@ app.use('/badjs/offlineLog', function (req, res) {
         responseHeader['Content-length'] = 0;
         res.writeHead(204, responseHeader);
 
+        logger.debug('===== complete a message =====');
         res.end();
 
 
