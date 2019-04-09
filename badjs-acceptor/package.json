@@ -8,7 +8,7 @@
     "body-parser": "^1.18.3",
     "c-interceptor": "^1.0.2",
     "express": "^4.16.4",
-    "log4js": "^0.6.38",
+    "log4js": "^4.1.0",
     "underscore": "^1.9.1"
   },
   "scripts": {
