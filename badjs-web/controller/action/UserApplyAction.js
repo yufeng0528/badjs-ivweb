@@ -2,9 +2,7 @@
  * Created by coverguo on 2015/1/12.
  */
 
-var log4js = require('log4js'),
-    logger = log4js.getLogger(),
-    UserApplyService = require('../../service/UserApplyService'),
+var UserApplyService = require('../../service/UserApplyService'),
     EmailService = require('../../service/EmailService'),
     isError = function (res, error) {
         if (error) {
@@ -67,7 +65,7 @@ var userAction = {
             res.json({ ret: 0, msg: "success-update" });
         });
     },
-    
+
     setRole: function (param, req, res) {
         if (param.id == "") {
             res.json({ ret: 1002, msg: "id为空" });

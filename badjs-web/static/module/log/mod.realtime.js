@@ -196,7 +196,9 @@ var startMonitor = function (id) {
         host += ':8081';
     }
 
-    websocket = new WebSocket("ws://" + host + "/ws/realtimeLog");
+    var wsPro = location.protocol === 'http:' ? 'ws:' : 'wss:';
+
+    websocket = new WebSocket(wsPro + "//" + host + "/ws/realtimeLog");
 
     currentIndex = 0;
     websocket.onmessage = function (evt) {

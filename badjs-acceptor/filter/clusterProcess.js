@@ -9,5 +9,5 @@ module.exports = function () {
         process : function (data){
             process.send({"msg" : data.data});
         }
-    }
+    };
 };

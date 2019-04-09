@@ -2,21 +2,22 @@
  * Created by chriscai on 2014/10/14.
  */
 
-var MongoClient = require('mongodb').MongoClient,
-    connect = require('connect');
+const MongoClient = require('mongodb').MongoClient;
+const express = require('express');
+const bodyParser = require('body-parser');
 
-var log4js = require('log4js'),
+const log4js = require('log4js'),
     logger = log4js.getLogger();
 
-var fs = require("fs");
-var path = require("path");
+const fs = require("fs");
+const path = require("path");
 
-//var realTotal = require('../service/realTotal');
+//const realTotal = require('../service/realTotal');
 
-var url = global.MONGODB.url;
-var LIMIT = global.MONGODB.limit || 500;
+const url = global.MONGODB.url;
+const LIMIT = global.MONGODB.limit || 500;
 
-var mongoDB;
+let mongoDB;
 // Use connect method to connect to the Server
 MongoClient.connect(url, function (err, db) {
     if (err) {
@@ -27,7 +28,15 @@ MongoClient.connect(url, function (err, db) {
     mongoDB = db;
 });
 
-var dateFormat = function (date, fmt) {
+const app = express();
+
+app.use(bodyParser.json({}));
+app.use(bodyParser.urlencoded({
+    extended: true,
+    limit: 2 * 1024 * 1024
+}));
+
+const dateFormat = function (date, fmt) {
     var o = {
         "M+": date.getMonth() + 1, //月份
         "d+": date.getDate(), //日
@@ -43,7 +52,7 @@ var dateFormat = function (date, fmt) {
     return fmt;
 };
 
-var validateDate = function (date) {
+const validateDate = function (date) {
     var startDate = new Date(date - 0) - 0;
     if (isNaN(startDate)) {
         return {
@@ -54,7 +63,7 @@ var validateDate = function (date) {
 
 };
 
-var validate = function (req, rep) {
+const validate = function (req, rep) {
     var json = req.query;
 
     var id;
@@ -249,101 +258,98 @@ var getErrorMsgFromCache = function (query, isJson, cb) {
 
 
 module.exports = function () {
-    connect()
-        .use('/query', connect.query())
-        .use('/query', function (req, res) {
-            var result = validate(req, res);
+    app.use('/query', function (req, res) {
+        var result = validate(req, res);
 
-            if (!result.ok) {
-                res.writeHead(403, {
-                    'Content-Type': 'text/html'
+        if (!result.ok) {
+            res.writeHead(403, {
+                'Content-Type': 'text/html'
+            });
+            res.statusCode = 403;
+            res.write(JSON.stringify(result));
+            return;
+        }
+
+        var json = req.query;
+        var id = json.id,
+            startDate = json.startDate.getTime(),
+            endDate = json.endDate.getTime();
+
+        var queryJSON = {
+            all: {}
+        };
+
+        var includeJSON = [];
+        json.include.forEach(function (value, key) {
+            includeJSON.push(new RegExp(value));
+        });
+
+        if (includeJSON.length > 0) {
+            queryJSON.all.$all = includeJSON;
+        }
+
+        var excludeJSON = [];
+        json.exclude.forEach(function (value, key) {
+            excludeJSON.push(new RegExp(value));
+        });
+
+        if (excludeJSON.length > 0) {
+            queryJSON.all.$not = {
+                $in: excludeJSON
+            };
+        }
+
+        if (includeJSON.length <= 0 && excludeJSON.length <= 0) {
+            delete queryJSON.all;
+        }
+
+        json.level.forEach(function (value, key) {
+            json.level[key] = value - 0;
+        });
+
+
+        queryJSON.date = {
+            $lt: endDate,
+            $gt: startDate
+        };
+
+
+        queryJSON.level = {
+            $in: json.level
+        };
+
+        if (json.index - 0) {
+            json.index = (json.index - 0);
+        } else {
+            json.index = 0;
+        }
+
+        if (global.debug) {
+            logger.debug("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
+        }
+        logger.info("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
+
+        mongoDB.collection('badjslog_' + id).find(queryJSON, function (error, cursor) {
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            });
+
+            cursor.sort({
+                'date': -1
+            })
+                .skip(json.index * LIMIT)
+                .limit(LIMIT)
+                .toArray(function (err, item) {
+                    res.write(JSON.stringify(item));
+                    res.end();
+
                 });
-                res.statusCode = 403;
-                res.write(JSON.stringify(result));
-                return;
-            }
-
-            var json = req.query;
-            var id = json.id,
-                startDate = json.startDate.getTime(),
-                endDate = json.endDate.getTime();
-
-            var queryJSON = {
-                all: {}
-            };
-
-            var includeJSON = [];
-            json.include.forEach(function (value, key) {
-                includeJSON.push(new RegExp(value));
-            });
-
-            if (includeJSON.length > 0) {
-                queryJSON.all.$all = includeJSON;
-            }
-
-            var excludeJSON = [];
-            json.exclude.forEach(function (value, key) {
-                excludeJSON.push(new RegExp(value));
-            });
-
-            if (excludeJSON.length > 0) {
-                queryJSON.all.$not = {
-                    $in: excludeJSON
-                };
-            }
-
-            if (includeJSON.length <= 0 && excludeJSON.length <= 0) {
-                delete queryJSON.all;
-            }
-
-            json.level.forEach(function (value, key) {
-                json.level[key] = value - 0;
-            });
 
 
-            queryJSON.date = {
-                $lt: endDate,
-                $gt: startDate
-            };
+        });
 
 
-            queryJSON.level = {
-                $in: json.level
-            };
-
-            if (json.index - 0) {
-                json.index = (json.index - 0);
-            } else {
-                json.index = 0;
-            }
-
-            if (global.debug) {
-                logger.debug("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
-            }
-            logger.info("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
-
-            mongoDB.collection('badjslog_' + id).find(queryJSON, function (error, cursor) {
-                res.writeHead(200, {
-                    'Content-Type': 'text/json'
-                });
-
-                cursor.sort({
-                    'date': -1
-                })
-                    .skip(json.index * LIMIT)
-                    .limit(LIMIT)
-                    .toArray(function (err, item) {
-                        res.write(JSON.stringify(item));
-                        res.end();
-
-                    });
-
-
-            });
-
-
-        })
-        .use('/errorMsgTop', connect.query())
+    })
         .use('/errorMsgTop', function (req, res) {
             var error = validateDate(req.query.startDate);
             if (error) {
@@ -364,7 +370,6 @@ module.exports = function () {
             });
 
         })
-        .use('/errorMsgTopCache', connect.query())
         .use('/errorMsgTopCache', function (req, res) {
             res.end();
             /*   var error = validateDate(req.query.startDate);

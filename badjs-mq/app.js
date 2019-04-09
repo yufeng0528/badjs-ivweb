@@ -11,9 +11,9 @@ var path = require('path');
 var argv = process.argv.slice(2);
 
 if (argv.indexOf('--debug') >= 0) {
-    logger.setLevel('DEBUG');
+    logger.level = 'DEBUG';
 } else {
-    logger.setLevel('INFO');
+    logger.lever = 'INFO';
 }
 
 if (argv.indexOf('--project') >= 0) {

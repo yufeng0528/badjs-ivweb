@@ -46,9 +46,9 @@ module.exports = function (app) {
     //     res.redirect(req.protocol + "://" + req.get('host') + '/user/index.html');
     // });
 
-    // app.get('/user/index.html', function (req, res) {
-    //     IndexAction.index({}, req, res);
-    // });
+    app.get('/user/index.html', function (req, res) {
+        IndexAction.index({}, req, res);
+    });
 
     // app.use('/login.html', function (req, res, next) {
     //     if (pluginHandler.login) {

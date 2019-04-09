@@ -1,4 +1,4 @@
-webpackJsonp([7],{
+webpackJsonp([5],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
@@ -45,10 +45,10 @@ webpackJsonp([7],{
 	 * */
 
 
-	__webpack_require__(21);
+	__webpack_require__(20);
 	var Dialog = __webpack_require__(24);
-	var statisticsTpl = __webpack_require__(160);
-	var scoreLib = __webpack_require__(151)
+	var statisticsTpl = __webpack_require__(32);
+	var scoreLib = __webpack_require__(23)
 
 	var encodeHtml = function (str) {
 	    return (str + '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\x60/g, '&#96;').replace(/\x27/g, '&#39;').replace(/\x22/g, '&quot;');
@@ -108,7 +108,7 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 21:
+/***/ 20:
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(jQuery) {/**
@@ -1967,7 +1967,96 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 22:
+/***/ 23:
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 注：badjs得分规则
+
+	 （1）当报错率 <= 0.5%： badjs得分=100
+
+	 （2）当 0.5%< 报错率 < 10%：badjs得分： 100 - 10 * 报错率
+
+	 （3）当报错率 >= 10%： badjs得分=0
+	 */
+
+	var handleScore = function (pv, e_pv) {
+
+	    // 算分
+	    var e_rate = e_pv / pv;
+	    var score;
+	    if (e_rate <= 0.005) {
+	        score = 100;
+	    } else if (e_rate < 0.1 && e_rate > 0.005) {
+	        score = 100 - 10 * 100 * e_rate;
+	    } else {
+	        score = 0;
+	    }
+
+	    return score.toFixed(2);
+
+	};
+
+	module.exports = {
+	    handleScore: handleScore
+	};
+
+
+/***/ },
+
+/***/ 24:
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(25);
+	var modal = __webpack_require__(36);
+
+	    var container;
+
+	    function hide() {
+	        container.removeClass('in');
+	        container.find('.modal-backdrop').removeClass('in');
+	        setTimeout(function () {
+	            container.remove();
+	            container = undefined;
+	        }, 300);
+	    }
+
+	    function Dialog (param) {
+	        if (container) {
+	            container.remove();
+	            container = undefined;
+	        }
+	        container = $(modal({it :param}))
+	            .appendTo(document.body)
+	            .show();
+
+	        var key,
+	            action,
+	            delegator,
+	            on = param.on || {};
+
+	        delegator = (new Delegator(container))
+	            .on('click', 'close', hide);
+
+	        for (key in on) {
+	            action = key.split('/');
+	            delegator.on(action[0], action[1], on[key]);
+	        }
+
+	        setTimeout(function () {
+	            container.addClass('in');
+	            container.find('.modal-backdrop').addClass('in');
+	        }, 0);
+	    }
+
+	    Dialog.hide = hide;
+
+	module.exports =  Dialog;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ },
+
+/***/ 25:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -2147,98 +2236,10 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 24:
+/***/ 32:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(22);
-	var modal = __webpack_require__(162);
-
-	    var container;
-
-	    function hide() {
-	        container.removeClass('in');
-	        container.find('.modal-backdrop').removeClass('in');
-	        setTimeout(function () {
-	            container.remove();
-	            container = undefined;
-	        }, 300);
-	    }
-
-	    function Dialog (param) {
-	        if (container) {
-	            container.remove();
-	            container = undefined;
-	        }
-	        container = $(modal({it :param}))
-	            .appendTo(document.body)
-	            .show();
-
-	        var key,
-	            action,
-	            delegator,
-	            on = param.on || {};
-
-	        delegator = (new Delegator(container))
-	            .on('click', 'close', hide);
-
-	        for (key in on) {
-	            action = key.split('/');
-	            delegator.on(action[0], action[1], on[key]);
-	        }
-
-	        setTimeout(function () {
-	            container.addClass('in');
-	            container.find('.modal-backdrop').addClass('in');
-	        }, 0);
-	    }
-
-	    Dialog.hide = hide;
-
-	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
-
-/***/ },
-
-/***/ 151:
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 注：badjs得分规则
-
-	（1）当报错率 <= 0.5%： badjs得分=100
-
-	（2）当 0.5%< 报错率 < 10%：badjs得分： 100 - 10 * 报错率
-
-	（3）当报错率 >= 10%： badjs得分=0
-	 */
-
-	var handleScore = function (pv, e_pv) {
-	    
-	    // 算分
-	    var e_rate = e_pv / pv;
-	    var score;
-	    if (e_rate <= 0.005) {
-	        score = 100;
-	    } else if (e_rate < 0.1 && e_rate > 0.005) {
-	        score = 100 - 10 * 100 * e_rate;
-	    } else {
-	        score = 0;
-	    }
-
-	    return score.toFixed(2);
-
-	}
-	module.exports = {
-	    handleScore: handleScore
-	}
-
-
-/***/ },
-
-/***/ 160:
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {module.exports = function (obj) {
+	/* WEBPACK VAR INJECTION */(function($) {module.exports = function(obj) {
 	obj || (obj = {});
 	var __t, __p = '', __j = Array.prototype.join;
 	function print() { __p += __j.call(arguments, '') }
@@ -2274,10 +2275,10 @@ webpackJsonp([7],{
 
 /***/ },
 
-/***/ 162:
+/***/ 36:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = function (obj) {
+	module.exports = function(obj) {
 	obj || (obj = {});
 	var __t, __p = '';
 	with (obj) {

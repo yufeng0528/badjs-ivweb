@@ -14,7 +14,7 @@ if (argv.indexOf('--debug') >= 0) {
     logger.setLevel('DEBUG');
     global.debug = true;
 } else {
-    logger.setLevel('INFO');
+    logger.level = 'INFO';
 }
 
 
