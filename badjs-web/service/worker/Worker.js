@@ -2,9 +2,6 @@
 
 var mq = require(process.env.mqModule);
 
-var log4js = require('log4js'),
-    logger = log4js.getLogger();
-
 var mqUrl = process.env.mqUrl;
 var service = process.env.service;
 var isDebug = process.env.debug == "false" ? false : true;
