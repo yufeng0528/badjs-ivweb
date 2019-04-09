@@ -8,7 +8,7 @@ var log4js = require('log4js'),
     logger = log4js.getLogger();
 
 
-var url = global.MONGODB.url;
+var url = global.pjconfig.mongodb.url;
 
 var mongoDB;
 // Use connect method to connect to the Server
