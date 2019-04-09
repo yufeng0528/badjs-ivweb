@@ -14,7 +14,7 @@ var isDebug = process.env.debug == "false" ? false : true;
 var indexId = process.env.index;
 
 if (isDebug) {
-    logger.setLevel('DEBUG');
+    logger.level = 'DEBUG';
 }
 
 
