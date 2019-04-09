@@ -191,7 +191,7 @@ router.post('/login-by-code', function (req, res) {
                         email: user.email,
                         loginName: user.loginName,
                         chineseName: user.chineseName,
-                        user_info: user_info,
+                        avatar: user_info.figureurl_qq_2,
                         verify_state: parseInt(user.verify_state, 10),
                         openid: user.openid
                     };
@@ -225,6 +225,7 @@ function meAction (req, res) {
             data: {
                 loginName: req.session.user.loginName,
                 role: req.session.user.role,
+                avatar: req.session.avatar,
                 email: req.session.user.email,
                 chineseName: req.session.user.chineseName,
                 verify_state: parseInt(req.session.user.verify_state, 10)
