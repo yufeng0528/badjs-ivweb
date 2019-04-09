@@ -225,7 +225,7 @@ function meAction (req, res) {
             data: {
                 loginName: req.session.user.loginName,
                 role: req.session.user.role,
-                avatar: req.session.avatar,
+                avatar: req.session.user.avatar,
                 email: req.session.user.email,
                 chineseName: req.session.user.chineseName,
                 verify_state: parseInt(req.session.user.verify_state, 10)
