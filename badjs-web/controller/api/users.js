@@ -185,13 +185,25 @@ router.post('/login-by-code', function (req, res) {
                 });
             } else {
                 QQConnect.getUserInfoByOpenid().then((user_info) => {
+                    try {
+                        if (user_info) {
+                            user_info = JSON.parse(user_info);
+                        } else {
+                            user_info = {
+                                figureurl_qq_2: ''
+                            };
+                        }
+                    } catch (e) {
+
+                    }
+
                     req.session.user = {
                         role: user.role,
                         id: user.id,
                         email: user.email,
                         loginName: user.loginName,
                         chineseName: user.chineseName,
-                        avatar: user_info.figureurl_qq_2,
+                        avatar: user_info.figureurl_qq_2 || '',
                         verify_state: parseInt(user.verify_state, 10),
                         openid: user.openid
                     };
@@ -227,6 +239,7 @@ function meAction (req, res) {
                 role: req.session.user.role,
                 avatar: req.session.user.avatar,
                 email: req.session.user.email,
+                avatar: req.session.user.avatar,
                 chineseName: req.session.user.chineseName,
                 verify_state: parseInt(req.session.user.verify_state, 10)
             }

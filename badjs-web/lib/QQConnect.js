@@ -74,9 +74,7 @@ QQConnect.code2openid = function (code, redirect_uri) {
 };
 
 QQConnect.getUserInfoByOpenid = function () {
-    console.info(`g_access_token`);
-    console.info(g_access_token);
-    console.info(g_openid);
+    console.info(`g_access_token: ${g_access_token}; g_openid: ${g_openid}`);
     if (!g_access_token || !g_openid) {
         return null;
     }
@@ -89,15 +87,7 @@ QQConnect.getUserInfoByOpenid = function () {
     const fullUrl = `https://graph.qq.com/user/get_user_info?${ urlQuery }`;
 
     return httpGet(fullUrl).then(res => {
-        console.info(`=============================`);
-        console.info(res);
-        return res.split('&').reduce((acc, e) => {
-            const t = e.split('=');
-            const k = t[0];
-            const v = t[1];
-            acc[k] = decodeURIComponent(v);
-            return acc;
-        }, {}).user_info || null;
+        return res || null;
     }).catch((err) => {
         console.info(err);
     });
