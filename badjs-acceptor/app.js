@@ -259,8 +259,9 @@ app.use('/badjs/offlineLog', function (req, res) {
                         offlineLogMonitorInfo[param.id] = {};
                     }
                     offlineLogMonitorInfo[param.id][param.uin] = result;
+                    return res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto('" + result + "');");
                 }
-                res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto(" + (result ? result : false) + ");");
+                res.end('');
             });
         }).on('error', function (e) {
             logger.warn("offlineLogCheck err , ", e);
