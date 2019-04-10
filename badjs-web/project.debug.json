@@ -16,6 +16,7 @@
     },
     "sourcemap": "/data/sourcemap",
     "offline_log": "/data/offline_log",
+    "secretKey": "as2123zfxgf_badjs_fff",
     "mq": {
         "url": "tcp://127.0.0.1:10000",
         "subscribe": "badjs",

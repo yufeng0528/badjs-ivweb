@@ -4,11 +4,12 @@
  * @date : 2014-12-16
  */
 
-var LogService = require('../../service/LogService');
-var http = require('http');
-var pjConfig = require('../../project.json');
-var fs = require("fs");
-var path = require("path");
+const LogService = require('../../service/LogService');
+const http = require('http');
+const pjConfig = require('../../project.json');
+const fs = require("fs");
+const path = require("path");
+const crypto = require('crypto');
 
 var isError = function (res, error) {
     if (error) {
@@ -129,10 +130,13 @@ var LogAction = {
         if (!global.offlineLogMonitorInfo[params.id]) {
             global.offlineLogMonitorInfo[params.id] = {};
         }
+        const hmac = crypto.createHmac('sha256', global.pjconfig.secretKey);
+
+        hmac.update(params.uin + '' + params.id);
 
         var hadAdd = false;
         if (!global.offlineLogMonitorInfo[params.id][params.uin]) {
-            global.offlineLogMonitorInfo[params.id][params.uin] = true;
+            global.offlineLogMonitorInfo[params.id][params.uin] = hmac.digest('hex');
         } else {
             hadAdd = true;
         }

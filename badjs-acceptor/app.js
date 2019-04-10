@@ -74,6 +74,8 @@ const forbiddenData = '403 forbidden';
 global.projectsInfo = {};
 global.offlineAutoInfo = {};
 
+const offlineLogMonitorInfo = {};
+
 const get_domain = function (url) {
     return (url.toString().match(REG_DOMAIN) || ['', ''])[1].replace(/^\*\./, '');
 };
@@ -192,6 +194,14 @@ app.use('/badjs/offlineLog', function (req, res) {
         return res.end('invalid uin ' + offline_log.uin);
     }
 
+    const secretKey = offlineLogMonitorInfo[offline_log.id][offline_log.uin];
+
+    if (secretKey !== offline_log.secretKey) {
+        return res.end('invalid secretKey');
+    }
+
+    delete offlineLogMonitorInfo[offline_log.id][offline_log.uin];
+
     const logs = offline_log.logs;
     const msgObj = offline_log.msgObj;
     const urlObj = offline_log.urlObj;
@@ -244,6 +254,12 @@ app.use('/badjs/offlineLog', function (req, res) {
             });
 
             clientRes.on("end", function () {
+                if (result) {
+                    if (!offlineLogMonitorInfo[param.id]) {
+                        offlineLogMonitorInfo[param.id] = {};
+                    }
+                    offlineLogMonitorInfo[param.id][param.uin] = result;
+                }
                 res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto(" + (result ? result : false) + ");");
             });
         }).on('error', function (e) {
@@ -263,6 +279,12 @@ app.use('/badjs/offlineLog', function (req, res) {
             });
 
             clientRes.on("end", function () {
+                if (result) {
+                    if (!offlineLogMonitorInfo[param.id]) {
+                        offlineLogMonitorInfo[param.id] = {};
+                    }
+                    offlineLogMonitorInfo[param.id][param.uin] = result;
+                }
                 return res.end(JSON.stringify({
                     code: 200,
                     msg: result ? result : false
