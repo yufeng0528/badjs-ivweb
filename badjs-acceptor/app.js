@@ -194,6 +194,10 @@ app.use('/badjs/offlineLog', function (req, res) {
         return res.end('invalid uin ' + offline_log.uin);
     }
 
+    if (!offlineLogMonitorInfo[offline_log.id] || !offlineLogMonitorInfo[offline_log.id][offline_log.uin]) {
+        return res.end('invalid offline log monitor');
+    }
+
     const secretKey = offlineLogMonitorInfo[offline_log.id][offline_log.uin];
 
     if (secretKey !== offline_log.secretKey) {
