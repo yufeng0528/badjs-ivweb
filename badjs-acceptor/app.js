@@ -198,6 +198,10 @@ app.use('/badjs/offlineLog', function (req, res) {
         return res.end('invalid uin ' + offline_log.uin);
     }
 
+    if (!offlineLogMonitorInfo[offline_log.id] || !offlineLogMonitorInfo[offline_log.id][offline_log.uin]) {
+        return res.end('invalid offline log monitor');
+    }
+
     const secretKey = offlineLogMonitorInfo[offline_log.id][offline_log.uin];
 
     if (secretKey !== offline_log.secretKey) {
@@ -263,8 +267,9 @@ app.use('/badjs/offlineLog', function (req, res) {
                         offlineLogMonitorInfo[param.id] = {};
                     }
                     offlineLogMonitorInfo[param.id][param.uin] = result;
+                    return res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto('" + result + "');");
                 }
-                res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto(" + (result ? result : false) + ");");
+                res.end('');
             });
         }).on('error', function (e) {
             logger.warn("offlineLogCheck err , ", e);
