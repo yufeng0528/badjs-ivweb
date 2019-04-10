@@ -7,6 +7,7 @@
     "axon": "^2.0.3",
     "body-parser": "^1.18.3",
     "c-interceptor": "^1.0.2",
+    "connect-multiparty": "^2.2.0",
     "express": "^4.16.4",
     "log4js": "^4.1.0",
     "underscore": "^1.9.1"

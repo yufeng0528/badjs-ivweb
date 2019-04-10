@@ -2,6 +2,7 @@
 'use strict';
 const express = require('express');
 const bodyParser = require('body-parser');
+const multipart = require('connect-multiparty');
 const log4js = require('log4js');
 const logger = log4js.getLogger();
 
@@ -13,6 +14,9 @@ const cluster = require('cluster');
 
 const app = express();
 
+const multipartMiddleware = multipart();
+
+app.use(multipartMiddleware);
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({
     extended: true,
