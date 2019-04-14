@@ -77,6 +77,14 @@ router.post('/bind-openid', function (req, res) {
     const loginName = (req.body.loginName || '').trim();
     const openid = (req.body.openid || '').trim();
 
+    if (!/^[A-Za-z]{1,20}$/.test(loginName)) {
+        return res.json({
+            code: 1005,
+            error: 'INVALID_LOGINNAME',
+            message: '大佬别玩了'
+        });
+    }
+
     if (!loginName || !openid || loginName.length > 20) {
         return res.json({
             code: 1005,
