@@ -191,11 +191,11 @@ app.use('/badjs/offlineLog', function (req, res) {
     }
 
     if (!/^[0-9]{1,5}$/.test(offline_log.id)) {
-        return res.end('invalid id ' + offline_log.id);
+        return res.end('invalid id');
     }
 
     if (!/^[0-9]{5,11}$/.test(offline_log.uin)) {
-        return res.end('invalid uin ' + offline_log.uin);
+        return res.end('invalid uin');
     }
 
     if (!offlineLogMonitorInfo[offline_log.id] || !offlineLogMonitorInfo[offline_log.id][offline_log.uin]) {
