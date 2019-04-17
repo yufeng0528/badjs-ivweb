@@ -8,7 +8,6 @@ global.pjconfig = require(path.join(__dirname, '../project.json'));
 
 const emailConf = global.pjconfig.email;
 
-
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
     service: 'qq',
@@ -51,7 +50,7 @@ module.exports = (from, to, cc, title, content, attachments) => {
 };
 
 
-function timeoutSendMail() {
+function timeoutSendMail () {
 
     // 3 分钟后 处理mailList 中的数据 合并同一个的人的邮件，变成每个人只发一封邮件，避免发邮件失败的情况
     setTimeout(() => {
@@ -127,12 +126,9 @@ function timeoutSendMail() {
         intervalMail(newMailList);
     }, 180 * 1000);
 
-    function intervalMail(list) {
-
+    function intervalMail (list) {
         let mailTimmer = setInterval(() => {
-
             console.log(`mailList.length: ${list.length}`);
-
 
             if (list.length <= 0) {
                 clearInterval(mailTimmer);
@@ -147,7 +143,7 @@ function timeoutSendMail() {
 
 }
 
-function sendMail(maildata) {
+function sendMail (maildata) {
     console.log('send email ....');
     console.log(maildata.to, maildata.title);
     return new Promise((resolve, reject) => {

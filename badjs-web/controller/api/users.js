@@ -245,7 +245,6 @@ function meAction (req, res) {
             data: {
                 loginName: req.session.user.loginName,
                 role: req.session.user.role,
-                avatar: req.session.user.avatar,
                 email: req.session.user.email,
                 avatar: req.session.user.avatar,
                 chineseName: req.session.user.chineseName,

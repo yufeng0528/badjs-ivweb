@@ -283,7 +283,7 @@ EmailService.prototype = {
                 path: that.host + emails.imagePath,
                 cid: data.cid1
             }];
-            sendEmail(this.from, emails.to, emails.cc, title, content, attachments);
+            sendEmail(that.from, emails.to, emails.cc, title, content, attachments);
         });
     },
     sendApplySuccessEmail: function (user, loginUser, items) {
@@ -311,7 +311,6 @@ EmailService.prototype = {
     },
     startRightNow: function () {
         this.queryAll();
-        logger.info('test Email service start');
     }
 };
 
