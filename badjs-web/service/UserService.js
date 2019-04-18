@@ -98,21 +98,20 @@ UserService.prototype = {
     },
 
     add: function (target, callback) {
-
         this.userDao.create(target, function (err, items) {
             if (err) {
                 callback(err);
                 return;
             }
             logger.info("Insert into b_user success! target1: ", target);
-            callback(null, {ret: 0, msg: "success add"});
+            callback(null, { ret: 0, msg: "success add" });
         });
     },
     remove: function (target, callback) {
 
     },
     update: function (target, callback) {
-        this.userDao.one({id: target.id}, function (err, user) {
+        this.userDao.one({ id: target.id }, function (err, user) {
             // SQL: "SELECT * FROM b_apply WHERE name = 'xxxx'"
 
             for (var key in target) {

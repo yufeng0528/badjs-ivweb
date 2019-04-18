@@ -96,7 +96,6 @@ var userAction = {
 
         var method = req.method.toLowerCase();
         if (method == "post") {
-
             if (!req.body.username || !req.body.password || !req.body.email) {
                 res.render('register', {
                     isUseOA: !!global.pjconfig.oos,
@@ -111,6 +110,12 @@ var userAction = {
                     message: "密码和确认密码不一致"
                 });
                 return;
+            } else if (!/^[A-Za-z]{1,20}$/.test(req.body.username)) {
+                return res.render('register', {
+                    isUseOA: !!global.pjconfig.oos,
+                    name: req.body.username,
+                    message: "名字不符合规范"
+                });
             }
 
             var userDao = req.models.userDao;
