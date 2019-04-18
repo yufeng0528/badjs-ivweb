@@ -15,10 +15,8 @@ var UserApplyService = require('../../service/UserApplyService'),
 
 var userAction = {
     addUserApply: function (userApply, req, res) {
-
         if (userApply.userName == "") {
-            res.json({ ret: 1002, msg: "userName为空" });
-            return;
+            return res.json({ ret: 1002, msg: "userName为空" });
         }
         userApply.createTime = new Date();
         var userApplyService = new UserApplyService();
@@ -33,10 +31,6 @@ var userAction = {
         });
     },
 
-
-    //update:function(req, res){
-    //
-    //},
     remove: function (remove, req, res) {
         if (remove.id == "") {
             res.json({ ret: 1002, msg: "id为空" });

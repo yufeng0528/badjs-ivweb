@@ -41,19 +41,7 @@ userApplyService.prototype = {
                     return;
                 });
             } else {
-                var newUser = {
-                    loginName: target.userName,
-                    role: 0,
-                    createTime: new Date()
-                };
-                self.userDao.create(newUser, function (err) {
-                    if (err) {
-                        callback(err);
-                        return;
-                    }
-                    logger.info("Insert into b_user success! ");
-                    self.add(target, callback);
-                });
+                callback('添加的用户不存在');
             }
         });
     },
