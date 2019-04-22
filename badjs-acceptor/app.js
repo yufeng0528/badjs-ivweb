@@ -159,11 +159,11 @@ const referer_match = function (id, req) {
         domain.indexOf(projectMatchDomain) !== -1;
 };
 
-const reponseReject = function (res, responseHeader, code = 204) {
+const reponseReject = function (res, responseHeader) {
     responseHeader['Content-length'] = forbiddenData.length;
-    res.writeHead(code, responseHeader);
+    res.writeHead(403, responseHeader);
     res.write(forbiddenData);
-    res.end();
+    res.end('');
 };
 
 const responseHeader = {
@@ -320,7 +320,7 @@ app.use('/badjs/offlineLog', function (req, res) {
         const id = param.id - 0;
 
         if (isNaN(id)) {
-            return reponseReject(res, responseHeader, 204);
+            return reponseReject(res, responseHeader);
         }
 
         if (id <= 0 || id >= 9999 || !global.projectsInfo[id + ""] || !referer_match(id, req)) {
