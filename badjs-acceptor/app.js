@@ -320,14 +320,11 @@ app.use('/badjs/offlineLog', function (req, res) {
         const id = param.id - 0;
 
         if (isNaN(id)) {
-            reponseReject(res, responseHeader, 204);
-            return;
+            return reponseReject(res, responseHeader, 204);
         }
 
         if (id <= 0 || id >= 9999 || !global.projectsInfo[id + ""] || !referer_match(id, req)) {
-            reponseReject(res, responseHeader);
-            logger.debug('forbidden :' + param.id);
-            return;
+            return reponseReject(res, responseHeader);
         }
 
         param.id = id;
@@ -338,25 +335,17 @@ app.use('/badjs/offlineLog', function (req, res) {
                 data: param
             });
         } catch (err) {
-            reponseReject(res, responseHeader);
-            logger.debug('id ' + param.id + ' , interceptor error :' + err);
-            return;
+            return reponseReject(res, responseHeader);
         }
 
         if (req.throwError) {
-            reponseReject(res, responseHeader);
-            logger.debug('id ' + param.id + ' , interceptor reject :' + req.throwError);
-            return;
+            return reponseReject(res, responseHeader);
         }
 
         // responseHeader end with 204
         responseHeader['Content-length'] = 0;
         res.writeHead(204, responseHeader);
-
-        logger.debug('===== complete a message =====');
         res.end();
-
-
     })
     .listen(global.pjconfig.port);
 
