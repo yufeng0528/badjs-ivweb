@@ -77,7 +77,8 @@ router.post('/bind-openid', function (req, res) {
     const loginName = (req.body.loginName || '').trim();
     const openid = (req.body.openid || '').trim();
 
-    if (!/^[A-Za-z]{1,20}$/.test(loginName)) {
+    // 有人曾经不断注入无效的用户名
+    if (!/^[A-Za-z_]{3,20}$/.test(loginName)) {
         return res.json({
             code: 1005,
             error: 'INVALID_LOGINNAME',

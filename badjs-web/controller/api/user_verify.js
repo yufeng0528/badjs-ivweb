@@ -39,6 +39,14 @@ router.post('/trust_him', function (req, res) {
             message: '传参无效'
         });
     }
+    // 姓名校验
+    if (!/^[A-Za-z_]{3,20}$/.test(loginName)) {
+        return res.json({
+            code: 1005,
+            error: 'INVALID_LOGINNAME',
+            message: '登录名校验失败'
+        });
+    }
 
     userService.userDao.one({ loginName }, (err, user) => {
         if (err) {
