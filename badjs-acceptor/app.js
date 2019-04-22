@@ -17,7 +17,7 @@ const app = express();
 const multipartMiddleware = multipart();
 
 app.use(multipartMiddleware);
-app.use(bodyParser.json({limit: '10mb'}));
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({
     extended: true,
     limit: 10 * 1024 * 1024
@@ -101,7 +101,7 @@ var genBlacklistReg = function (data) {
 
 };
 
-function getClientIp(req) {
+function getClientIp (req) {
     try {
         const xff = (
             req.headers['X-Forwarded-For'] ||
@@ -310,7 +310,7 @@ app.use('/badjs/offlineLog', function (req, res) {
     .use('/badjs', function (req, res) {
 
         let param = req.query;
-        if (req.method === "POST" && req.body && !!req.body.id) {
+        if (req.method === "POST" && req.body && typeof req.body.id !== 'undefined') {
             param = req.body;
         }
 
