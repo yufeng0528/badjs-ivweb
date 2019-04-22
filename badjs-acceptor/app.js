@@ -152,7 +152,6 @@ const referer_match = function (id, req) {
         if (!projectMatchDomain) {
             return true;
         }
-        logger.debug('no referer ,  forbidden :' + req.query.id);
         return false;
     }
     const domain = (referer.match(REG_REFERER) || [""])[0] || "";
@@ -188,6 +187,10 @@ app.use('/badjs/offlineLog', function (req, res) {
         } catch (e) {
             return res.end('offline log error');
         }
+    }
+
+    if (!offline_log) {
+        return res.end('error');
     }
 
     if (!/^[0-9]{1,5}$/.test(offline_log.id)) {
@@ -309,9 +312,9 @@ app.use('/badjs/offlineLog', function (req, res) {
     })
     .use('/badjs', function (req, res) {
 
-        let param = req.query;
+        let param = req.query || {};
         if (req.method === "POST" && req.body && typeof req.body.id !== 'undefined') {
-            param = req.body;
+            param = req.body || {};
         }
 
         const id = param.id - 0;
