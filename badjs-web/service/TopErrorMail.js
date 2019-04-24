@@ -30,4 +30,7 @@ orm.connect(msqlUrl, function (err, db) {
     new EmailService().startRightNow();
 });
 
+setTimeout(() => {
+    process.exit();
+}, 3 * 60 * 60 * 1000);
 

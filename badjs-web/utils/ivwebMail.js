@@ -145,7 +145,7 @@ function timeoutSendMail () {
 
 function sendMail (maildata) {
     console.log('send email ....');
-    console.log(maildata.to, maildata.title);
+    console.log(maildata.to, maildata.subject);
     return new Promise((resolve, reject) => {
         // send mail with defined transport object
         transporter.sendMail(maildata, function (error, info) {

@@ -1,4 +1,3 @@
-
 var MongoClient = require('mongodb').MongoClient,
     http = require('http'),
     map = require('map-stream');
@@ -92,7 +91,7 @@ var createUinIndex = function (collection, collectionName, cb) {
             cb(null, collection);
         }
     });
-}
+};
 
 
 var insertDocuments = function (db, model) {
