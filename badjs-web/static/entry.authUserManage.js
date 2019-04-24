@@ -1,15 +1,15 @@
-webpackJsonp([5],{
+webpackJsonp([2],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var usermanger = __webpack_require__(8);
+	var usermanger = __webpack_require__(10);
 
 	usermanger.init();
 
 /***/ },
 
-/***/ 8:
+/***/ 10:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -92,7 +92,7 @@ webpackJsonp([5],{
 	        }
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
 
