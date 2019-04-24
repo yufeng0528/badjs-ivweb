@@ -13,13 +13,16 @@
 </head>
 <body>
 
-	<script src="/static/badjs/bj-report.js"></script>
-	<script src="/static/badjs/bj-wrap.js"></script>
+	<script src="/static/badjs/index.js"></script>
     <script>
-        BJ_REPORT.init({
-            id: 2,
-            url: "http://127.0.0.1/badjs"
-        });
-
-        BJ_REPORT.tryJs().spyAll();
+        const WardjsReport = window['wardjs-report'].default
+        window.BJ_REPORT = new WardjsReport({
+            id: 359,
+            version: 1,
+            offlineLog: true,
+            offlineLogAuto: true,
+            onReport: function (bid, reportLog) {
+                WardjsReport.monitor(34024277);
+            }
+        })
     </script>
