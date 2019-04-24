@@ -1,17 +1,17 @@
-webpackJsonp([5],{
+webpackJsonp([4],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var statistics = __webpack_require__(17);
+	var statistics = __webpack_require__(18);
 	statistics.init();
 
-	var last_select = __webpack_require__(14);
+	var last_select = __webpack_require__(12);
 	last_select.init();
 
 /***/ },
 
-/***/ 14:
+/***/ 12:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {exports.init = function(){
@@ -36,7 +36,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 17:
+/***/ 18:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -46,9 +46,9 @@ webpackJsonp([5],{
 
 
 	__webpack_require__(20);
-	var Dialog = __webpack_require__(24);
+	var Dialog = __webpack_require__(22);
 	var statisticsTpl = __webpack_require__(32);
-	var scoreLib = __webpack_require__(23)
+	var scoreLib = __webpack_require__(21)
 
 	var encodeHtml = function (str) {
 	    return (str + '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\x60/g, '&#96;').replace(/\x27/g, '&#39;').replace(/\x22/g, '&quot;');
@@ -1967,7 +1967,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 23:
+/***/ 21:
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2004,10 +2004,10 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 24:
+/***/ 22:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(25);
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(23);
 	var modal = __webpack_require__(36);
 
 	    var container;
@@ -2056,7 +2056,7 @@ webpackJsonp([5],{
 
 /***/ },
 
-/***/ 25:
+/***/ 23:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
