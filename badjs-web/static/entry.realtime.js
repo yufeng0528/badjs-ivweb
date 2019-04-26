@@ -1,8 +1,8 @@
-webpackJsonp([8],[
+webpackJsonp([7],[
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var log = __webpack_require__(15);
+	var log = __webpack_require__(16);
 	log.init();
 
 	var source_trigger = __webpack_require__(13);
@@ -88,16 +88,17 @@ webpackJsonp([8],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 15 */
+/* 15 */,
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {var dialog = __webpack_require__(24);
-	var Delegator = __webpack_require__(25);
+	var Delegator = __webpack_require__(21);
 
-	var logTable = __webpack_require__(33);
-	var keyword = __webpack_require__(34);
-	var debar = __webpack_require__(35);
-	var logDetailDialog = __webpack_require__(26);
+	var logTable = __webpack_require__(30);
+	var keyword = __webpack_require__(31);
+	var debar = __webpack_require__(32);
+	var logDetailDialog = __webpack_require__(22);
 
 	var logConfig = {
 	        id: 0,
@@ -285,9 +286,6 @@ webpackJsonp([8],[
 	var startMonitor = function (id) {
 
 	    var host = location.host;
-	    if (host.indexOf(':') < 0) {
-	        host += ':8081';
-	    }
 
 	    var wsPro = location.protocol === 'http:' ? 'ws:' : 'wss:';
 
@@ -367,66 +365,11 @@ webpackJsonp([8],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 16 */,
 /* 17 */,
 /* 18 */,
 /* 19 */,
 /* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(25);
-	var modal = __webpack_require__(36);
-
-	    var container;
-
-	    function hide() {
-	        container.removeClass('in');
-	        container.find('.modal-backdrop').removeClass('in');
-	        setTimeout(function () {
-	            container.remove();
-	            container = undefined;
-	        }, 300);
-	    }
-
-	    function Dialog (param) {
-	        if (container) {
-	            container.remove();
-	            container = undefined;
-	        }
-	        container = $(modal({it :param}))
-	            .appendTo(document.body)
-	            .show();
-
-	        var key,
-	            action,
-	            delegator,
-	            on = param.on || {};
-
-	        delegator = (new Delegator(container))
-	            .on('click', 'close', hide);
-
-	        for (key in on) {
-	            action = key.split('/');
-	            delegator.on(action[0], action[1], on[key]);
-	        }
-
-	        setTimeout(function () {
-	            container.addClass('in');
-	            container.find('.modal-backdrop').addClass('in');
-	        }, 0);
-	    }
-
-	    Dialog.hide = hide;
-
-	module.exports =  Dialog;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ },
-/* 25 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {/**
@@ -605,11 +548,11 @@ webpackJsonp([8],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 26 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(25);
-	var dialogTpl = __webpack_require__(39);
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
+	var dialogTpl = __webpack_require__(36);
 
 	    var container;
 
@@ -659,13 +602,64 @@ webpackJsonp([8],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
+/* 23 */,
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function($) {var Delegator = __webpack_require__(21);
+	var modal = __webpack_require__(37);
+
+	    var container;
+
+	    function hide() {
+	        container.removeClass('in');
+	        container.find('.modal-backdrop').removeClass('in');
+	        setTimeout(function () {
+	            container.remove();
+	            container = undefined;
+	        }, 300);
+	    }
+
+	    function Dialog (param) {
+	        if (container) {
+	            container.remove();
+	            container = undefined;
+	        }
+	        container = $(modal({it :param}))
+	            .appendTo(document.body)
+	            .show();
+
+	        var key,
+	            action,
+	            delegator,
+	            on = param.on || {};
+
+	        delegator = (new Delegator(container))
+	            .on('click', 'close', hide);
+
+	        for (key in on) {
+	            action = key.split('/');
+	            delegator.on(action[0], action[1], on[key]);
+	        }
+
+	        setTimeout(function () {
+	            container.addClass('in');
+	            container.find('.modal-backdrop').addClass('in');
+	        }, 0);
+	    }
+
+	    Dialog.hide = hide;
+
+	module.exports =  Dialog;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+
+/***/ },
+/* 25 */,
+/* 26 */,
 /* 27 */,
 /* 28 */,
 /* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {module.exports = function(obj) {
@@ -853,7 +847,7 @@ webpackJsonp([8],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 34 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(obj) {
@@ -871,7 +865,7 @@ webpackJsonp([8],[
 	}
 
 /***/ },
-/* 35 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(obj) {
@@ -889,29 +883,10 @@ webpackJsonp([8],[
 	}
 
 /***/ },
+/* 33 */,
+/* 34 */,
+/* 35 */,
 /* 36 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function(obj) {
-	obj || (obj = {});
-	var __t, __p = '';
-	with (obj) {
-	__p += '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="' +
-	((__t = (it.id || '' )) == null ? '' : __t) +
-	'">\n  <div class="modal-backdrop fade"></div>\n  <div class="modal-dialog">\n    <div class="modal-content">\n\n      <div class="modal-header">\n        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" data-event-click="close">×</span><span class="sr-only">Close</span></button>\n        <h4 class="modal-title">' +
-	((__t = (it.header)) == null ? '' : __t) +
-	'</h4>\n      </div>\n      <div class="modal-body">\n        ' +
-	((__t = (it.body)) == null ? '' : __t) +
-	'\n      </div>\n      <div class="modal-footer">\n        <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n      </div>\n\n    </div>\n  </div>\n</div>';
-
-	}
-	return __p
-	}
-
-/***/ },
-/* 37 */,
-/* 38 */,
-/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(obj) {
@@ -931,6 +906,26 @@ webpackJsonp([8],[
 	'</div>\n                </p>\n                <p>\n                    <b>Source：</b><div class="source">' +
 	((__t = (source)) == null ? '' : __t) +
 	'</div>\n                </p>\n            </div>\n            <div class="modal-footer">\n                <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n            </div>\n\n        </div>\n    </div>\n</div>\n';
+
+	}
+	return __p
+	}
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(obj) {
+	obj || (obj = {});
+	var __t, __p = '';
+	with (obj) {
+	__p += '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="' +
+	((__t = (it.id || '' )) == null ? '' : __t) +
+	'">\n  <div class="modal-backdrop fade"></div>\n  <div class="modal-dialog">\n    <div class="modal-content">\n\n      <div class="modal-header">\n        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" data-event-click="close">×</span><span class="sr-only">Close</span></button>\n        <h4 class="modal-title">' +
+	((__t = (it.header)) == null ? '' : __t) +
+	'</h4>\n      </div>\n      <div class="modal-body">\n        ' +
+	((__t = (it.body)) == null ? '' : __t) +
+	'\n      </div>\n      <div class="modal-footer">\n        <button type="button" class="btn btn-default" data-event-click="close">Close</button>\n      </div>\n\n    </div>\n  </div>\n</div>';
 
 	}
 	return __p

@@ -192,9 +192,6 @@ var maxShow = 100;
 var startMonitor = function (id) {
 
     var host = location.host;
-    if (host.indexOf(':') < 0) {
-        host += ':8081';
-    }
 
     var wsPro = location.protocol === 'http:' ? 'ws:' : 'wss:';
 
