@@ -19,8 +19,8 @@ app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'html');
 app.engine('html', tpl.__express);
 app.use(compress());
-app.use(session({secret: 'keyboard cat', cookie: {maxAge: 120 * 60 * 1000}}));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 48 * 60 * 60 * 1000 } }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({}));
 app.use(cookieParser());
 
@@ -64,8 +64,7 @@ app.use('/user', function (req, res, next) {
         pluginHandler.login.check(req, res, next);
     } else {
         if (!req.session.user) {
-            res.redirect(req.protocol + '://' + req.get('host') + '/login.html');
-            return;
+            return res.redirect(req.protocol + '://' + req.get('host') + '/login.html');
         } else {
             next();
         }
