@@ -44,7 +44,6 @@ app.post('/offlineLogReport', function (req, res) {
         try {
             var offline_log;
             try {
-                offline_log = pako.inflate(decodeURIComponent(param.offline_log), { to: 'string' });
                 if (typeof offline_log === 'string') {
                     offline_log = JSON.parse(offline_log);
                 }
@@ -99,7 +98,7 @@ app.post('/offlineLogReport', function (req, res) {
 app.use('/offlineLogCheck', function (req, res) {
     var param = req.query;
     if (param.id && param.uin && global.offlineLogMonitorInfo[param.id] && global.offlineLogMonitorInfo[param.id][param.uin]) {
-        let key = global.offlineLogMonitorInfo[param.id][param.uin]
+        let key = global.offlineLogMonitorInfo[param.id][param.uin];
         delete global.offlineLogMonitorInfo[param.id][param.uin];
         logger.info('should download offline log: ' + (param.id + '_' + param.uin));
         res.end(key);
