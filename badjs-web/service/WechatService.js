@@ -1,11 +1,11 @@
-const Promise = require('bluebird');
 const moment = require('moment');
 const orm = require('orm');
 const cp = require('child_process');
 const request = require('request');
 const pjConfig = require('../project.json');
 const getScore = require('../lib/getScore.js');
-const mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
+
+const mysqlUrl = pjConfig.mysql.url;
 
 var mdb = orm.connect(mysqlUrl, function (err, db) {
 

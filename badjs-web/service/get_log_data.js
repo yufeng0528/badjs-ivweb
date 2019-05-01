@@ -1,8 +1,10 @@
-'use strict';
-var moment = require('moment');
-var Promise = require('bluebird');
+const moment = require('moment');
+const path = require('path');
+const pjConfig = require(path.join(__dirname, '..', 'project.json'));
 
-function getLogData(db) {
+const mysqlUrl = pjConfig.mysql.url;
+
+function getLogData (db) {
 
     return new Promise((resolve, reject) => {
 
@@ -25,7 +27,7 @@ function getLogData(db) {
 }
 
 
-function _render(data) {
+function _render (data) {
     let html = [];
     html.push();
     html.push(`<h4>最近7天数据上报量</h4>`);
@@ -40,10 +42,9 @@ function _render(data) {
     return html.join('');
 }
 
-function test() {
+function test () {
     const orm = require('orm');
-    var mysqlUrl = `mysql://root:root@localhost:3306/badjs`;
-    var mdb = orm.connect(mysqlUrl, function (err, db) {
+    const mdb = orm.connect(mysqlUrl, function (err, db) {
         getLogData(db).then((data) => {
             console.log(data);
         });

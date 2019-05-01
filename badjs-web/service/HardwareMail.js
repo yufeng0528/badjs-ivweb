@@ -1,15 +1,15 @@
-var child_process = require('child_process');
-var mail = require('../utils/ivwebMail_for_single.js');
-var moment = require('moment');
-var path = require('path');
-var orm = require('orm');
-var pjConfig = require(path.join(__dirname, '..', 'project.json'));
+const child_process = require('child_process');
+const mail = require('../utils/ivwebMail_for_single.js');
+const moment = require('moment');
+const path = require('path');
+const orm = require('orm');
+const pjConfig = require(path.join(__dirname, '..', 'project.json'));
 
-var mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
+const mysqlUrl = pjConfig.mysql.url;
 
 function constructEmail(items) {
 
-    var html = ['<html>'];
+    const html = ['<html>'];
     html.push('<head><style>tbody {text-align: center} td,th {padding: 4px; border-bottom: 1px solid #b7a2a2; border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} .red {color: red}</style></head>');
     html.push('<body><h2>BadJS服务器磁盘占用情况</h2>');
     html.push(`<h3>目前使用磁盘 <span class="red">${items[0].usedPercent}</span></h3>`);
@@ -40,8 +40,8 @@ function constructEmail(items) {
     return html.join('');
 }
 
-var mdb = orm.connect(mysqlUrl, function (err, db) {
-    var hardware = db.define('b_hardware', {
+const mdb = orm.connect(mysqlUrl, function (err, db) {
+    const hardware = db.define('b_hardware', {
         id: Number,
         fullSize: String,
         usedSize: String,
@@ -50,7 +50,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
         createTime: String
     });
 
-    var child = child_process.spawn('df', ['-h']);
+    const child = child_process.spawn('df', ['-h']);
 
     child.stdout.on('data', (data) => {
         console.log('-------');

@@ -2,11 +2,14 @@ const fs = require('fs');
 const readline = require('readline');
 const orm = require('orm');
 console.log(process.argv);
-var filePath = process.argv[2];
-var date = process.argv[3];
-var pv = {}, pvlist = [], badjsid;
+const filePath = process.argv[2];
+const date = process.argv[3];
+const pv = {};
+const pvlist = [];
 
-var mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
+const pjConfig = require('../project.json');
+
+const mysqlUrl = pjConfig.mysql.url;
 
 const rs = fs.createReadStream(filePath, 'utf8');
 
@@ -15,8 +18,10 @@ const rl = readline.createInterface({
     output: null // process.stdout
 });
 
+let badjsid;
+
 rl.on('line', (input) => {
-    var r = /\/badjs\/(\d+)/g.exec(input);
+    const r = /\/badjs\/(\d+)/g.exec(input);
 
     if (r) {
         badjsid = r[1];
@@ -31,8 +36,7 @@ rl.on('line', (input) => {
 
 rl.on('close', () => {
     console.log('文件读完了。');
-    for (var i in pv) {
-
+    for (const i in pv) {
         pvlist.push({
             badjsid: i - 0,
             pv: pv[i],
@@ -40,18 +44,16 @@ rl.on('close', () => {
         });
     }
 
-
     console.log(pvlist);
 
-    var mdb = orm.connect(mysqlUrl, function (err, db) {
+    const mdb = orm.connect(mysqlUrl, function (err, db) {
 
-        var pv = db.define("b_pv", {
+        const pv = db.define("b_pv", {
             id: Number,
             badjsid: Number,
             pv: Number,
             date: Number
         });
-
 
         pv.create(pvlist, function (err, items) {
 
@@ -61,7 +63,6 @@ rl.on('close', () => {
             } else {
                 console.log(err);
             }
-
             mdb.close();
         });
 

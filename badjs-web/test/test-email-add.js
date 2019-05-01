@@ -1,23 +1,22 @@
 var mysql = require('mysql'),
     orm = require('orm');
+const pjConfig = require('../project.json');
 
-var mysql = "mysql://root:root@localhost:3306/badjs";
-//var mysql = "mysql://badjs:pass4badjs@10.134.5.103:3306/badjs";
+const mysqlUrl = pjConfig.mysql.url;
 
-orm.connect( mysql, function(err , db) {
-    if(err){
+orm.connect(mysqlUrl, function (err, db) {
+    if (err) {
         throw err;
     }
 
-  var   userDao = require('../dao/UserDao')(db)
+    var userDao = require('../dao/UserDao')(db)
 
-    userDao.find({} , function (err , item){
+    userDao.find({}, function (err, item) {
 
-        item.forEach(function (value){
+        item.forEach(function (value) {
             value.email = value.loginName + "@xx.com";
             value.save();
         })
-
 
 
     })

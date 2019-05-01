@@ -1,7 +1,11 @@
 'use strict';
-var moment = require('moment');
-var Promise = require('bluebird');
+const moment = require('moment');
+const Promise = require('bluebird');
+const path = require('path');
 const getBaseScore = require('../lib/getScore.js');
+const pjConfig = require(path.join(__dirname, '..', 'project.json'));
+
+const mysqlUrl = pjConfig.mysql.url;
 
 /**
  * 得到红黑榜分数
@@ -144,8 +148,7 @@ function _render(data) {
 
 function test() {
     const orm = require('orm');
-    var mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
-    var mdb = orm.connect(mysqlUrl, function (err, db) {
+    const mdb = orm.connect(mysqlUrl, function (err, db) {
         getScore(db).then((data) => {
             console.log(data);
         });

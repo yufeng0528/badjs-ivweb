@@ -1,12 +1,13 @@
-var pv = require('./handle_pv_2.js');
+const pv = require('./handle_pv_2.js');
 const orm = require('orm');
 
+const pjConfig = require('../project.json');
 
-var mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
+const mysqlUrl = pjConfig.mysql.url;
 
-var mdb = orm.connect(mysqlUrl, function (err, db) {
+const mdb = orm.connect(mysqlUrl, function (err, db) {
 
-    var Score = db.define('b_score', {
+    const Score = db.define('b_score', {
         id: Number,
         badjsid: Number,
         score: String,

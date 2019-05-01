@@ -1,31 +1,33 @@
-var moment = require('moment');
-
+const moment = require('moment');
 const orm = require('orm');
 
-var getYesterday = function () {
-    var date = new Date();
+const pjConfig = require('../project.json');
+
+const mysqlUrl = pjConfig.mysql.url;
+
+const getYesterday = function () {
+    const date = new Date();
     date.setDate(date.getDate() - 1);
     date.setHours(0, 0, 0, 0);
     return date;
 };
 
-var getYesterdayForPv = function () {
-    var y = getYesterday();
+const getYesterdayForPv = function () {
+    const y = getYesterday();
     return moment(y.getTime()).format('YYYYMMDD');
 };
 
-var mysqlUrl = 'mysql://root:root@localhost:3306/badjs';
 
-var mdb = orm.connect(mysqlUrl, function (err, db) {
+const mdb = orm.connect(mysqlUrl, function (err, db) {
 
-    var pv = db.define("b_pv", {
+    const pv = db.define("b_pv", {
         id: Number,
         badjsid: Number,
         pv: Number,
         date: Number
     });
 
-    var param = {
+    const param = {
         date: getYesterdayForPv()
     };
 
@@ -45,9 +47,9 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
 });
 
 // pvlist pv的元数据
-function createScore(db, pvlist) {
+function createScore (db, pvlist) {
 
-    var Statistics = db.define('b_statistics', {
+    const Statistics = db.define('b_statistics', {
         id: Number,
         projectId: Number,
         startDate: Date,
@@ -56,7 +58,7 @@ function createScore(db, pvlist) {
         total: Number
     });
 
-    var param = {
+    const param = {
         startDate: getYesterday()
     };
 
@@ -64,7 +66,7 @@ function createScore(db, pvlist) {
 
     Statistics.find(param, (err, data) => {
 
-        var scoreList = [];
+        const scoreList = [];
 
         if (err) {
             console.log('error');
@@ -72,9 +74,11 @@ function createScore(db, pvlist) {
         } else {
             data.forEach(item => {
 
-                var proId = item.projectId,
-                    badjsTotal = item.total,
-                    pv = 0, score = 0;
+                const proId = item.projectId;
+                const badjsTotal = item.total;
+
+                let pv = 0;
+                let score = 0;
 
                 pvlist.forEach(item => {
                     if (item.badjsid == proId) {
@@ -99,7 +103,7 @@ function createScore(db, pvlist) {
 
             console.log(scoreList);
 
-            var Quality = db.define('b_quality', {
+            const Quality = db.define('b_quality', {
                 id: Number,
                 badjsid: Number,
                 rate: String,
