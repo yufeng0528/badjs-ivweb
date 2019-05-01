@@ -37,7 +37,7 @@ CREATE TABLE `b_apply` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `userName` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
   `status` int(11) NOT NULL,
-  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `appkey` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `url` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `blacklist` text COLLATE utf8_unicode_ci ,
@@ -96,6 +96,15 @@ INSERT INTO `b_user` (`id`, `loginName`, `chineseName`, `role`, `email`, `passwo
 	(1, 'admin', 'admin', 1, NULL, '21232f297a57a5a743894a0e4a801fc3');
 
 
+DROP TABLE IF EXISTS `b_log_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE IF NOT EXISTS `b_log_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `logpv` int(11) NOT NULL DEFAULT 0,
+  `date` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table `b_user_apply`
