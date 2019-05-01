@@ -49,7 +49,7 @@ module.exports = (from, to, cc, title, content, attachments, retry) => {
             // 两分钟后重试
             setTimeout(() => {
                 const cp = require('child_process');
-                cp.exec('/data/server/node/node10/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log',
+                cp.exec('node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log',
                     (err, out, stderr) => {
                         if (err) {
                             logger.error(err);
