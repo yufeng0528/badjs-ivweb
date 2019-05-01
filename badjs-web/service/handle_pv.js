@@ -58,7 +58,7 @@ rl.on('close', () => {
         // 2 20190430
         pvDao.one({ badjsid: pvlist.badjsid, date: pvlist.date }, function (err, pvLog) {
             if (pvLog) {
-                pvlist.pv += parseInt(pvLog.pv);
+                pvLog.pv = parseInt(pvLog.pv) + parseInt(pvlist.pv);
                 pvLog.save();
             } else {
                 pvDao.create(pvlist, function (err, items) {
