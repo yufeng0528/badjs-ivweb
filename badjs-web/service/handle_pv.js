@@ -48,22 +48,29 @@ rl.on('close', () => {
 
     const mdb = orm.connect(mysqlUrl, function (err, db) {
 
-        const pv = db.define("b_pv", {
+        const pvDao = db.define("b_pv", {
             id: Number,
             badjsid: Number,
             pv: Number,
             date: Number
         });
 
-        pv.create(pvlist, function (err, items) {
-
-            if (!err) {
-                console.log('ok');
-
+        // 2 20190430
+        pvDao.one({ badjsid: pvlist.badjsid, date: pvlist.date }, function (err, pvLog) {
+            if (pvLog) {
+                pvlist.pv += parseInt(pvLog.pv);
+                pvLog.save();
             } else {
-                console.log(err);
+                pvDao.create(pvlist, function (err, items) {
+                    if (!err) {
+                        console.log('ok');
+
+                    } else {
+                        console.log(err);
+                    }
+                    mdb.close();
+                });
             }
-            mdb.close();
         });
 
     });
