@@ -55,24 +55,30 @@ rl.on('close', () => {
             date: Number
         });
 
-        // 2 20190430
-        pvDao.one({ badjsid: pvlist.badjsid, date: pvlist.date }, function (err, pvLog) {
-            if (pvLog) {
-                pvLog.pv = parseInt(pvLog.pv) + parseInt(pvlist.pv);
-                pvLog.save();
-            } else {
-                pvDao.create(pvlist, function (err, items) {
-                    if (!err) {
-                        console.log('ok');
-
-                    } else {
-                        console.log(err);
-                    }
-                    mdb.close();
-                });
-            }
+        pvlist.forEach((pv, index) => {
+            pvDao.one({ badjsid: pv.badjsid, date: pv.date }, function (err, pvLog) {
+                if (pvLog) {
+                    pvLog.pv = parseInt(pvLog.pv) + parseInt(pv.pv);
+                    pvLog.save(function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        if (index === pvlist.length - 1) {
+                            mdb.close();
+                        }
+                    });
+                } else {
+                    pvDao.create(pv, function (err, items) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        if (index === pvlist.length - 1) {
+                            mdb.close();
+                        }
+                    });
+                }
+            });
         });
-
     });
 });
 
