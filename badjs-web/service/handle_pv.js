@@ -56,28 +56,30 @@ rl.on('close', () => {
         });
 
         pvlist.forEach((pv, index) => {
-            pvDao.one({ badjsid: pv.badjsid, date: pv.date }, function (err, pvLog) {
-                if (pvLog) {
-                    pvLog.pv = parseInt(pvLog.pv) + parseInt(pv.pv);
-                    pvLog.save(function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        if (index === pvlist.length - 1) {
-                            mdb.close();
-                        }
-                    });
-                } else {
-                    pvDao.create(pv, function (err, items) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        if (index === pvlist.length - 1) {
-                            mdb.close();
-                        }
-                    });
-                }
-            });
+            setTimeout(() => {
+                pvDao.one({ badjsid: pv.badjsid, date: pv.date }, function (err, pvLog) {
+                    if (pvLog) {
+                        pvLog.pv = parseInt(pvLog.pv) + parseInt(pv.pv);
+                        pvLog.save(function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            if (index === pvlist.length - 1) {
+                                mdb.close();
+                            }
+                        });
+                    } else {
+                        pvDao.create(pv, function (err, items) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            if (index === pvlist.length - 1) {
+                                mdb.close();
+                            }
+                        });
+                    }
+                });
+            }, index * 1000);
         });
     });
 });
