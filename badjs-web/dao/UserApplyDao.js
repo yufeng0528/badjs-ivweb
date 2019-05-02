@@ -9,7 +9,8 @@ module.exports  = function (db){
         userId      : Number,
         applyId     : Number,
         role        : Number,
-        createTime  : Date
+        createTime  : Date,
+        loginName   : String
     });
     return user_apply;
 };

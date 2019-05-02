@@ -118,8 +118,8 @@ CREATE TABLE `b_user_apply` (
   `userId` int(11) NOT NULL,
   `applyId` int(11) NOT NULL,
   `role` int(1) NOT NULL DEFAULT '0',
-  `loginName` varchar(100),
   `createTime` timestamp NULL DEFAULT NULL,
+  `loginName` varchar(100),
   PRIMARY KEY (`id`),
   KEY `applyId_idx` (`applyId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;

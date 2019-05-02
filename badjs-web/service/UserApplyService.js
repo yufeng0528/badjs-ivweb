@@ -30,6 +30,7 @@ userApplyService.prototype = {
             }
             if (item) {
                 userApply.userId = item.id;
+                userApply.loginName = item.loginName;
 
                 self.userApplyDao.create(userApply, function (err, items) {
                     if (err) {
