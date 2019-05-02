@@ -55,32 +55,35 @@ rl.on('close', () => {
             date: Number
         });
 
-        pvlist.forEach((pv, index) => {
+        for (let i = 0; i < pvlist.length; i++) {
+            const pv = pvlist[i];
             setTimeout(() => {
                 pvDao.one({ badjsid: pv.badjsid, date: pv.date }, function (err, pvLog) {
                     if (pvLog) {
+                        console.log('update pv log');
                         pvLog.pv = parseInt(pvLog.pv) + parseInt(pv.pv);
                         pvLog.save(function (err) {
                             if (err) {
                                 console.log(err);
                             }
-                            if (index === pvlist.length - 1) {
+                            if (i === pvlist.length - 1) {
                                 mdb.close();
                             }
                         });
                     } else {
+                        console.log('insert pv log');
                         pvDao.create(pv, function (err, items) {
                             if (err) {
                                 console.log(err);
                             }
-                            if (index === pvlist.length - 1) {
+                            if (i === pvlist.length - 1) {
                                 mdb.close();
                             }
                         });
                     }
                 });
-            }, index * 1000);
-        });
+            }, i * 1000);
+        }
     });
 });
 
