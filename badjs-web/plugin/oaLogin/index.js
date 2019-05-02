@@ -1,14 +1,13 @@
-
 'use strict';
 
 const http = require('http');
 const Promise = require('bluebird');
 const api = require(global.apiPath);
-const config = require('./config.json')
+const config = require('./config.json');
 
-const whiteList = ['ivweb']
+const whiteList = ['ivweb'];
 
-function checkWhitelist(req, res) {
+function checkWhitelist (req, res) {
 
     if (req.body &&
         req.body.username &&
@@ -20,19 +19,19 @@ function checkWhitelist(req, res) {
 
             if (user) {
                 req.session.user = {
-                    role : user.role,
-                    id : user.userId,
-                    email : user.email,
-                    loginName : user.name,
-                    chineseName : user.name
-                }
-                res.json({retcode: 0, msg:'ok'});
+                    role: user.role,
+                    id: user.userId,
+                    email: user.email,
+                    loginName: user.name,
+                    chineseName: user.name
+                };
+                res.json({ retcode: 0, msg: 'ok' });
             } else {
-                res.json({retcode: 1, msg:'no user'});
+                res.json({ retcode: 1, msg: 'no user' });
             }
         }).catch(e => {
             res.json(e);
-        })
+        });
 
         return true;
     } else {
@@ -40,7 +39,7 @@ function checkWhitelist(req, res) {
     }
 }
 
-function check(req, res, next) {
+function check (req, res, next) {
 
     if (checkWhitelist(req, res)) {
         return;
@@ -49,15 +48,15 @@ function check(req, res, next) {
     if (req.session.user) {
         next();
     } else if (req.query.code) {
-        console.log('oalogin dologin.')
+        console.log('oalogin dologin.');
         doLogin(req, res, next);
     } else {
-        console.log('oalogin not login.')
+        console.log('oalogin not login.');
         redirect(req, res, config.auth);
     }
 }
 
-function getOAUser(code) {
+function getOAUser (code) {
     return new Promise((resolve, reject) => {
         const url = `http://now.qq.com/zxjg/cgi-bin/tofhander/?type=1&code=${code}`;
 
@@ -65,7 +64,7 @@ function getOAUser(code) {
             const statusCode = res.statusCode;
 
             if (statusCode !== 200) {
-                reject({code: statusCode});
+                reject({ code: statusCode });
             } else {
                 let rawData = '';
                 res.on('data', chunk => {
@@ -79,19 +78,19 @@ function getOAUser(code) {
                         } else {
                             reject(parseData);
                         }
-                    } catch(e) {
-                        reject({msg: e});
+                    } catch (e) {
+                        reject({ msg: e });
                     }
-                })
+                });
             }
         }).on('error', e => {
-            reject({msg: e});
-        })
+            reject({ msg: e });
+        });
 
-    })
+    });
 }
 
-function doLogin(req, res, next) {
+function doLogin (req, res, next) {
 
     var code = req.query.code;
 
@@ -103,12 +102,12 @@ function doLogin(req, res, next) {
 
         if (user) {
             req.session.user = {
-                role : user.role,
-                id : user.userId,
-                email : user.email,
-                loginName : user.name,
-                chineseName : user.name
-            }
+                role: user.role,
+                id: user.userId,
+                email: user.email,
+                loginName: user.name,
+                chineseName: user.name
+            };
 
             next();
         } else {
@@ -117,32 +116,27 @@ function doLogin(req, res, next) {
     }).catch(e => {
         if (e.retcode == 5) {
 
-            redirect(req, res, config.auth)
+            redirect(req, res, config.auth);
 
         } else {
             res.end(JSON.stringify(e));
         }
-    })
-
-
-
-
+    });
 
 
 }
 
-function logout(req, res, next) {
+function logout (req, res, next) {
     req.session.user = null;
     redirect(req, res, config.logout);
 }
 
 
-function redirect(req, res, url) {
+function redirect (req, res, url) {
     res.writeHead(302, {
-        'Location': url + '?appkey=6f0611791dbc4a59a0f6f17f7bc8783c&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/user/index.html')
-    })
+        'Location': url + '?appkey=' + config.appkey +'&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/user/index.html')
+    });
     res.end();
-
 }
 
 
@@ -150,12 +144,9 @@ const login = {
     check,
     doLogin,
     logout
-}
-
-
+};
 
 
 module.exports = {
-
     login
-}
+};
