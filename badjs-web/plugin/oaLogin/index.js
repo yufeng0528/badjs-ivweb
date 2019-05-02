@@ -96,7 +96,6 @@ function doLogin (req, res, next) {
 
     getOAUser(code).then(data => {
         // 获得用户信息
-
         return api.getUser(data.data.LoginName);
     }).then(user => {
 
@@ -115,9 +114,7 @@ function doLogin (req, res, next) {
         }
     }).catch(e => {
         if (e.retcode == 5) {
-
             redirect(req, res, config.auth);
-
         } else {
             res.end(JSON.stringify(e));
         }
@@ -133,8 +130,9 @@ function logout (req, res, next) {
 
 
 function redirect (req, res, url) {
+    const redUrl = `${url}?appkey=${config.appkey}&redirect_uri=${encodeURIComponent('http://' + req.headers.host + '/user/index.html')}`;
     res.writeHead(302, {
-        'Location': url + '?appkey=' + config.appkey +'&redirect_uri=' + encodeURIComponent('http://' + req.headers.host + '/user/index.html')
+        'Location': redUrl
     });
     res.end();
 }
