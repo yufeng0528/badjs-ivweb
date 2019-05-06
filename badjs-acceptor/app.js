@@ -197,7 +197,7 @@ app.use('/badjs/offlineLog', function (req, res) {
         return res.end('invalid id');
     }
 
-    if (!/^[0-9]{5,11}$/.test(offline_log.uin)) {
+    if (!/^\w{4, 40}$/.test(offline_log.uin)) {
         return res.end('invalid uin');
     }
 
