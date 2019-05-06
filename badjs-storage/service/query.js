@@ -134,98 +134,6 @@ const validate = function (req, rep) {
     };
 };
 
-//var totalKey = dateFormat(new Date, "yyyy-MM-dd");
-
-/*var errorMsgTop = function(json, cb) {
-    var id;
-    if (isNaN((id = json.id - 0)) || id <= 0 || id >= 9999) {
-        cb({
-            ok: false,
-            msg: 'id is required'
-        });
-    }
-
-    var oneDate = new Date(json.startDate);
-
-    if (isNaN(+oneDate)) {
-        cb(new Error("parse date error"), {
-            ok: false,
-            msg: 'startDate or endDate parse error'
-        });
-        return;
-    }
-
-    var nowDate = new Date(dateFormat(new Date, "yyyy-MM-dd")) - 0;
-
-    if ((+oneDate) > (+nowDate)) {
-        cb(new Error("can not found today"), {
-            ok: false,
-            msg: 'can not found today'
-        });
-        return;
-    }
-
-    var startDate = oneDate;
-    var endDate = new Date(+startDate + 86400000);
-
-    var queryJSON = {
-        date: {
-            $lt: endDate,
-            $gte: startDate
-        },
-        level: 4
-    };
-
-    var limit = json.limit || 50;
-
-    var outResult = {
-        startDate: +startDate,
-        endDate: +endDate,
-        item: []
-    };
-
-    realTotal.getTotal({
-        id: id,
-        key: totalKey
-    }, function(err, total) {
-        if (err) {
-            throw err;
-        }
-
-        var cursor = mongoDB.collection('badjslog_' + id).aggregate(
-            [{
-                $match: queryJSON
-            }, {
-                $group: {
-                    _id: "$msg",
-                    total: {
-                        $sum: 1
-                    }
-                }
-            }, {
-                $sort: {
-                    total: -1
-                }
-            }, {
-                $limit: limit
-            }], {
-                allowDiskUse: true
-            }
-        );
-
-        cursor.toArray(function(err, docs) {
-            if (err) {
-                cb(err);
-                return;
-            }
-            outResult.item = docs;
-            outResult.pv = total;
-            cb(err, outResult);
-        });
-    });
-};*/
-
-
 var getErrorMsgFromCache = function (query, isJson, cb) {
     var fileName = dateFormat(new Date(query.startDate), "yyyy-MM-dd") + "__" + query.id;
     var filePath = path.join(__dirname, "..", "cache", "errorMsg", fileName);
@@ -248,108 +156,104 @@ var getErrorMsgFromCache = function (query, isJson, cb) {
         logger.info("could not found cache  id=" + query.id);
         returnValue(null, '');
     }
-    /* errorMsgTop(query, function(err, doc) {
-         if (err) {
-             logger.info("cache errorMsgTop error fileName=" + fileName + " " + err.toString());
-         }
-         returnValue(err, isJson ? doc : JSON.stringify(doc));
-     });*/
 };
 
 
 module.exports = function () {
-    app.use('/query', function (req, res) {
-        var result = validate(req, res);
+    app
+        .use('/query', function (req, res) {
+            var result = validate(req, res);
 
-        if (!result.ok) {
-            res.writeHead(403, {
-                'Content-Type': 'text/html'
-            });
-            res.statusCode = 403;
-            res.write(JSON.stringify(result));
-            return;
-        }
+            if (!result.ok) {
+                res.writeHead(403, {
+                    'Content-Type': 'text/html'
+                });
+                res.statusCode = 403;
+                res.write(JSON.stringify(result));
+                return;
+            }
 
-        var json = req.query;
-        var id = json.id,
-            startDate = json.startDate.getTime(),
-            endDate = json.endDate.getTime();
+            var json = req.query;
+            var id = json.id,
+                uin = json.uin,
+                startDate = json.startDate.getTime(),
+                endDate = json.endDate.getTime();
 
-        var queryJSON = {
-            all: {}
-        };
-
-        var includeJSON = [];
-        json.include.forEach(function (value, key) {
-            includeJSON.push(new RegExp(value));
-        });
-
-        if (includeJSON.length > 0) {
-            queryJSON.all.$all = includeJSON;
-        }
-
-        var excludeJSON = [];
-        json.exclude.forEach(function (value, key) {
-            excludeJSON.push(new RegExp(value));
-        });
-
-        if (excludeJSON.length > 0) {
-            queryJSON.all.$not = {
-                $in: excludeJSON
+            var queryJSON = {
+                all: {}
             };
-        }
 
-        if (includeJSON.length <= 0 && excludeJSON.length <= 0) {
-            delete queryJSON.all;
-        }
-
-        json.level.forEach(function (value, key) {
-            json.level[key] = value - 0;
-        });
-
-
-        queryJSON.date = {
-            $lt: endDate,
-            $gt: startDate
-        };
-
-
-        queryJSON.level = {
-            $in: json.level
-        };
-
-        if (json.index - 0) {
-            json.index = (json.index - 0);
-        } else {
-            json.index = 0;
-        }
-
-        if (global.debug) {
-            logger.debug("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
-        }
-        logger.info("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
-
-        mongoDB.collection('badjslog_' + id).find(queryJSON, function (error, cursor) {
-            res.writeHead(200, {
-                'Content-Type': 'text/json'
+            var includeJSON = [];
+            json.include.forEach(function (value, key) {
+                includeJSON.push(new RegExp(value));
             });
 
-            cursor.sort({
-                'date': -1
-            })
-                .skip(json.index * LIMIT)
-                .limit(LIMIT)
-                .toArray(function (err, item) {
-                    res.write(JSON.stringify(item));
-                    res.end();
+            if (includeJSON.length > 0) {
+                queryJSON.all.$all = includeJSON;
+            }
 
+            var excludeJSON = [];
+            json.exclude.forEach(function (value, key) {
+                excludeJSON.push(new RegExp(value));
+            });
+
+            if (excludeJSON.length > 0) {
+                queryJSON.all.$not = {
+                    $in: excludeJSON
+                };
+            }
+
+            if (includeJSON.length <= 0 && excludeJSON.length <= 0) {
+                delete queryJSON.all;
+            }
+
+            json.level.forEach(function (value, key) {
+                json.level[key] = value - 0;
+            });
+
+
+            queryJSON.date = {
+                $lt: endDate,
+                $gt: startDate
+            };
+
+
+            queryJSON.level = {
+                $in: json.level
+            };
+
+            if (json.index - 0) {
+                json.index = (json.index - 0);
+            } else {
+                json.index = 0;
+            }
+
+            if (global.debug) {
+                logger.debug("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
+            }
+            logger.info("query logs id=" + id + ",query=" + JSON.stringify(queryJSON));
+
+            mongoDB.collection('badjslog_' + id).find(queryJSON, function (error, cursor) {
+                res.writeHead(200, {
+                    'Content-Type': 'text/json'
                 });
 
+                cursor.sort({
+                    'date': -1
+                })
+                    .skip(json.index * LIMIT)
+                    .limit(LIMIT)
+                    .toArray(function (err, item) {
+                        res.write(JSON.stringify(item));
+                        res.end();
 
-        });
+                    });
 
 
-    })
+            });
+
+
+        })
         .use('/errorMsgTop', function (req, res) {
             var error = validateDate(req.query.startDate);
             if (error) {
@@ -368,56 +272,6 @@ module.exports = function () {
                 res.write(doc);
                 res.end();
             });
-
-        })
-        .use('/errorMsgTopCache', function (req, res) {
-            res.end();
-            /*   var error = validateDate(req.query.startDate);
-               if (error) {
-                   res.end(JSON.stringify(error));
-               }else {
-                   res.end();
-               }*/
-
-            /*var error = validateDate(req.query.startDate);
-            if (error) {
-                res.end(JSON.stringify(error));
-                return;
-            }
-
-            req.query.startDate = req.query.startDate - 0;
-            var startDate = req.query.startDate;
-
-            res.end();
-
-            totalKey = dateFormat(new Date(startDate), "yyyy-MM-dd");
-
-
-            req.query.ids.split("_").forEach(function(value, key) {
-                var fileName = dateFormat(new Date(startDate), "yyyy-MM-dd") + "__" + value;
-                var filePath = path.join(__dirname , "..", "cache", "errorMsg", fileName);
-
-                logger.info("start cache id=" + value);
-
-                if (fs.existsSync(filePath)) {
-                    logger.info("id=" + value + " had cached");
-                    return;
-                }
-
-                getErrorMsgFromCache({
-                    id: value,
-                    startDate: startDate
-                }, false, function(err, doc) {
-                    if (err) {
-                        logger.info("cache errorMsgTop error fileName=" + fileName + " " + err);
-                    } else {
-                        logger.info("id = " + value + "cache success");
-                        fs.writeFileSync(filePath, doc);
-                    }
-                });
-
-            });*/
-
 
         })
         .listen(global.pjconfig.port);

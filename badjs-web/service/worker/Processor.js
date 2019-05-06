@@ -114,7 +114,7 @@ Processor.prototype = {
         var self = this;
         this.eventEmitter.on(key, function () {
             cb.apply(self, arguments);
-        })
+        });
     }
 };
 
