@@ -3,6 +3,7 @@ var log4js = require('log4js'),
 
 var path = require("path");
 var argv = process.argv.slice(2);
+var pos = require('./cache/pos');
 
 if (argv.indexOf('--project') >= 0) {
     global.pjconfig = require(path.join(__dirname, 'project.debug.json'));
@@ -16,6 +17,9 @@ if (argv.indexOf('--debug') >= 0) {
 } else {
     logger.level = 'INFO';
 }
+
+// 创建所需目录
+pos();
 
 
 global.MONGODB = global.pjconfig.mongodb;
