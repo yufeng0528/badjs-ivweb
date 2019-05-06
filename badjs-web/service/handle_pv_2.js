@@ -10,7 +10,7 @@ const pjConfig = require('../project.json');
 
 const mail = require("../utils/ivwebMail_for_single.js");
 
-function getScoreParam(Score) {
+function getScoreParam (Score) {
     var param = {
         dao: Score
     };
@@ -20,7 +20,7 @@ function getScoreParam(Score) {
     return param;
 }
 
-function getScoreData(param, db) {
+function getScoreData (param, db) {
 
     return new Promise((resolve, reject) => {
         var sql = "select s.*, a.name from b_quality as s, b_apply as a where s.badjsid=a.id and a.status=1 and s.pv>0 and s.date>" + param.date + " order by s.date;";
@@ -39,7 +39,7 @@ function getScoreData(param, db) {
     });
 }
 
-function getApplyList(db) {
+function getApplyList (db) {
     return new Promise((resolve, reject) => {
         var sql = "select * from b_apply where status=1;";
         db.driver.execQuery(sql, (err, data) => {
@@ -49,7 +49,7 @@ function getApplyList(db) {
 }
 
 
-function handleScorePic(Score, db, closeCallback) {
+function handleScorePic (Score, db, closeCallback) {
 
     // 创建参数 日期
     var param = getScoreParam(Score),
@@ -203,11 +203,11 @@ function handleScorePic(Score, db, closeCallback) {
     });
 }
 
-function sendErrorMail() {
+function sendErrorMail () {
     mail('', pjConfig.errorMailTo, '', 'IVWEB badjs质量评分日报错误', '请检查是否磁盘已满并且重新发送邮件', '', true);
 }
 
-function sendMail(data) {
+function sendMail (data) {
     var html = data[0], picNum = data[1];
     console.log('start send mail');
 

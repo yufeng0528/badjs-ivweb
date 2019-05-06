@@ -54,7 +54,7 @@ var getImageData = function (name, data) {
         totalArray.push(0);
     }
 
-    function whichDayIndex(day1) {
+    function whichDayIndex (day1) {
         for (var i = 0, len = categories.length; i < len; i++) {
             if (day1 == categories[i]) {
                 return i;
