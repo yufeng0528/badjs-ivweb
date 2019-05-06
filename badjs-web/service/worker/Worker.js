@@ -41,10 +41,10 @@ var isExclude = function(str, regs) {
 
 var getSubscribe = function (str){
     if(process.env.mqModule == "axon") {
-            return str + "*"
+            return str + "*";
     }
     return str;
-}
+};
 
 
 

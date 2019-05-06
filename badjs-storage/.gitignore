@@ -227,8 +227,9 @@ node_modules/
 
 #############
 ## my
-############# 
-project.db  
+#############
+project.db
 *.bat
 
-cache/errorMsg/
+cache/errorMsg/*
+cache/total/*
