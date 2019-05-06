@@ -76,29 +76,29 @@ badjs-ivweb 默认使用 linux 中的 crontab 进行定时任务，完成每天�
 
 ```sh
 # create b_statistics table
-30 2 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/handle-statistics.js
 
 # 统计 pv
 6 0 * * * bash /data/badjs-ivweb/badjs-web/service/nginx_log.sh
-0 3 * * * bash /data/badjs-ivweb/badjs-web/service/get_pv.sh
+30 0 * * * bash /data/badjs-ivweb/badjs-web/service/get_pv.sh
 
 # 清理离线日志
-30 2 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/CleanOffline.js
+30 2 * * * node /data/badjs-ivweb/badjs-web/service/CleanOffline.js >> /data/log/clean.log
 
-# create b_quality table
-30 3 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/handle-quality.js
+# create b_quality table create b_statistics table
+0 2 * * * node /data/badjs-ivweb/badjs-web/service/handle-statistics.js >> /data/log/statistics.log
+30 3 * * * node /data/badjs-ivweb/badjs-web/service/handle-quality.js >> /data/log/quality.log
 
 # hardware check
-0 2 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/HardwareMail.js
+0 2 * * * node /data/badjs-ivweb/badjs-web/service/HardwareMail.js
 
 # send score mail
-0 4 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/ScoreMail.js
+0 4 * * * node /data/badjs-ivweb/badjs-web/service/ScoreMail.js >> /data/log/scoreMail.log
 
 # send top error mail
-0 5 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/TopErrorMail.js
+0 5 * * * node /data/badjs-ivweb/badjs-web/service/TopErrorMail.js >> /data/log/topErrorMail.log
 
 # wechat bot
-0 9 * * * /data/home/server/nodejs/bin/node /data/badjs-ivweb/badjs-web/service/WechatService.js
+0 9 * * * node /data/badjs-ivweb/badjs-web/service/WechatService.js >> /data/log/wechatBot.log
 ```
 
 需要注意的是 `统计 pv` 需要在 `create b_quality table` 前面进行，`pv`，`b_statistics`、`b_quality` 需要在 sendEmail 前进行。

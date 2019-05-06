@@ -7,7 +7,7 @@ logs_path_log="/data/nginx_log/logaccess/"
 pid_path="/etc/nginx/logs/nginx.pid"
 
 mv ${logs_path}default.log ${logs_path}access_$(date -d "yesterday" +"%Y%m%d").log
-mv ${logs_path_log}default.log ${logs_path_log}access_$(date -d "yesterday" +"%Y%m%d").log
+#mv ${logs_path_log}default.log ${logs_path_log}access_$(date -d "yesterday" +"%Y%m%d").log
 
 kill -USR1 `cat ${pid_path}`
 
