@@ -270,9 +270,10 @@ app.use('/badjs/offlineLog', function (req, res) {
                         offlineLogMonitorInfo[param.id] = {};
                     }
                     offlineLogMonitorInfo[param.id][param.uin] = result;
+                    console.log('new offline log monitor:', offlineLogMonitorInfo);
                     return res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto('" + result + "');");
                 }
-                res.end('');
+                res.end('false');
             });
         }).on('error', function (e) {
             logger.warn("offlineLogCheck err , ", e);
@@ -296,6 +297,7 @@ app.use('/badjs/offlineLog', function (req, res) {
                         offlineLogMonitorInfo[param.id] = {};
                     }
                     offlineLogMonitorInfo[param.id][param.uin] = result;
+                    console.log('new offline log monitor:', offlineLogMonitorInfo);
                 }
                 return res.end(JSON.stringify({
                     code: 200,

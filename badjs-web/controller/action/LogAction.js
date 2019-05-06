@@ -140,7 +140,7 @@ var LogAction = {
         } else {
             hadAdd = true;
         }
-
+        console.log('new offline monitor info:', global.offlineLogMonitorInfo);
 
         res.json({ ret: 0, msg: "success-query", data: { hadAdd: hadAdd } });
     },
