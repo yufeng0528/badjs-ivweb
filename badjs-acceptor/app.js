@@ -327,7 +327,7 @@ app.use('/badjs/offlineLog', function (req, res) {
 
         if (id <= 0 || id >= 9999 || !global.projectsInfo[id + ""] || !referer_match(id, req)) {
             const referer = (((req || {}).headers || {}).referer || "").toString();
-            console.log('error badjsid: ', id, referer, req.url);
+            // console.log('error badjsid: ', id, referer, req.url);
             return reponseReject(res, responseHeader);
         }
 
