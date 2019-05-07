@@ -1,7 +1,7 @@
 const log4js = require('log4js');
 const logger = log4js.getLogger();
 const path = require('path');
-const {mkdirs} = require('../utils/mkdir');
+const { mkdirs } = require('../utils/mkdir');
 
 module.exports = function () {
     setTimeout(function () {
@@ -26,8 +26,12 @@ module.exports = function () {
         pushProject();
 
         require("../service/OfflineLogService")();
-        mkdirs(path.join(__dirname, '../static/img/tmp'));
-        mkdirs(path.join(__dirname, '../static/scoreimg'));
+        mkdirs(path.join(__dirname, '../static/img/tmp'), () => {
+            console.log('mkdir success');
+        });
+        mkdirs(path.join(__dirname, '../static/scoreimg'), () => {
+            console.log('mkdir success');
+        });
 
         // 邮件报表
         // 2019-1-18日注释 => 使用 Linux 中的 crontab 做为数据导入定时器，之前用setTimeout定时器问题太多。
