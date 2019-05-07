@@ -25,7 +25,7 @@ MongoClient.connect(url, function (err, db) {
     } else {
         logger.info("Connected correctly to server");
     }
-    mongoDB = db;
+    mongoDB = db.db('badjs');
 });
 
 const app = express();

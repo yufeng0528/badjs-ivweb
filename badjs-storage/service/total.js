@@ -60,7 +60,7 @@ var start = function (db, params) {
 };
 
 MongoClient.connect(url, function (err, db) {
-    start(db, {
+    start(db.db('badjs'), {
         id: 25,
         include: [new RegExp(unicode('加载次数'))]
     });

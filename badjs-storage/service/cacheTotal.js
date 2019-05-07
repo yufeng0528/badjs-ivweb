@@ -14,7 +14,7 @@ MongoClient.connect(global.MONGODB.url, function (err, db) {
     } else {
         logger.info('Connected correctly to mongodb');
     }
-    mongoDB = db;
+    mongoDB = db.db('badjs');
 });
 
 

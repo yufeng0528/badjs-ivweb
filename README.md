@@ -75,8 +75,6 @@ badjs-ivweb 默认使用 linux 中的 crontab 进行定时任务，完成每天�
 添加一下定时任务（请注意更换node路径和文件路径）
 
 ```sh
-# create b_statistics table
-
 # 统计 pv
 6 0 * * * bash /data/badjs-ivweb/badjs-web/service/nginx_log.sh
 30 0 * * * bash /data/badjs-ivweb/badjs-web/service/get_pv.sh
