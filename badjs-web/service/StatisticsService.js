@@ -116,7 +116,7 @@ StatisticsService.prototype = {
     queryScoreById: function (param, callback) {
         var id = param.id;
 
-        this.scoreDao.find({badjsid: id})
+        this.scoreDao.find({ badjsid: id })
             .limit(30).order('-date')
             .all((err, items) => {
                 callback(items);
@@ -157,11 +157,19 @@ StatisticsService.prototype = {
                         total: 0
                     };
                 }
-                self.statisticsDao.one({projectId: id, startDate: startDate}, function (err, old) {
+                self.statisticsDao.one({ projectId: id, startDate: startDate }, function (err, old) {
+                    // 如果已经插入过则进行更新
                     if (old) {
                         console.log('update statistics log:', id);
                         const oldContent = JSON.parse(old.content);
-                        old.content = saveModel.content.concat(oldContent).sort((p, n) =>{
+                        saveModel.content.forEach(c => {
+                            oldContent.forEach(o => {
+                                if (o.title == c.title) {
+                                    o.total += c.total;
+                                }
+                            });
+                        });
+                        old.content = oldContent.sort((p, n) => {
                             return n.total - p.total;
                         });
                         old.content = JSON.stringify(old.content);
@@ -172,6 +180,7 @@ StatisticsService.prototype = {
                             cb && cb(err);
                         });
                     } else {
+                        // 没有插入过直接保存
                         console.log('insert statistics log:', id);
                         saveModel.content = JSON.stringify(saveModel.content);
                         self.statisticsDao.create(saveModel, function (err, items) {
