@@ -99,7 +99,9 @@ app.use('/offlineLogCheck', function (req, res) {
     var param = req.query;
     if (param.id && param.uin && global.offlineLogMonitorInfo[param.id] && global.offlineLogMonitorInfo[param.id][param.uin]) {
         let key = global.offlineLogMonitorInfo[param.id][param.uin];
-        delete global.offlineLogMonitorInfo[param.id][param.uin];
+        if (param.delete) {
+            delete global.offlineLogMonitorInfo[param.id][param.uin];
+        }
         logger.info('should download offline log: ' + (param.id + '_' + param.uin));
         res.end(key);
     } else {

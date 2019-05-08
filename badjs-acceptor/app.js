@@ -76,9 +76,6 @@ interceptor.add(require(global.pjconfig.dispatcher.module)());
 const forbiddenData = '403 forbidden';
 
 global.projectsInfo = {};
-global.offlineAutoInfo = {};
-
-global.offlineLogMonitor = {};
 
 const get_domain = function (url) {
     return (url.toString().match(REG_DOMAIN) || ['', ''])[1].replace(/^\*\./, '');
@@ -118,6 +115,48 @@ function getClientIp (req) {
     }
 
     return "0.0.0.0";
+}
+
+function writeOfflineLog (offline_log) {
+
+    const logs = offline_log.logs;
+    const msgObj = offline_log.msgObj;
+    const urlObj = offline_log.urlObj;
+
+    if (!logs || !logs.length) {
+        return false;
+    }
+
+    const filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
+
+    const fileName = offline_log.uin + '_' + offline_log.startDate + '_' + offline_log.endDate;
+
+    if (!fs.existsSync(filePath)) {
+        fs.mkdirSync(filePath);
+    }
+
+    logs.map(function (log) {
+        if (msgObj) {
+            log.m = msgObj[log.m];
+        }
+        if (urlObj) {
+            log.f = urlObj[log.f];
+        }
+        for (const k in deflateObj) {
+            if (k in log) {
+                const v = deflateObj[k];
+                log[v] = log[k];
+                delete log[k];
+            }
+        }
+        return log;
+    });
+
+    fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log), function (err) {
+        if (!err) {
+            console.log('write offline log success');
+        }
+    });
 }
 
 process.on('message', function (data) {
@@ -201,58 +240,24 @@ app.use('/badjs/offlineLog', function (req, res) {
         return res.end('invalid uin');
     }
 
-    if (!global.offlineLogMonitor[offline_log.id] || !global.offlineLogMonitor[offline_log.id][offline_log.uin]) {
-        return res.end('invalid offline log monitor');
-    }
+    // secretKey 校验
+    http.get(global.pjconfig.offline.offlineLogCheck + "?delete=1&id=" + offline_log.id + "&uin=" + offline_log.uin, function (clientRes) {
+        var result = '';
+        clientRes.setEncoding('utf8');
+        clientRes.on('data', function (chunk) {
+            result += chunk;
+        });
 
-    const secretKey = global.offlineLogMonitor[offline_log.id][offline_log.uin];
-
-    if (secretKey !== offline_log.secretKey) {
-        return res.end('invalid secretKey');
-    }
-
-    delete global.offlineLogMonitor[offline_log.id][offline_log.uin];
-
-    const logs = offline_log.logs;
-    const msgObj = offline_log.msgObj;
-    const urlObj = offline_log.urlObj;
-
-    if (!logs || !logs.length) {
-        return res.end('wrong logs');
-    }
-
-    const filePath = path.join(global.pjconfig.offline.path, offline_log.id + "");
-
-    const fileName = offline_log.uin + '_' + offline_log.startDate + '_' + offline_log.endDate;
-
-    if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath);
-    }
-
-    logs.map(function (log) {
-        if (msgObj) {
-            log.m = msgObj[log.m];
-        }
-        if (urlObj) {
-            log.f = urlObj[log.f];
-        }
-        for (const k in deflateObj) {
-            if (k in log) {
-                const v = deflateObj[k];
-                log[v] = log[k];
-                delete log[k];
+        clientRes.on("end", function () {
+            if (result && result == offline_log.secretKey) {
+                writeOfflineLog(offline_log);
+                return res.end('ok');
             }
-        }
-        return log;
+            return res.end('invalid secretKey');
+        });
+    }).on('error', function (e) {
+        return res.end('false');
     });
-
-    fs.writeFile(path.join(filePath, fileName), JSON.stringify(offline_log), function (err) {
-        if (!err) {
-            console.log('write offline log success');
-        }
-    });
-
-    res.end('ok');
 
 })
     .use('/badjs/offlineAuto', function (req, res) {
@@ -266,11 +271,6 @@ app.use('/badjs/offlineLog', function (req, res) {
 
             clientRes.on("end", function () {
                 if (result) {
-                    if (!global.offlineLogMonitor[param.id]) {
-                        global.offlineLogMonitor[param.id] = {};
-                    }
-                    global.offlineLogMonitor[param.id][param.uin] = result;
-                    console.log('new offline log monitor:', global.offlineLogMonitor);
                     return res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto('" + result + "');");
                 }
                 res.end('false');
@@ -292,13 +292,6 @@ app.use('/badjs/offlineLog', function (req, res) {
             });
 
             clientRes.on("end", function () {
-                if (result) {
-                    if (!global.offlineLogMonitor[param.id]) {
-                        global.offlineLogMonitor[param.id] = {};
-                    }
-                    global.offlineLogMonitor[param.id][param.uin] = result;
-                    console.log('new offline log monitor:', global.offlineLogMonitor);
-                }
                 return res.end(JSON.stringify({
                     code: 200,
                     msg: result ? result : false
