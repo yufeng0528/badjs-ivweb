@@ -78,7 +78,7 @@ const forbiddenData = '403 forbidden';
 global.projectsInfo = {};
 global.offlineAutoInfo = {};
 
-const offlineLogMonitorInfo = {};
+global.offlineLogMonitor = {};
 
 const get_domain = function (url) {
     return (url.toString().match(REG_DOMAIN) || ['', ''])[1].replace(/^\*\./, '');
@@ -201,17 +201,17 @@ app.use('/badjs/offlineLog', function (req, res) {
         return res.end('invalid uin');
     }
 
-    if (!offlineLogMonitorInfo[offline_log.id] || !offlineLogMonitorInfo[offline_log.id][offline_log.uin]) {
+    if (!global.offlineLogMonitor[offline_log.id] || !global.offlineLogMonitor[offline_log.id][offline_log.uin]) {
         return res.end('invalid offline log monitor');
     }
 
-    const secretKey = offlineLogMonitorInfo[offline_log.id][offline_log.uin];
+    const secretKey = global.offlineLogMonitor[offline_log.id][offline_log.uin];
 
     if (secretKey !== offline_log.secretKey) {
         return res.end('invalid secretKey');
     }
 
-    delete offlineLogMonitorInfo[offline_log.id][offline_log.uin];
+    delete global.offlineLogMonitor[offline_log.id][offline_log.uin];
 
     const logs = offline_log.logs;
     const msgObj = offline_log.msgObj;
@@ -266,11 +266,11 @@ app.use('/badjs/offlineLog', function (req, res) {
 
             clientRes.on("end", function () {
                 if (result) {
-                    if (!offlineLogMonitorInfo[param.id]) {
-                        offlineLogMonitorInfo[param.id] = {};
+                    if (!global.offlineLogMonitor[param.id]) {
+                        global.offlineLogMonitor[param.id] = {};
                     }
-                    offlineLogMonitorInfo[param.id][param.uin] = result;
-                    console.log('new offline log monitor:', offlineLogMonitorInfo);
+                    global.offlineLogMonitor[param.id][param.uin] = result;
+                    console.log('new offline log monitor:', global.offlineLogMonitor);
                     return res.end("window && window._badjsOfflineAuto && window._badjsOfflineAuto('" + result + "');");
                 }
                 res.end('false');
@@ -293,11 +293,11 @@ app.use('/badjs/offlineLog', function (req, res) {
 
             clientRes.on("end", function () {
                 if (result) {
-                    if (!offlineLogMonitorInfo[param.id]) {
-                        offlineLogMonitorInfo[param.id] = {};
+                    if (!global.offlineLogMonitor[param.id]) {
+                        global.offlineLogMonitor[param.id] = {};
                     }
-                    offlineLogMonitorInfo[param.id][param.uin] = result;
-                    console.log('new offline log monitor:', offlineLogMonitorInfo);
+                    global.offlineLogMonitor[param.id][param.uin] = result;
+                    console.log('new offline log monitor:', global.offlineLogMonitor);
                 }
                 return res.end(JSON.stringify({
                     code: 200,
