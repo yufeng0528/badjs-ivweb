@@ -143,7 +143,7 @@ StatisticsService.prototype = {
                     saveModel = {
                         startDate: new Date(result.startDate),
                         endDate: new Date(result.endDate),
-                        content: JSON.stringify(result.item),
+                        content: result.item,
                         projectId: id,
                         total: result.pv
                     };
@@ -152,17 +152,36 @@ StatisticsService.prototype = {
                     saveModel = {
                         startDate: startDate,
                         endDate: new Date(+startDate + 86400000 - 1),
-                        content: "[]",
+                        content: [],
                         projectId: id,
                         total: 0
                     };
                 }
-                self.statisticsDao.create(saveModel, function (err, items) {
-                    if (err) {
-                        logger.error("Insert into b_statistics error(id=", id + ") :  " + err);
+                self.statisticsDao.one({projectId: id, startDate: startDate}, function (err, old) {
+                    if (old) {
+                        console.log('update statistics log:', id);
+                        const oldContent = JSON.parse(old.content);
+                        old.content = saveModel.content.concat(oldContent).sort((p, n) =>{
+                            return n.total - p.total;
+                        });
+                        old.content = JSON.stringify(old.content);
+                        old.save(function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            cb && cb(err);
+                        });
+                    } else {
+                        console.log('insert statistics log:', id);
+                        saveModel.content = JSON.stringify(saveModel.content);
+                        self.statisticsDao.create(saveModel, function (err, items) {
+                            if (err) {
+                                logger.error("Insert into b_statistics error(id=", id + ") :  " + err);
+                            }
+                            logger.info("Insert into b_statistics success(id=", id + ") :  ");
+                            cb && cb(err);
+                        });
                     }
-                    logger.info("Insert into b_statistics success(id=", id + ") :  ");
-                    cb && cb(err);
                 });
             });
 

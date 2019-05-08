@@ -60,7 +60,7 @@ rl.on('close', () => {
             setTimeout(() => {
                 pvDao.one({ badjsid: pv.badjsid, date: pv.date }, function (err, pvLog) {
                     if (pvLog) {
-                        console.log('update pv log');
+                        console.log('update pv log' + badjsid);
                         pvLog.pv = parseInt(pvLog.pv) + parseInt(pv.pv);
                         pvLog.save(function (err) {
                             if (err) {
@@ -71,7 +71,7 @@ rl.on('close', () => {
                             }
                         });
                     } else {
-                        console.log('insert pv log');
+                        console.log('insert pv log' + badjsid);
                         pvDao.create(pv, function (err, items) {
                             if (err) {
                                 console.log(err);

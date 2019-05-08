@@ -26,11 +26,11 @@ module.exports = function () {
         pushProject();
 
         require("../service/OfflineLogService")();
-        mkdirs(path.join(__dirname, '../static/img/tmp'), () => {
-            console.log('mkdir success');
+        mkdirs(path.join(__dirname, '../static/img/tmp'), (str) => {
+            console.log(str || 'mkdir success');
         });
-        mkdirs(path.join(__dirname, '../static/scoreimg'), () => {
-            console.log('mkdir success');
+        mkdirs(path.join(__dirname, '../static/scoreimg'), (str) => {
+            console.log(str || 'mkdir success');
         });
 
         // 邮件报表

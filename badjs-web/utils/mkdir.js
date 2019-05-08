@@ -5,7 +5,7 @@ const path = require('path');
 function mkdirs (dirname, callback) {
     fs.exists(dirname, function (exists) {
         if (exists) {
-            callback();
+            callback('fold is exists');
         } else {
             mkdirs(path.dirname(dirname), function () {
                 fs.mkdir(dirname, callback);
