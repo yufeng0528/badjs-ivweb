@@ -38,7 +38,7 @@ var LogAction = {
         });
     },
     showOfflineFiles: function (params, req, res) {
-        if (!params.id) {
+        if (!params.id || !/^[0-9]{1,5}$/.test(params.id)) {
             res.json({ ret: 0, msg: "success-query", data: [] });
             return;
         }
@@ -71,10 +71,17 @@ var LogAction = {
 
         res.json({ ret: 0, msg: "success-query", data: offlineFilesList });
 
-
     },
 
     showOfflineLog: function (params, req, res) {
+        if (!/^\w{1,60}$/.test(params.fileId)) {
+            return res.json({ ret: 0, msg: "success-query", data: '' });
+        }
+
+        if (!/^[0-9]{1,5}$/.test(params.id)) {
+            return res.json({ ret: 0, msg: "success-query", data: '' });
+        }
+
         if (!params.fileId || !params.id) {
             res.json({ ret: 0, msg: "success-query", data: '' });
             return;
@@ -90,7 +97,6 @@ var LogAction = {
         var offlineFiles = fs.readFileSync(filePath);
 
         res.json({ ret: 0, msg: "success-query", data: offlineFiles.toString() });
-
 
     },
 
