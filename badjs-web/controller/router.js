@@ -74,16 +74,16 @@ module.exports = function (app) {
     app.get('/user/apply.html', function (req, res) {
         var user = req.session.user;
         if (req.query && req.query.applyId) {
-            ApplyAction.get({applyId: req.query.applyId}, function (err, apply) {
-                res.render('apply', {layout: false, user: user, index: 'apply', apply: apply});
+            ApplyAction.get({ applyId: req.query.applyId }, function (err, apply) {
+                res.render('apply', { layout: false, user: user, index: 'apply', apply: apply });
             });
         } else {
-            res.render('apply', {layout: false, user: user, index: 'apply', apply: {}});
+            res.render('apply', { layout: false, user: user, index: 'apply', apply: {} });
         }
     });
     app.get('/user/applyList.html', function (req, res) {
         var user = req.session.user;
-        res.render('applyList', {layout: false, user: user, index: 'manage', manageTitle: '申请项目列表'});
+        res.render('applyList', { layout: false, user: user, index: 'manage', manageTitle: '申请项目列表' });
     });
 
     app.get('/user/userManage.html', function (req, res) {
@@ -98,7 +98,7 @@ module.exports = function (app) {
     });
 
     app.get('/user/statistics.html', function (req, res) {
-        StatisticsAction.index({tpl: "statistics", statisticsTitle: "日志统计"}, req, res);
+        StatisticsAction.index({ tpl: "statistics", statisticsTitle: "日志统计" }, req, res);
     });
     app.get('/user/realtimelog.html', function (req, res) {
         IndexAction.realtime({}, req, res);
@@ -109,17 +109,17 @@ module.exports = function (app) {
     });
 
     app.get('/user/charts.html', function (req, res) {
-        StatisticsAction.index({tpl: "charts", statisticsTitle: "图表统计"}, req, res);
+        StatisticsAction.index({ tpl: "charts", statisticsTitle: "图表统计" }, req, res);
     });
     app.get('/user/projectTotal.html', function (req, res) {
-        StatisticsAction.projectTotal({tpl: "projectTotal", statisticsTitle: "项目统计"}, req, res);
+        StatisticsAction.projectTotal({ tpl: "projectTotal", statisticsTitle: "项目统计" }, req, res);
     });
     app.get('/user/introduce.html', function (req, res) {
-        res.render('introduce', {layout: false, user: req.session.user, index: 'guide', guideTitle: '使用指南'});
+        res.render('introduce', { layout: false, user: req.session.user, index: 'guide', guideTitle: '使用指南' });
     });
 
     app.get('/user/monitor.html', function (req, res) {
-        res.render('monitor', {layout: false, user: req.session.user, index: 'guide', guideTitle: '实时监控'});
+        res.render('monitor', { layout: false, user: req.session.user, index: 'guide', guideTitle: '实时监控' });
     });
 
     // global.pjconfig.QQConnect
@@ -146,7 +146,7 @@ module.exports = function (app) {
         for (var i = 0; i < req.files.length; i++) {
             names.push(req.files[i]['originalname']);
         }
-        res.send({ret: 1, filename: names.join(', ')});
+        res.send({ ret: 1, filename: names.join(', ') });
     });
 
 
@@ -170,7 +170,12 @@ module.exports = function (app) {
         params.user = req.session.user;
 
         if (!params.user) {
-            res.json({ret: -2, msg: "should login"});
+            res.json({ ret: -2, msg: "should login" });
+            return;
+        }
+
+        if (params.user.verify_state !== 2) {
+            res.json({ ret: -2, msg: "waiting for admin verify" });
             return;
         }
         //根据不同actionName 调用不同action
