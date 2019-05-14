@@ -63,8 +63,11 @@ app.use('/user', function (req, res, next) {
     if (pluginHandler.login) {
         pluginHandler.login.check(req, res, next);
     } else {
-        if (!req.session.user) {
+        const { user } = req.session;
+        if (!user) {
             return res.redirect(req.protocol + '://' + req.get('host') + '/login.html');
+        } else if (user.verify_state !== 2) {
+            return res.redirect(req.protocol + '://' + req.get('host'));
         } else {
             next();
         }

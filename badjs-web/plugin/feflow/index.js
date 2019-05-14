@@ -1,23 +1,16 @@
-
-
 // 注册路由 和 处理请求函数
 
 const path = require('path');
 const api = require(global.apiPath);
 
 
+function handlerFeflow (req, res, next) {
 
-function handlerFeflow(req, res, next) {
-
-    api.registApply(req.query).
-    then(data => {
-        
+    api.registApply(req.query).then(data => {
         res.json(data);
     }).catch(e => {
         res.json(e);
-    })
-
-
+    });
 }
 
 module.exports = {
@@ -25,5 +18,5 @@ module.exports = {
         path: 'feflow',
         handle: handlerFeflow
     }]
-}
+};
 
