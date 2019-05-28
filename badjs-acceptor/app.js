@@ -14,7 +14,9 @@ const cluster = require('cluster');
 
 const app = express();
 
-const multipartMiddleware = multipart();
+const multipartMiddleware = multipart({
+    maxFilesSize : 10 * 10 * 1024
+});
 
 app.use(multipartMiddleware);
 app.use(bodyParser.json({ limit: '10mb' }));
