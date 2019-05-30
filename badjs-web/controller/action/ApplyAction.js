@@ -33,7 +33,7 @@ var _process = function(value, key) {
     if (value.passTime) {
         value.passTime = (new Date(value.passTime) - 0);
     }
-}
+};
 
 var processData = function (data) {
     if(data.length) {
