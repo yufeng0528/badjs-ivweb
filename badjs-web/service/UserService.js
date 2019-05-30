@@ -87,6 +87,16 @@ UserService.prototype = {
 
     },
 
+    findOne: function (condition, callback) {
+        this.userDao.one(condition, function (err, item) {
+            if (err) {
+                callback();
+                return;
+            }
+            callback(item);
+        });
+    },
+
     queryUsersByCondition: function (target, callback) {
         this.userDao.find(target, function (err, items) {
             if (err) {

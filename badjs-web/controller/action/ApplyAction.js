@@ -10,6 +10,7 @@ var log4js = require('log4js'),
     _ = require('underscore'),
     crypto = require('crypto'),
     ApplyService = require('../../service/ApplyService'),
+    UserService = require('../../service/UserService'),
     isError = function (res, error) {
         if (error) {
             res.json({
@@ -39,7 +40,7 @@ var processData = function (data) {
         _.each(data, _process);
     } else {
         _process(data);
-    }    
+    }
     return data;
 };
 
@@ -50,46 +51,66 @@ var applyAction = {
         // 必要信息为空，则报错
         var url = params.url;
         var url_no_match = !REG_DOMAIN_STAR.test(url) && !REG_REFERER.test(url);
-        if (params.name === "" || url_no_match) {
-            res.json({
+        if (!params.name) {
+            return res.json({
                 ret: 1002,
-                msg: "params error"
+                msg: "项目名不能为空，请重新填写"
             });
-            return;
         }
-
-        var apply = params;
-
-        var applyService = new ApplyService();
-        if (apply.id) {
-            applyService.update(apply, function (err, items) {
-                if (isError(res, err)) {
-                    return;
-                }
-                res.json({
-                    ret: 0,
-                    msg: "success-add"
-                });
+        if (url_no_match) {
+            return res.json({
+                ret: 1002,
+                msg: "业务url有误，请重新填写"
             });
-        } else {
-            apply.userName = params.user.loginName;
-            apply.status = 0;
-            apply.createTime = new Date();
-            apply.appkey = crypto.createHash("md5").update(new Date - 0 + "badjsappkey" + params.user.loginName).digest('hex');
+        }
+        if (!params.userName) {
+            return res.json({
+                ret: 1002,
+                msg: "负责人不能为空，请重新填写"
+            });
+        }
+        var userService = new UserService();
+        userService.findOne({loginName: params.userName}, item => {
+            if (item && item.loginName == params.userName) {
+                var apply = params;
 
-            if (apply.limitpv == '') {
-                apply.limitpv = 0;
+                var applyService = new ApplyService();
+                if (apply.id) {
+                    applyService.update(apply, function (err, items) {
+                        if (isError(res, err)) {
+                            return;
+                        }
+                        res.json({
+                            ret: 0,
+                            msg: "success-add"
+                        });
+                    });
+                } else {
+                    apply.userName = params.user.loginName;
+                    apply.status = 0;
+                    apply.createTime = new Date();
+                    apply.appkey = crypto.createHash("md5").update(new Date - 0 + "badjsappkey" + params.user.loginName).digest('hex');
+
+                    if (apply.limitpv == '') {
+                        apply.limitpv = 0;
+                    }
+                    applyService.add(apply, function (err, items) {
+                        if (isError(res, err)) {
+                            return;
+                        }
+                        res.json({
+                            ret: 0,
+                            msg: "success-add"
+                        });
+                    });
+                }
+            } else {
+                return res.json({
+                    ret: 1002,
+                    msg: '负责人不存在，请修改后重新添加'
+                });
             }
-            applyService.add(apply, function (err, items) {
-                if (isError(res, err)) {
-                    return;
-                }
-                res.json({
-                    ret: 0,
-                    msg: "success-add"
-                });
-            });
-        }
+        });
     },
 
     queryListByUser: function (params, req, res) {
