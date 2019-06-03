@@ -115,7 +115,7 @@ var startService = function () {
             appKeyList = processProjectId(param.projectsInfo);
 
             fs.writeFile(dbPath, param.projectsInfo, function () {
-                logger.info('update project.db :' + param.projectsInfo);
+                logger.info('update project.db');
             });
         }
         res.writeHead(200);
