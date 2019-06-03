@@ -29,6 +29,10 @@ if (argv.indexOf('--debug') >= 0) {
 
 const dbPath = path.join(__dirname, 'project.db');
 
+if (!fs.existsSync(dbPath)) {
+    fs.writeFileSync(dbPath, '{}', 'utf8');
+}
+
 
 if (argv.indexOf('--project') >= 0) {
     global.pjconfig = require(path.join(__dirname, 'project.debug.json'));

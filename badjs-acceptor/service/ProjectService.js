@@ -11,7 +11,11 @@ const logger = log4js.getLogger();
 
 const path = require('path');
 
-const dbPath = path.join(__dirname, "..", "project.db");
+const dbPath = path.join(__dirname, '..', 'project.db');
+
+if (!fs.existsSync(dbPath)) {
+    fs.writeFileSync(dbPath, '{}', 'utf8');
+}
 
 const app = express();
 
@@ -33,7 +37,7 @@ const ProjectService = function (clusters) {
             param = req.body;
         }
 
-        if (param.auth != "badjsAccepter" || !param.projectsInfo) {
+        if (param.auth != 'badjsAccepter' || !param.projectsInfo) {
 
         } else {
             dispatchCluster({
@@ -51,7 +55,7 @@ const ProjectService = function (clusters) {
     })
         .listen(9001);
 
-    var info = fs.readFileSync(dbPath, "utf-8");
+    var info = fs.readFileSync(dbPath, 'utf-8');
 
     dispatchCluster({
         projectsInfo: info
