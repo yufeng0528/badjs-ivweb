@@ -9,7 +9,7 @@ endDate.setHours(endDate.getHours(), 60, 0, 0);
 var runIntervalClear = function () {
     setInterval(function () {
         limitTotal = {};
-    }, 3600000);
+    }, 1800000);
 };
 
 logger.info("after " + (endDate - new Date) + " run limit monitor clear");
