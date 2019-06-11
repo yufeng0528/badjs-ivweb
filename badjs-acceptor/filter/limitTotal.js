@@ -39,7 +39,7 @@ module.exports = function () {
                 total = limitTotal[id];
             }
 
-            if (total >= 10000) {
+            if (total >= 50000) {
                 console.log("id " + id + " total is exceed 10000");
                 return false;
             }
