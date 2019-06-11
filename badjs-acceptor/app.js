@@ -12,6 +12,8 @@ const fs = require('fs');
 
 const cluster = require('cluster');
 
+const monitor = require('./monitor');
+
 const app = express();
 
 const multipartMiddleware = multipart({
@@ -40,6 +42,7 @@ app.use((req, res, next) => {
     let ua = req.get('User-Agent') || '';
     if(ua.indexOf('TST(Tencent_Security_Team)') > -1) {
         console.log('tencent sercurity');
+        monitor('34464214');
         return res.json({
             retcode: 0,
             msg: 'succ'
