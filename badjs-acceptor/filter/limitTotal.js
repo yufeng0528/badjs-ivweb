@@ -20,7 +20,7 @@ setTimeout(function () {
 
 /**
  * Created by chriscai, 为后面的服务减少压力
- * 限制进程每个小时最大上报 10000
+ * 限制进程每个小时最大上报 200000
  */
 module.exports = function () {
     return {
@@ -39,8 +39,8 @@ module.exports = function () {
                 total = limitTotal[id];
             }
 
-            if (total >= 50000) {
-                console.log("id " + id + " total is exceed 10000");
+            if (total >= 200000) {
+                console.log("id " + id + " total is exceed 200000");
                 return false;
             }
         }
