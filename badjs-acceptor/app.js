@@ -12,11 +12,23 @@ const fs = require('fs');
 
 const cluster = require('cluster');
 
+const interceptor = require('c-interceptor')();
+const interceptors = global.pjconfig.interceptors;
+
 const app = express();
 
 const multipartMiddleware = multipart({
-    maxFilesSize : 10 * 10 * 1024
+    maxFilesSize: 10 * 10 * 1024
 });
+
+const logErrors = (err, req, res, next) => {
+    console.log('=========================');
+    console.error(err);
+    console.log('=========================');
+    res.status(500);
+    res.json({ 'error': 'json parser error' });
+    return;
+};
 
 app.use(multipartMiddleware);
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -24,6 +36,21 @@ app.use(bodyParser.urlencoded({
     extended: true,
     limit: 10 * 1024 * 1024
 }));
+
+app.use((req, res, next) => {
+    // 过滤安全扫描
+    let ua = req.get('User-Agent') || '';
+    if(ua.indexOf('TST(Tencent_Security_Team)') > -1) {
+        console.log('tencent sercurity');
+        return res.json({
+            retcode: 0,
+            msg: 'succ'
+        });
+    } else {
+        next();
+    }
+})
+app.use(logErrors);
 
 const argv = process.argv.slice(2);
 
@@ -65,9 +92,6 @@ if (cluster.isMaster) {
 
     return;
 }
-
-const interceptor = require('c-interceptor')();
-const interceptors = global.pjconfig.interceptors;
 
 interceptors.forEach(function (value, key) {
     var one = require(value)();
