@@ -5,28 +5,28 @@
  */
 module.exports = function () {
     return {
-        process : function (data){
+        process: function (data) {
 
-            function parse2Int (str){
+            function parse2Int (str) {
                 var tmp = parseInt(str);
-                if(isNaN(tmp)){
+                if (isNaN(tmp)) {
                     return str;
-                }else {
+                } else {
                     return tmp;
                 }
             }
 
-            data.data.forEach(function (value){
+            data.data.forEach(function (value) {
 
-                if(value.level){
+                if (value.level) {
                     value.level = parse2Int(value.level);
                 }
 
-                if(value.colNum){
+                if (value.colNum) {
                     value.colNum = parse2Int(value.colNum);
                 }
 
-                if(value.rowNum){
+                if (value.rowNum) {
                     value.rowNum = parse2Int(value.rowNum);
                 }
 

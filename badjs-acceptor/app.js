@@ -21,6 +21,7 @@ const multipartMiddleware = multipart({
 const logErrors = (err, req, res, next) => {
     console.log('=========================');
     console.error(err);
+    console.log(req.get('User-Agent'));
     console.log('=========================');
     res.status(500);
     res.json({ 'error': 'json parser error' });

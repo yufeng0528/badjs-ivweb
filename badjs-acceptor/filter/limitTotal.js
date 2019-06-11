@@ -1,24 +1,21 @@
-
-
 var log4js = require('log4js'),
     logger = log4js.getLogger();
 
 var limitTotal = {};
 
 var endDate = new Date;
-endDate.setHours(endDate.getHours() , 60 ,0 ,0)
+endDate.setHours(endDate.getHours(), 60, 0, 0);
 
-var runIntervalClear = function (){
-    setInterval(function (){
-        limitTotal = {}
-    }, 3600000 )
-}
+var runIntervalClear = function () {
+    setInterval(function () {
+        limitTotal = {};
+    }, 3600000);
+};
 
 logger.info("after " + (endDate - new Date) + " run limit monitor clear");
-setTimeout(function (){
+setTimeout(function () {
     runIntervalClear();
-} , endDate - new Date )
-
+}, endDate - new Date);
 
 
 /**
@@ -30,21 +27,20 @@ module.exports = function () {
         process: function (data) {
             var arr = data.data;
             var id = arr ? arr[0].id : null;
-            if(!id){
+            if (!id) {
                 return false;
             }
 
-            var total = 0 ;
-            if(!limitTotal[id]){
+            var total = 0;
+            if (!limitTotal[id]) {
                 total = limitTotal[id] = arr.length;
-            }else {
+            } else {
                 limitTotal[id] += arr.length;
                 total = limitTotal[id];
             }
 
-
-            if (total >= 10000){
-                // console.log("id " + id + " total is exceed 10000")
+            if (total >= 10000) {
+                console.log("id " + id + " total is exceed 10000");
                 return false;
             }
         }

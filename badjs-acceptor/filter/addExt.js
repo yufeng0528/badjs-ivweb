@@ -4,9 +4,9 @@
  * @param {Request} req
  * @returns {Stream}
  */
-module.exports = function() {
+module.exports = function () {
 
-    function getClientIp(req) {
+    function getClientIp (req) {
         try {
             var xff = (
                 req.headers['X-Forwarded-For'] ||
@@ -21,17 +21,17 @@ module.exports = function() {
         } catch (ex) {
 
         }
-        
+
         return "0.0.0.0";
     }
 
     return {
-        preProcess: function(data) {
+        preProcess: function (data) {
 
         },
 
-        process: function(data) {
-            data.data.forEach(function(value) {
+        process: function (data) {
+            data.data.forEach(function (value) {
                 value.ip = getClientIp(data.req);
                 value.userAgent = data.req.headers['user-agent'];
             });

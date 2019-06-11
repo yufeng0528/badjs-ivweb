@@ -1,10 +1,10 @@
 var _ = require("underscore");
 
-var has = function(obj, key) {
+var has = function (obj, key) {
     return obj !== null && hasOwnProperty.call(obj, key);
 };
 
-var extend = function(obj) {
+var extend = function (obj) {
     var source, prop;
     for (var i = 1, length = arguments.length; i < length; i++) {
         source = arguments[i];
@@ -22,9 +22,9 @@ var extend = function(obj) {
  * 合并预处理
  * @returns {Stream}
  */
-module.exports = function() {
+module.exports = function () {
     return {
-        process: function(data) {
+        process: function (data) {
             var queryData = data.data;
             var newData = data.data = [];
 
@@ -39,8 +39,8 @@ module.exports = function() {
                     version: queryData.version
                 };
 
-                if(_.isString(queryData.from)){
-                    fixedParam.from = queryData.from
+                if (_.isString(queryData.from)) {
+                    fixedParam.from = queryData.from;
                 }
 
                 //delete queryData.id;
@@ -50,14 +50,14 @@ module.exports = function() {
 
                 var queryArray = [];
                 for (var key in queryData) {
-                    _.isArray(queryData[key]) && queryData[key].forEach(function(value, index) {
+                    _.isArray(queryData[key]) && queryData[key].forEach(function (value, index) {
                         queryArray[index] = queryArray[index] || {};
                         queryArray[index][key] = value;
                     });
                 }
 
                 // extend default params
-                queryArray.forEach(function(value, index) {
+                queryArray.forEach(function (value, index) {
                     newData.push(extend(value, fixedParam));
                 });
             }
