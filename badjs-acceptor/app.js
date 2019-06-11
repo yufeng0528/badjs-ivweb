@@ -12,9 +12,6 @@ const fs = require('fs');
 
 const cluster = require('cluster');
 
-const interceptor = require('c-interceptor')();
-const interceptors = global.pjconfig.interceptors;
-
 const app = express();
 
 const multipartMiddleware = multipart({
@@ -92,6 +89,11 @@ if (cluster.isMaster) {
 
     return;
 }
+
+
+const interceptor = require('c-interceptor')();
+const interceptors = global.pjconfig.interceptors;
+
 
 interceptors.forEach(function (value, key) {
     var one = require(value)();
