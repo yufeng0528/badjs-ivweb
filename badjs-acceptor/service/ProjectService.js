@@ -19,9 +19,10 @@ if (!fs.existsSync(dbPath)) {
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: true,
+    limit: 10 * 1024 * 1024
 }));
 
 const ProjectService = function (clusters) {
