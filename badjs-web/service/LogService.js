@@ -77,7 +77,8 @@ LogService.prototype = {
                         url: value.url,
                         blacklist: value.blacklist,
                         appkey: value.appkey,
-                        user: value.loginName
+                        user: value.loginName,
+                        name: value.name
                     };
                 });
 
