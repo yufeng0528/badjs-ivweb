@@ -87,6 +87,7 @@ function registApply (applyObj) {
         passTime: new Date(),
         online: 1,
         limitpv: 0,
+        codePath: applyObj.codePath
     };
 
     return getUser(apply.userName).then(data => {

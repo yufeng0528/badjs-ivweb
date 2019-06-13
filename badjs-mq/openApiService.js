@@ -12,10 +12,10 @@ const path = require('path');
 
 const app = express();
 
-app.use(bodyParser.json({}));
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({
     extended: true,
-    limit: 2 * 1024 * 1024
+    limit: 10 * 1024 * 1024
 }));
 
 const argv = process.argv.slice();
@@ -32,7 +32,6 @@ const dbPath = path.join(__dirname, 'project.db');
 if (!fs.existsSync(dbPath)) {
     fs.writeFileSync(dbPath, '{}', 'utf8');
 }
-
 
 if (argv.indexOf('--project') >= 0) {
     global.pjconfig = require(path.join(__dirname, 'project.debug.json'));
@@ -77,7 +76,7 @@ setInterval(function () {
 
 
 var processProjectId = function (str) {
-    var map = {appkey: {}, idMappingKey: {}};
+    var map = { appkey: {}, idMappingKey: {} };
 
     var json = JSON.parse(str || '{}');
 
@@ -136,20 +135,20 @@ var processClientMessage = function (msg, client) {
                     clientMapping[msg.appkey] = {};
                 }
                 clientMapping[msg.appkey][client.ext.id] = client;
-                client.write(JSON.stringify({'err': 0, msg: 'auth success', type: 'auth'}));
+                client.write(JSON.stringify({ 'err': 0, msg: 'auth success', type: 'auth' }));
                 logger.info('one client auth succ , appkey is ' + msg.appkey);
             } else {
-                client.write(JSON.stringify({'err': -1, msg: 'auth fail', type: 'auth'}));
+                client.write(JSON.stringify({ 'err': -1, msg: 'auth fail', type: 'auth' }));
                 logger.info('one client auth fail , appkey is ' + msg.appkey);
                 client.destroy();
             }
             break;
         case 'keepalive' :
             client.ext.timeout = new Date - 0;
-            client.write(JSON.stringify({'err': 0, msg: 'keepalive', type: 'keepalive'}));
+            client.write(JSON.stringify({ 'err': 0, msg: 'keepalive', type: 'keepalive' }));
             break;
         default :
-            client.write(JSON.stringify({'err': -2, msg: 'should auth ', type: 'auth'}));
+            client.write(JSON.stringify({ 'err': -2, msg: 'should auth ', type: 'auth' }));
             client.destroy();
             break;
     }
@@ -198,7 +197,7 @@ mq.on('message', function (data) {
     var sendingClients = clientMapping[appkey];
     if (sendingClients) {
         _.each(sendingClients, function (value) {
-            value.write(JSON.stringify({type: 'message', msg: message, err: 0}));
+            value.write(JSON.stringify({ type: 'message', msg: message, err: 0 }));
         });
     }
 });

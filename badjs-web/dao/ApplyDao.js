@@ -19,8 +19,9 @@ module.exports  = function (db){
         createTime  : Date,
         passTime    : Date,
         online      : Number,
-        limitpv     : Number
+        limitpv     : Number,
+        codePath    : String
     });
 
     return apply;
-}
+};

@@ -89,6 +89,7 @@ var applyAction = {
                     apply.userName = params.user.loginName;
                     apply.status = 0;
                     apply.createTime = new Date();
+                    apply.codePath = params.codePath;
                     apply.appkey = crypto.createHash("md5").update(new Date - 0 + "badjsappkey" + params.user.loginName).digest('hex');
 
                     if (apply.limitpv == '') {

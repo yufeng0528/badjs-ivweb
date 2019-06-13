@@ -1,4 +1,3 @@
-/* global global */
 /**
  * Created by chriscai on 2014/12/16.
  */
@@ -64,13 +63,9 @@ LogService.prototype = {
         var businessService = new BusinessService();
 
         var push = function () {
-
             businessService.findBusiness(function (err, item) {
-
                 var projectsInfo = {};
-
                 _.each(item, function (value) {
-
                     try {
                         value.blacklist = JSON.parse(value.blacklist || {});
                     } catch (e) {
@@ -81,7 +76,9 @@ LogService.prototype = {
                         id: value.id,
                         url: value.url,
                         blacklist: value.blacklist,
-                        appkey: value.appkey
+                        appkey: value.appkey,
+                        user: value.loginName,
+                        name: value.name
                     };
                 });
 
