@@ -39,6 +39,7 @@ CREATE TABLE `b_apply` (
   `status` int(11) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `appkey` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `codePath` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `url` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `blacklist` text COLLATE utf8_unicode_ci ,
   `description` text COLLATE utf8_unicode_ci,
