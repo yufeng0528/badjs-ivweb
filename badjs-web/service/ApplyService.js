@@ -52,9 +52,7 @@ ApplyService.prototype = {
         });
     },
     queryListBySearch: function (searchParam, callback) {
-
-
-        this.applyDao.find(searchParam, ["createTime", "Z"], function (err, items) {
+        this.applyDao.find(searchParam, ["id", "Z"], function (err, items) {
             if (err) {
                 callback(err);
                 return;
