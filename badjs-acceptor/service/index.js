@@ -74,35 +74,30 @@ async function wechatNotify({
 async function quantityLimitNotify(projectID, quantityLimit, isHalfNotify) {
   const robotKey = global.pjconfig.wechat.robotKey
   const mentionedList = []
-  try {
-    // find project info
-    const project = global.projectsInfo[projectID] || {}
-    const { user: owner, name = '' } = project
+  // find project info
+  const project = global.projectsInfo[projectID] || {}
+  const { user: owner, name = '' } = project
 
-    if (owner) {
-      mentionedList.push(owner)
-    }
-
-    const halfText = quantityLimit / 2 / 10000 + 'w'
-    const totalText = quantityLimit / 10000 + 'w'
-
-    const message =
-      (isHalfNotify
-        ? `#### Aegis 1小时内项目上报数量超过${halfText}条异常提示\n\n`
-        : `#### Aegis 1小时内项目上报数量超过${totalText}条丢弃告警\n\n`) +
-      `> ${projectID} - ${name}\n` +
-      `\n（限制策略：1小时内，上报超过${halfText}条将提示异常，超过${totalText}条将丢弃上报并告警。每隔1小时重置记录）` +
-      '\n进入 [Aegis](https://aegis.ivweb.io) 定位问题。'
-
-    return wechatNotify({
-      robotKey,
-      message,
-      mentionedList,
-    })
-  } catch (error) {
-    logger.error('上报数量异常告警失败！', error)
-    return Promise.reject(error)
+  if (owner) {
+    mentionedList.push(owner)
   }
+
+  const halfText = quantityLimit / 2 / 10000 + 'w'
+  const totalText = quantityLimit / 10000 + 'w'
+
+  const message =
+    (isHalfNotify
+      ? `#### Aegis 1小时内项目上报数量超过${halfText}条异常提示\n\n`
+      : `#### Aegis 1小时内项目上报数量超过${totalText}条丢弃告警\n\n`) +
+    `> ${projectID} - ${name}\n` +
+    `\n（限制策略：1小时内，上报超过${halfText}条将提示异常，超过${totalText}条将丢弃上报并告警。每隔1小时重置记录）` +
+    '\n进入 [Aegis](https://aegis.ivweb.io) 定位问题。'
+
+  return wechatNotify({
+    robotKey,
+    message,
+    mentionedList,
+  })
 }
 
 module.exports = {
