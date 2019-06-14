@@ -45,30 +45,23 @@ module.exports = function () {
                 total = reportRecord[id].count;
             }
 
-            // 超过一半阈值后，提示一次异常
-            if (total >= QUANTITY_LIMIT / 2) {
-                logger.info(`id ${id} total is exceed ${QUANTITY_LIMIT / 2}`);
-                if (!reportRecord[id].hasHalfNotify) {
-                    quantityLimitNotify(id, QUANTITY_LIMIT, true).then(
-                        () => {
-                            reportRecord[id].hasHalfNotify = true;
-                        },
-                        e => logger.error(`id: ${id} 上报超过一半阈值，微信机器人提示失败`, e)
-                    );
-                }
-            }
             // 超过阈值后，告警一次，并且丢弃上报
             if (total >= QUANTITY_LIMIT) {
-                logger.info(`id ${id} total is exceed ${QUANTITY_LIMIT}`);
                 if (!reportRecord[id].hasNotify) {
-                    quantityLimitNotify(id, QUANTITY_LIMIT, false).then(
-                        () => {
-                            reportRecord[id].hasNotify = true;
-                        },
-                        e => logger.error(`id: ${id} 上报超过阈值，微信机器人告警失败`, e)
-                    );
+                    logger.info(`id ${id} total is exceed ${QUANTITY_LIMIT}`);
+                    reportRecord[id].hasNotify = true;
+                    quantityLimitNotify(id, QUANTITY_LIMIT, false);
                 }
                 return false;
+            }
+
+            // 超过一半阈值后，提示一次异常
+            if (total >= QUANTITY_LIMIT / 2) {
+                if (!reportRecord[id].hasHalfNotify) {
+                    logger.info(`id ${id} total is exceed ${QUANTITY_LIMIT / 2}`);
+                    reportRecord[id].hasHalfNotify = true;
+                    quantityLimitNotify(id, QUANTITY_LIMIT, true);
+                }
             }
         },
     };
