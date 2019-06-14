@@ -13,17 +13,17 @@ const HOOK_URL = 'http://in.qyapi.weixin.qq.com/cgi-bin/webhook/send';
  * @param {string[]} [params.mentionedList=[]] - @ 企业微信账号列表，单独用一条 text 格式的消息发送
  * @returns {Promise}
  */
-async function wechatNotify ({
-                                 robotKey,
-                                 messageType = 'markdown',
-                                 message,
-                                 mentionText = '请相关同事注意。',
-                                 mentionedList = [],
-                             }) {
+async function wechatNotify({
+    robotKey,
+    messageType = 'markdown',
+    message,
+    mentionText = '请相关同事注意。',
+    mentionedList = []
+}) {
     const baseOptions = {
         method: 'POST',
         uri: `${HOOK_URL}?key=${robotKey}`,
-        json: true, // Automatically stringifies the body to JSON
+        json: true // Automatically stringifies the body to JSON
     };
 
     // request body of markdown and text
@@ -31,15 +31,15 @@ async function wechatNotify ({
         markdown: {
             msgtype: 'markdown',
             markdown: {
-                content: message,
-            },
+                content: message
+            }
         },
         text: {
             msgtype: 'text',
             text: {
-                content: message,
-            },
-        },
+                content: message
+            }
+        }
     };
 
     // message
@@ -55,8 +55,8 @@ async function wechatNotify ({
         const mentionOption = {
             ...baseOptions,
             body: {
-                ...bodys.text,
-            },
+                ...bodys.text
+            }
         };
         mentionOption.body.text.content = mentionText;
         mentionOption.body.text.mentioned_list = mentionedList;
@@ -71,7 +71,7 @@ async function wechatNotify ({
  * @param {boolean} isHalfNotify - 是否达到阈值一半时的提示
  * @returns {Promise}
  */
-async function quantityLimitNotify (projectID, quantityLimit, isHalfNotify) {
+async function quantityLimitNotify(projectID, quantityLimit, isHalfNotify) {
     const robotKey = global.pjconfig.wechat.robotKey;
     const mentionedList = [];
     // find project info
@@ -89,18 +89,18 @@ async function quantityLimitNotify (projectID, quantityLimit, isHalfNotify) {
         (isHalfNotify
             ? `#### Aegis 1小时内项目上报数量超过${halfText}条异常提示\n\n`
             : `#### Aegis 1小时内项目上报数量超过${totalText}条丢弃告警\n\n`) +
-        `> ${projectID} - ${name}\n` +
+        `> ${projectID} - ${name} - ${owner}\n` +
         `\n（限制策略：1小时内，上报超过${halfText}条将提示异常，超过${totalText}条将丢弃上报并告警。每隔1小时重置记录）` +
         '\n进入 [Aegis](https://aegis.ivweb.io) 定位问题。';
 
     return wechatNotify({
         robotKey,
         message,
-        mentionedList,
-    })
+        mentionedList
+    });
 }
 
 module.exports = {
     quantityLimitNotify,
-    wechatNotify,
-}
+    wechatNotify
+};
