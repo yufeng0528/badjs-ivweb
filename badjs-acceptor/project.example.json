@@ -21,5 +21,8 @@
     "blackList" :{
         "ip" : [ "999.9.9.9" , "999.9.*" ,  "999.9.*.*"],
         "ua": ["Baiduspider" , "*_Security_Team" ]
+    },
+    "wechat": {
+        "robotKey": "xxx"
     }
 }
