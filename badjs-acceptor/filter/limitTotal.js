@@ -3,7 +3,7 @@ const logger = log4js.getLogger();
 
 const { quantityLimitNotify } = require('../service');
 
-const QUANTITY_LIMIT = 200000;
+const QUANTITY_LIMIT = 100000;
 let reportRecord = {};
 
 const endDate = new Date();
