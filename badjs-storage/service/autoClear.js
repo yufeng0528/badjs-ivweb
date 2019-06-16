@@ -28,7 +28,7 @@ var beforeDate = 1000 * 60 * 60 * 24 * maxAge;
 
 // 自动清理 maxAge 天前的数据
 var autoClearStart = function () {
-    logger.info('start auto clear data before ' + beforeDate + ' and after 7d will clear again');
+    logger.info(`start auto clear data before ' + beforeDate + ' and after ${maxAge}d will clear again`);
     mongoDB.collections(function (error, collections) {
         var count = 0;
         collections.forEach(function (collection, key) {

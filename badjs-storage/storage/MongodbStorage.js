@@ -102,11 +102,8 @@ var insertDocuments = function (db, model) {
             coll.insert([
                 model.model
             ], function (err, result) {
-                if (global.debug) {
-                    logger.debug('save one log : ' + JSON.stringify(model.model));
-                }
-
                 if (err) {
+                    console.log('badjs-storage insert documents err', err);
                     errorNum++;
                 } else {
                     count++;
