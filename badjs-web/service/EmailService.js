@@ -104,7 +104,7 @@ EmailService.prototype = {
         data = data || {};
         var html = [];
         html.push('<html>');
-        html.push('<h3>【BadJS日报邮件】 ' + data.title + '</h3>');
+        html.push('<h3>【Aegis日报邮件】 ' + data.title + '</h3>');
         that.homepage &&
         html.push('<p style="font-size:12px"><a href="{{homepage}}">日志查看点这: {{homepage}}</a></p>'
             .replace(/{{homepage}}/g, that.homepage));
@@ -267,7 +267,7 @@ EmailService.prototype = {
     },
     sendEmail: function (emails, data, badjsid) {
         var that = this;
-        var title = "【BadJS 日报 " + dateFormat(this.date, "yyyy-MM-dd") + "】- " + emails.title;
+        var title = "【Aegis 日报 " + dateFormat(this.date, "yyyy-MM-dd") + "】- " + emails.title;
         data.title = emails.title;
         var pvParam = {
             badjsid: badjsid,
@@ -292,8 +292,8 @@ EmailService.prototype = {
             this.from,
             [user.email],
             [loginUser.email],
-            "【BadJS 授权成功 " + dateFormat(this.date, "yyyy-MM-dd hh:mm:ss") + "】",
-            '<html><h3>用户 ' + user.loginName + ' 申请的 BadJS-id：' + items.applyId + ' 授权成功</h3></html>',
+            "【Aegis 授权成功 " + dateFormat(this.date, "yyyy-MM-dd hh:mm:ss") + "】",
+            '<html><h3>用户 ' + user.loginName + ' 申请的 Aegis-id：' + items.applyId + ' 授权成功</h3></html>',
             false
         );
     },

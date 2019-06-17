@@ -20,7 +20,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
 
         const mentioned_list = [];
 
-        const base = `#### Badjs昨日统计扣分项目共<font color=\"warning\"> ${data.length} </font>例。\n \n`;
+        const base = `#### Aegis昨日统计扣分项目共<font color=\"warning\"> ${data.length} </font>例。\n \n`;
 
         const msg = base + data.map(d => {
             if (mentioned_list.indexOf(d.userName) === -1) {
@@ -29,7 +29,7 @@ var mdb = orm.connect(mysqlUrl, function (err, db) {
             const score = getScore.handleScore(d.pv, d.badjscount);
             return `> ${d.badjsid}-${d.name} - (得分：<font color="info">${score}</font>)`;
         }).join('\n') +
-        `\n \n #### 查看 [Badjs](http://badjs2.ivweb.io) 定位问题。`;
+        `\n \n #### 查看 [Aegis](https://aegis.ivweb.io/#/project-daily-statics) 定位问题。`;
 
         const options = {
             url,

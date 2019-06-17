@@ -128,10 +128,10 @@ function handleScoreMail (Score, db, closeCallback) {
 
         applyList = applyList.concat(applyList_offline);
 
-        const html = ['<html><h2>IVWEB Badjs 质量评分日报</h2>'];
+        const html = ['<html><h2>IVWEB Aegis 质量评分日报</h2>'];
 
         html.push('<style>td,th {border-bottom: 1px solid #b7a2a2;border-right: 1px solid #b7a2a2;} table {border-top: 1px solid black;border-left: 1px solid black;} </style>');
-        html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>业务名称</th><th>负责人</th><th>评分</th><th>错误率</th><th>pv</th><th>badjs错误量</th><td>上线</th><th>最低PV阈值</td><th>日期</th></tr>');
+        html.push('<table border="0" cellspacing="0" cellpadding="0"><tr><th>业务名称</th><th>负责人</th><th>评分</th><th>错误率</th><th>pv</th><th>aegis错误量</th><td>上线</th><th>最低PV阈值</td><th>日期</th></tr>');
         applyList.forEach(item => {
 
             html.push('<tr>');
@@ -151,7 +151,7 @@ function handleScoreMail (Score, db, closeCallback) {
 
         html.push('</table>');
 
-        html.push('<p>注：badjs得分规则</p> <p>（1）当报错率 <= 0.5%： badjs得分=100</p> <p>（2）当 0.5%< 报错率 < 10%：badjs得分： 100 - 10 * 报错率</p> <p>（3）当报错率 >= 10%： badjs得分=0</p>');
+        html.push('<p>注：aegis得分规则</p> <p>（1）当报错率 <= 0.5%： aegis得分=100</p> <p>（2）当 0.5%< 报错率 < 10%：aegis得分： 100 - 10 * 报错率</p> <p>（3）当报错率 >= 10%： aegis得分=0</p>');
 
         html.push(hhd);
         html.push(logdata);
@@ -174,13 +174,13 @@ function handleScoreMail (Score, db, closeCallback) {
 }
 
 function sendErrorMail () {
-    mail('', pjConfig.errorMailTo, '', 'IVWEB badjs质量评分日报错误', '请检查是否磁盘已满并且重新发送邮件', '', true);
+    mail('', pjConfig.errorMailTo, '', 'IVWEB Aegis质量评分日报错误', '请检查是否磁盘已满并且重新发送邮件', '', true);
 }
 
 function sendMail (html) {
     console.log('start send mail');
 
-    mail('', pjConfig.scoreMailTo, '', 'IVWEB badjs质量评分日报', html, '', true);
+    mail('', pjConfig.scoreMailTo, '', 'IVWEB Aegis质量评分日报', html, '', true);
 }
 
 module.exports = {
