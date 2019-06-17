@@ -23,7 +23,7 @@ var tryInit = function (db, collectionName, cb) {
     }
 
     hadCreatedCollection[collectionName] = 'ping';
-    db.createCollection(collectionName, { capped: true, size: 400000, max: 5000 }, function (err, collection) {
+    db.createCollection(collectionName, { capped: true, size: 1000000, max: 5000 }, function (err, collection) {
         collection.indexExists('date_-1_level_1', function (errForIE, result) {
             if (errForIE) {
                 throw errForIE;
