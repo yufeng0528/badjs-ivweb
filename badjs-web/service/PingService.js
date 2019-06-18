@@ -12,8 +12,8 @@ module.exports = function () {
 
     const { wechat_ping, ping } = global.pjconfig;
     const url = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${wechat_ping}`;
-    // ping 逻辑
-    setInterval(() => {
+
+    const job = function () {
         ping.forEach((id) => {
             const endDate = +new Date() - INTERVAL * 60 * 1000;
             const startDate = endDate - INTERVAL * 60 * 1000;
@@ -45,15 +45,25 @@ module.exports = function () {
                 }
             });
         });
-    }, INTERVAL * 60 * 1000);
+    };
+    // ping 逻辑
+    let TIMER = setInterval(job, INTERVAL * 60 * 1000);
     // 限制邮件频率为10分钟一次
     // 晚上低峰期流量会比平时少
     setInterval(() => {
         const hour = new Date().getHours();
-        if (hour > 2 && hour < 8) {
-            INTERVAL = 10;
+        if (hour > 1 && hour < 9) {
+            if (INTERVAL !== 10) {
+                INTERVAL = 10;
+                clearInterval(TIMER);
+                TIMER = setInterval(job, INTERVAL * 60 * 1000);
+            }
         } else {
-            INTERVAL = 2;
+            if (INTERVAL !== 2) {
+                INTERVAL = 2;
+                clearInterval(TIMER);
+                TIMER = setInterval(job, INTERVAL * 60 * 1000);
+            }
         }
         mailed = false;
     }, 10 * 60 * 1000);
