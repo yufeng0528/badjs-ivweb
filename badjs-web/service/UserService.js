@@ -68,6 +68,18 @@ UserService.prototype = {
         });
 
     },
+
+    queryMailByApplyId: function (id, callback) {
+        const string = `select b.email, b.loginName from b_user as b join b_apply as a on(a.userName = b.loginName) where a.id=${id}`;
+        this.db.driver.execQuery(string, function (err, data) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            callback(null, data);
+        });
+    },
+
     //查询用户创建项目的项目成员列表
     queryListByUserProject: function (target, callback) {
 
