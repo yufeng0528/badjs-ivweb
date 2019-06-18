@@ -25,6 +25,7 @@ const tryInit = function (db, collectionName, cb) {
 
     hadCreatedCollection[collectionName] = 'ping';
     db.createCollection(collectionName, { capped: true, size: 1000000, max: 5000 }, function (err, collection) {
+        console.log('创建 collection 成功: ', collectionName);
         collection.indexExists('date_-1_level_1', function (errForIE, result) {
             if (errForIE) {
                 throw errForIE;
@@ -34,6 +35,7 @@ const tryInit = function (db, collectionName, cb) {
                     if (errForCI) {
                         throw errForCI;
                     }
+                    console.log(collectionName + '创建索引 date_-1_level_1 成功');
                     if (global.MONGODB.isShard) {
                         adminMongoDB.command({
                             shardcollection: 'badjs.' + collectionName,
@@ -80,6 +82,7 @@ const createUinIndex = function (collection, collectionName, cb) {
         }
         if (!result) {
             collection.createIndex({ uin: 1 }, function (errForCI) {
+                console.log(collectionName + '创建索引 uin 成功');
                 if (errForCI) {
                     throw errForCI;
                 }
