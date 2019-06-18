@@ -3,6 +3,7 @@
   "workflow": [
     "InitWorker",
     "ExpressInitWorker",
-    "ServiceInitWorker"
+    "ServiceInitWorker",
+    "Ping"
   ]
 }

@@ -23,6 +23,7 @@
         "module": "axon"
     },
     "wechat": "",
+    "wechat_ping": "",
     "email": {
         "homepage": "http://aegis.ivweb.io/user/index.html",
         "from": "noreply-badjs@demo.com",
@@ -32,6 +33,7 @@
         "top": 20,
         "module": "email"
     },
+    "ping": [17, 182],
     "errorMailTo": "xx@yy.com",
     "ownerMailTo": "xx@yy.com,a@b.com",
     "scoreMailTo": "a@b.com,c@b.com"
