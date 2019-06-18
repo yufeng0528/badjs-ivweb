@@ -34,11 +34,11 @@ module.exports = function () {
             console.log(str || 'mkdir success');
         });
 
-        const pings = global.pjconfig.ping;
-        const url = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${global.pjConfig.wechat_ping}`;
+        const { wechat_ping, ping } = global.pjconfig;
+        const url = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${wechat_ping}`;
         // ping 逻辑
         setInterval(() => {
-            pings.forEach((id) => {
+            ping.forEach((id) => {
                 const endDate = +new Date() - INTERVAL * 60 * 1000;
                 const startDate = endDate - INTERVAL * 60 * 1000;
 
