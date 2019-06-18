@@ -3,8 +3,6 @@ const logger = log4js.getLogger();
 const path = require('path');
 const request = require('request');
 const mail = require('../utils/ivwebMail_for_single.js');
-const pings = global.pjconfig.ping;
-const url = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${global.pjConfig.wechat_ping}`;
 const INTERVAL = 2;
 let mailed = false;
 
@@ -36,6 +34,8 @@ module.exports = function () {
             console.log(str || 'mkdir success');
         });
 
+        const pings = global.pjconfig.ping;
+        const url = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${global.pjConfig.wechat_ping}`;
         // ping 逻辑
         setInterval(() => {
             pings.forEach((id) => {
