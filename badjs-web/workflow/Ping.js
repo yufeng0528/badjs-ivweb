@@ -18,24 +18,27 @@ module.exports = function () {
 
                 logService.query({ id, startDate, endDate, 'level[]': 2, _t: +new Date() }, function (err, items) {
                     if (!items.length) {
-                        const msg = `Aegis数据上报异常 - 检测到 aegis id ${id} 最近${INTERVAL}分钟没有数据上报，服务或者项目可能存在异常，请及时检查`;
-                        if (!mailed) {
-                            mailed = true;
-                            mail('', global.pjconfig.ownerMailTo, '', 'Aegis数据上报异常', msg, '', true);
-                        }
-                        request({
-                            url,
-                            method: 'POST',
-                            json: {
-                                'msgtype': 'text',
-                                'text': {
-                                    content: msg
-                                }
+                        userService.queryMailByApplyId(id, function (err, data) {
+                            const email = data[0].email;
+                            const loginName = data[0].loginName;
+                            const msg = `Aegis数据上报异常 - 检测到 aegis id: ${id} owner: ${loginName} 最近${INTERVAL}分钟没有数据上报，服务或者项目可能存在异常，请及时检查`;
+                            if (!mailed) {
+                                mailed = true;
+                                let { ownerMailTo } = global.pjconfig;
+                                mail('', `${ownerMailTo},${email}`, '', 'Aegis数据上报异常', msg, '', true);
                             }
-                        }, function (err, res, body) {
-
+                            request({
+                                url,
+                                method: 'POST',
+                                json: {
+                                    'msgtype': 'text',
+                                    'text': {
+                                        content: msg,
+                                        mentioned_list: [loginName]
+                                    }
+                                }
+                            }, () => {});
                         });
-
                     }
                 });
             });
