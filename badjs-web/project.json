@@ -1,0 +1,39 @@
+{
+    "host" : "http://badjs.server.com/",
+    "port": 8081,
+    "mysql" : {
+        "url" : "mysql://badjs:badjs@121.41.17.212:3306/badjs"
+    },
+    "storage" : {
+        "errorMsgTopUrl" : "http://127.0.0.1:9000/errorMsgTop",
+        "queryUrl" : "http://127.0.0.1:19000/query"
+    },
+    "acceptor": {
+        "pushProjectUrl" : "http://127.0.0.1:9001/getProjects"
+    },
+    "openapi": {
+        "pushProjectUrl" : "http://127.0.0.1:9002/getProjects"
+    },
+    "sourcemap": "/data/sourcemap",
+    "offline_log": "/data/offline_log",
+    "http_public": "/data/badjs-ivweb/badjs-ivweb/badjs-web/views",
+    "secretKey": "as2123zfxgf_badjs_fff",
+    "mq": {
+        "url": "tcp://127.0.0.1:10000",
+        "subscribe": "badjs",
+        "module": "axon"
+    },
+    "wechat": "",
+    "email": {
+        "homepage": "http://aegis.ivweb.io/user/index.html",
+        "from": "noreply-badjs@demo.com",
+        "emailSuffix" : "@demo.com",
+        "smtp": "smtp.demo.com",
+        "time": "09:00:00",
+        "top": 20,
+        "module": "email"
+    },
+    "errorMailTo": "xx@yy.com",
+    "ownerMailTo": "xx@yy.com,a@b.com",
+    "scoreMailTo": "a@b.com,c@b.com"
+}

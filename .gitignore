@@ -224,7 +224,6 @@ node_modules/
 coverage.html
 web-debug.bat
 badjs-web/static/scoreimg/
-**project.json
 
 
 #############
@@ -236,4 +235,3 @@ badjs-installer
 offline_log
 uploads
 *.example
-*config.json

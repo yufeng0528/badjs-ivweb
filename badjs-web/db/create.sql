@@ -93,8 +93,8 @@ CREATE TABLE IF NOT EXISTS `b_user` (
 
 --
 /*!40000 ALTER TABLE `b_user` DISABLE KEYS */;
-INSERT INTO `b_user` (`id`, `loginName`, `chineseName`, `role`, `email`, `password`) VALUES
-	(1, 'admin', 'admin', 1, NULL, '21232f297a57a5a743894a0e4a801fc3');
+INSERT INTO `b_user` (`id`, `loginName`, `chineseName`, `role`, `email`, `password`, `verify_state`) VALUES
+	(1, 'admin', 'admin', 1, NULL, '21232f297a57a5a743894a0e4a801fc3', 2);
 
 
 DROP TABLE IF EXISTS `b_log_data`;

@@ -29,7 +29,7 @@ module.exports = function (app) {
 
     app.get('/', function (req, res) {
         res.setHeader('Content-Type', 'text/html');
-        res.sendFile(`${global.pjconfig.http_public}/index.html`);
+        res.render('index',{} );
     });
 
     app.get('/index.html', function (req, res, next) {
@@ -50,13 +50,13 @@ module.exports = function (app) {
         IndexAction.index({}, req, res);
     });
 
-    // app.use('/login.html', function (req, res, next) {
-    //     if (pluginHandler.login) {
-    //         res.redirect('/user/index.html');
-    //     } else {
-    //         UserAction.login({}, req, res);
-    //     }
-    // });
+    app.use('/login.html', function (req, res, next) {
+        if (pluginHandler.login) {
+            res.redirect('/user/index.html');
+        } else {
+            UserAction.login({}, req, res);
+        }
+    });
 
     app.use('/upload.html', function (req, res, next) {
         var user = req.session.user;

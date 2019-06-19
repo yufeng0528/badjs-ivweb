@@ -16,14 +16,15 @@ var User = function(args){
     if(!args){
         return;
     }
-    _.defaults(this, _.pick(args, 'id', 'loginName', 'chineseName', 'role'));
+    _.defaults(this, _.pick(args, 'id', 'loginName', 'chineseName', 'role', 'verify_state'));
 }
 
 User.prototype  = {
     id : undefined,
     loginName : undefined,
     chineseName: undefined,
-    role : undefined
+    role : undefined,
+    verify_state : undefined
 }
 
 module.exports =  User;
