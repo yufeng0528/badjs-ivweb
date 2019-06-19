@@ -49,7 +49,8 @@ npm run start
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/gogoday/track/master/upgrade/upgrade.sh?v=1)"
 ```
 
-## 配置
+## 前端代码参考
+[badjs-report](https://github.com/BetterJS/badjs-report)
 
 ### email
 
